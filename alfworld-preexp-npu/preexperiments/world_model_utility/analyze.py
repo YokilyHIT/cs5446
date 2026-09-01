@@ -123,6 +123,45 @@ def _fmt(x: Any) -> str:
     return "nan" if x is None or (isinstance(x, float) and math.isnan(x)) else f"{x:.3f}"
 
 
+_MIN_CHANGED_POINTS = 10
+_MIN_ANY_SUCCESS_RATE = 0.05
+
+
+def _check_inconclusive(
+    n_changed_eval: int, any_success_rate: float
+) -> Tuple[bool, str]:
+    """Fixed after review: a near-zero mismatch rate and near-zero oracle
+    gain can mean either (a) confidence really does track planning utility
+    here, or (b) this run never actually generated enough signal to tell --
+    e.g. almost nothing in the changed-action evaluation subset ever
+    succeeds via EITHER branch, so `planning_gain` is 0 everywhere by
+    construction, not because foresight is harmless. Those two situations
+    must not both collapse into "not supported under the current setup" --
+    that phrasing claims evidence AGAINST the hypothesis, whereas the second
+    situation has no evidence either way. This checks for the second
+    situation and returns a distinct INCONCLUSIVE verdict when it applies,
+    instead of letting `_go_no_go` interpret silence as a negative result.
+    """
+    if n_changed_eval < _MIN_CHANGED_POINTS:
+        return True, (
+            f"Only {n_changed_eval} action-changed decision points fell in the evaluation "
+            f"subset (need at least {_MIN_CHANGED_POINTS} for the mismatch-rate/correlation "
+            "statistics to be meaningful) -- increase eval_episodes/decision_points_per_episode "
+            "or relax the ambiguity/history filters in collect_decision_points.py and re-run "
+            "before drawing a go/no-go conclusion."
+        )
+    if (not math.isnan(any_success_rate)) and any_success_rate < _MIN_ANY_SUCCESS_RATE:
+        return True, (
+            f"Only {any_success_rate:.1%} of evaluation decision points ever reached success via "
+            "EITHER branch (base or foresight) -- planning_gain is ~0 everywhere not because "
+            "foresight is harmless, but because the base model essentially never completes these "
+            "tasks within max_episode_steps. This run cannot distinguish 'no mismatch exists' from "
+            "'the model is too weak to generate any signal to measure'. Raise max_episode_steps, "
+            "use an easier eval subset, or use a stronger base model before re-running."
+        )
+    return False, ""
+
+
 def _go_no_go(r_mismatch: float, oracle_gain: float, rho_self: float) -> Tuple[str, str]:
     conditions = {
         "R_mismatch>=0.15": (not math.isnan(r_mismatch)) and r_mismatch >= 0.15,
@@ -132,28 +171,34 @@ def _go_no_go(r_mismatch: float, oracle_gain: float, rho_self: float) -> Tuple[s
     n_hold = sum(conditions.values())
     summary = f"mismatch_rate={_fmt(r_mismatch)}, oracle_gain={_fmt(oracle_gain)}, rho_self={_fmt(rho_self)}"
 
+    # verdict is a short machine-readable tag (GO/WEAK-GO/NO-GO), matching
+    # experiment A's convention -- generate_report.py's recommendation logic
+    # keys off this tag. The required phrasing ("supported by preliminary
+    # evidence" / "weakly supported" / "not supported under the current
+    # setup") always appears in `interpretation` instead, never in `verdict`.
     if (not math.isnan(r_mismatch)) and (not math.isnan(oracle_gain)) and r_mismatch < 0.02 and oracle_gain < 0.01:
-        verdict = "not supported under the current setup"
+        verdict = "NO-GO"
         interpretation = (
             f"Both the mismatch rate and the oracle upper-bound gain are near zero ({summary}), "
             "leaving essentially no room for confidence-gated foresight to help over the base "
-            "planner on this evaluation subset; stop direction B."
+            "planner on this evaluation subset. Not supported under the current setup -- stop "
+            "direction B."
         )
     elif n_hold >= 2:
-        verdict = "supported by preliminary evidence"
+        verdict = "GO"
         interpretation = (
-            f"{n_hold}/3 go/no-go criteria hold ({summary}), meeting the STRONG-support bar for "
-            "pursuing direction B further."
+            f"{n_hold}/3 go/no-go criteria hold ({summary}). Supported by preliminary evidence -- "
+            "meets the strong-support bar for pursuing direction B further."
         )
     elif n_hold == 1:
-        verdict = "weakly supported"
+        verdict = "WEAK-GO"
         interpretation = (
-            f"Only {n_hold}/3 go/no-go criteria hold ({summary}); the hypothesis is weakly "
-            "supported by preliminary evidence and any follow-up should proceed cautiously."
+            f"Only {n_hold}/3 go/no-go criteria hold ({summary}); weakly supported by preliminary "
+            "evidence and any follow-up should proceed cautiously."
         )
     else:
-        verdict = "not supported under the current setup"
-        interpretation = f"None of the go/no-go criteria hold ({summary}); direction B is not supported under the current setup."
+        verdict = "NO-GO"
+        interpretation = f"None of the go/no-go criteria hold ({summary}); not supported under the current setup."
 
     return verdict, interpretation
 
@@ -219,6 +264,10 @@ def main(args: argparse.Namespace) -> None:
     harmful_rate = (
         sum(1 for r in changed_eval if r["planning_gain"] == -1) / n_changed_eval if n_changed_eval else float("nan")
     )
+    any_success_rate = (
+        sum(1 for r in evaluation if r["base_success"] or r["foresight_success"]) / len(evaluation)
+        if evaluation else float("nan")
+    )
 
     r_mismatch = eval_stats["R_mismatch"]
     rho_self = eval_stats["rho_self_changed"]
@@ -228,7 +277,11 @@ def main(args: argparse.Namespace) -> None:
     oracle_gain = oracle_stats["G_oracle"]
     oracle_gain_ci = oracle_stats["G_oracle_ci"]
 
-    verdict, interpretation = _go_no_go(r_mismatch, oracle_gain, rho_self)
+    is_inconclusive, inconclusive_reason = _check_inconclusive(n_changed_eval, any_success_rate)
+    if is_inconclusive:
+        verdict, interpretation = "INCONCLUSIVE", inconclusive_reason
+    else:
+        verdict, interpretation = _go_no_go(r_mismatch, oracle_gain, rho_self)
 
     summary = {
         "decision_points": len(records),
@@ -244,6 +297,7 @@ def main(args: argparse.Namespace) -> None:
         "oracle_gain_ci": oracle_gain_ci,
         "helpful_rate": helpful_rate,
         "harmful_rate": harmful_rate,
+        "any_success_rate_eval": any_success_rate,
         "verdict": verdict,
         "interpretation": interpretation,
     }

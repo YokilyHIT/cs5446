@@ -58,6 +58,19 @@ def compute_failure_utility(pairwise_episodes: List[Dict[str, Any]], lessons_by_
     return rows
 
 
+def compute_trial_counts(pairwise_episodes: List[Dict[str, Any]]) -> Dict[str, Dict[str, List[int]]]:
+    """Per-failure (n, k) trial/success counts for each condition, used only
+    by `simulate_luck_baseline` below (not written to any CSV)."""
+    counts: Dict[str, Dict[str, List[int]]] = {}
+    for rec in pairwise_episodes:
+        fid = rec["failure_id"]
+        c = counts.setdefault(fid, {"no_lesson": [0, 0], "with_lesson": [0, 0]})
+        cell = c[rec["condition"]]
+        cell[0] += 1
+        cell[1] += int(bool(rec["success"]))
+    return counts
+
+
 def write_failure_utility_csv(rows: List[Dict[str, Any]], path: str) -> None:
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
@@ -95,6 +108,77 @@ def plot_delta_histogram(deltas: List[float], path: str) -> None:
     fig.tight_layout()
     fig.savefig(path, dpi=150)
     plt.close(fig)
+
+
+# ---------------------------------------------------------------------------
+# Luck baseline (added after review): is the observed per-failure delta
+# heterogeneity distinguishable from pure chance?
+# ---------------------------------------------------------------------------
+
+def simulate_luck_baseline(
+    trial_counts: Dict[str, Dict[str, List[int]]],
+    observed_var_delta: float,
+    observed_p_delta_le0: float,
+    n_resamples: int,
+    seed: int,
+) -> Dict[str, Any]:
+    """Fixed after review: the pipeline used to compute Var(delta) and
+    P(delta<=0) across failures and treat any nonzero spread as evidence that
+    "some lessons are better than others". With only 3 tasks x 3 seeds = 9
+    trials per condition per failure, a meaningful-looking spread can appear
+    from pure sampling noise alone -- like judging two coins from 9 flips
+    each.
+
+    This simulates the null hypothesis "no failure's lesson has any true
+    effect on success probability": for each failure, pool its no_lesson and
+    with_lesson trials into one success rate p_i (the failure's estimated
+    task difficulty with lesson quality removed), then redraw BOTH
+    conditions' outcomes from Binomial(n, p_i). Repeating this `n_resamples`
+    times gives the distribution of Var(delta)/P(delta<=0) expected under
+    pure chance. The returned p-values are the fraction of null replicates
+    at least as extreme as the real data -- a small p-value means the real
+    heterogeneity is unlikely to be chance alone.
+    """
+    failure_ids = [
+        fid for fid, c in trial_counts.items()
+        if c["no_lesson"][0] > 0 and c["with_lesson"][0] > 0
+    ]
+    if len(failure_ids) < 2:
+        return {
+            "n_failures": len(failure_ids),
+            "n_simulations": n_resamples,
+            "var_delta_pvalue": float("nan"),
+            "p_delta_le0_pvalue": float("nan"),
+            "note": "fewer than 2 failures had trials in both conditions; luck baseline not computable.",
+        }
+
+    rng = np.random.default_rng(seed)
+    null_var = np.empty(n_resamples)
+    null_p_le0 = np.empty(n_resamples)
+    deltas = np.empty(len(failure_ids))
+
+    for rep in range(n_resamples):
+        for i, fid in enumerate(failure_ids):
+            n0, k0 = trial_counts[fid]["no_lesson"]
+            n1, k1 = trial_counts[fid]["with_lesson"]
+            p_pool = (k0 + k1) / (n0 + n1)
+            sim0 = rng.binomial(n0, p_pool) / n0
+            sim1 = rng.binomial(n1, p_pool) / n1
+            deltas[i] = sim1 - sim0
+        null_var[rep] = np.var(deltas)
+        null_p_le0[rep] = np.mean(deltas <= 0)
+
+    return {
+        "n_failures": len(failure_ids),
+        "n_simulations": n_resamples,
+        "var_delta_pvalue": float(np.mean(null_var >= observed_var_delta)),
+        "p_delta_le0_pvalue": float(np.mean(null_p_le0 >= observed_p_delta_le0)),
+        "note": (
+            "p-values are the fraction of pure-chance (binomial-null) simulated replicates "
+            "at least as extreme as the observed statistic; small p-value = observed "
+            "heterogeneity is unlikely to be sampling noise alone."
+        ),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -174,22 +258,68 @@ def plot_condition_bar_chart(sr_by_condition: Dict[str, Tuple[float, float, floa
 # Go / No-Go (section 16)
 # ---------------------------------------------------------------------------
 
-def determine_verdict(p_delta_le0: float, rho_u: float, sr_diff: float) -> Tuple[str, str]:
+_MIN_FAILURES_EVALUATED = 5
+_LUCK_ALPHA = 0.10  # observed heterogeneity must beat pure chance at this significance to count as "real"
+
+
+def determine_verdict(
+    p_delta_le0: float,
+    rho_u: float,
+    sr_diff: float,
+    n_failures_evaluated: int,
+    luck_pvalue: float,
+) -> Tuple[str, str]:
     # Hard requirement (spec section 16): never claim "our hypothesis is
     # proven" -- the interpretation text must always use one of the exact
     # phrasings "supported by preliminary evidence" (GO), "weakly supported"
     # (WEAK-GO), or "not supported under the current setup" (NO-GO).
-    if (p_delta_le0 >= 0.20 and rho_u >= 0.30) or (sr_diff >= 0.05):
+    #
+    # Fixed after review: raw P(delta<=0)/rho_U thresholds alone cannot tell
+    # a real effect apart from noise at n=9 trials/condition per failure --
+    # two coins each flipped 9 times can easily "look" 5-vs-3 different by
+    # chance. `luck_pvalue` (from simulate_luck_baseline, a binomial-null
+    # simulation) estimates how likely the observed P(delta<=0) is under
+    # "no failure's lesson has any true effect"; GO now additionally
+    # requires this to be unlikely under pure chance (p < _LUCK_ALPHA).
+    if n_failures_evaluated < _MIN_FAILURES_EVALUATED:
+        return "INCONCLUSIVE", (
+            f"Only {n_failures_evaluated} failures had pairwise evaluation data -- too few "
+            f"(need >= {_MIN_FAILURES_EVALUATED}) to distinguish a real per-failure effect from "
+            "sampling noise. Increase experiment_a.max_failures_evaluated and re-run before "
+            "drawing a conclusion."
+        )
+
+    luck_ok = (not np.isnan(luck_pvalue)) and luck_pvalue < _LUCK_ALPHA
+    luck_note = (
+        f"luck-baseline p={luck_pvalue:.2f} (< {_LUCK_ALPHA} = distinguishable from pure chance)"
+        if not np.isnan(luck_pvalue) else "luck-baseline not computable"
+    )
+
+    if sr_diff >= 0.05:
         return "GO", (
             "Selective failure learning is supported by preliminary evidence: "
-            f"P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}, "
-            f"SR_TopK-SR_All={sr_diff:.2f}."
+            f"SR_TopK-SR_All={sr_diff:.2f} meets the 5-point bar on its own, independent of the "
+            f"per-failure delta analysis (P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f})."
+        )
+    if p_delta_le0 >= 0.20 and rho_u >= 0.30 and luck_ok:
+        return "GO", (
+            "Selective failure learning is supported by preliminary evidence: "
+            f"P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}, and the observed per-failure "
+            f"heterogeneity is unlikely to be pure sampling noise ({luck_note})."
+        )
+    if p_delta_le0 >= 0.20 and rho_u >= 0.30 and not luck_ok:
+        return "WEAK-GO", (
+            f"Raw thresholds are met (P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}) but the "
+            f"observed per-failure heterogeneity is NOT statistically distinguishable from a "
+            f"pure-chance baseline ({luck_note}) -- weakly supported until a larger sample "
+            "(more failures and/or more tasks/seeds per failure) rules out noise."
         )
     if p_delta_le0 > 0 and abs(rho_u) < 0.15:
         return "WEAK-GO", (
             "Selective failure learning is weakly supported: some failures show "
             f"delta<=0 (P={p_delta_le0:.2f}), so selection matters in principle, "
-            f"but the current utility proxy is weak (rho_U={rho_u:.2f}, near 0)."
+            f"but the current utility proxy is weak (rho_U={rho_u:.2f}, near 0). "
+            f"({luck_note})"
         )
     if p_delta_le0 < 0.05 and sr_diff <= 0:
         return "NO-GO", (
@@ -197,13 +327,13 @@ def determine_verdict(p_delta_le0: float, rho_u: float, sr_diff: float) -> Tuple
             f"almost all lessons show delta>0 (P(delta<=0)={p_delta_le0:.2f}) and "
             f"SR_TopK does not exceed SR_All (diff={sr_diff:.2f})."
         )
-    # None of the three crisp rules fired cleanly; pick whichever verdict the
+    # None of the crisp rules fired cleanly; pick whichever verdict the
     # numbers most resemble and say so explicitly rather than forcing a fit.
     if p_delta_le0 >= 0.10 or rho_u >= 0.15 or sr_diff >= 0.0:
         return "WEAK-GO", (
             "Result pattern does not cleanly match the GO or NO-GO thresholds; "
             f"weakly supported is the closest fit given P(delta<=0)={p_delta_le0:.2f}, "
-            f"rho_U={rho_u:.2f}, SR_TopK-SR_All={sr_diff:.2f}."
+            f"rho_U={rho_u:.2f}, SR_TopK-SR_All={sr_diff:.2f} ({luck_note})."
         )
     return "NO-GO", (
         "Result pattern does not cleanly match the GO or WEAK-GO thresholds; "
@@ -276,12 +406,24 @@ def main(args: argparse.Namespace) -> None:
             topk_values, all_values, n_resamples=n_resamples, seed=boot_seed
         )
 
-    # --- Go / No-Go ---
+    # --- Luck baseline (added after review) ---
+    trial_counts = compute_trial_counts(pairwise_episodes)
     p_delta_le0 = delta_stats["p_delta_lt0"] + delta_stats["p_delta_eq0"]
+    luck_baseline = simulate_luck_baseline(
+        trial_counts,
+        observed_var_delta=delta_stats["var_delta"],
+        observed_p_delta_le0=p_delta_le0 if not np.isnan(p_delta_le0) else 0.0,
+        n_resamples=n_resamples,
+        seed=boot_seed,
+    )
+
+    # --- Go / No-Go ---
     verdict, interpretation = determine_verdict(
         p_delta_le0 if not np.isnan(p_delta_le0) else 0.0,
         rho_u if not np.isnan(rho_u) else 0.0,
         sr_diff_point if not np.isnan(sr_diff_point) else 0.0,
+        n_failures_evaluated=len(deltas),
+        luck_pvalue=luck_baseline["p_delta_le0_pvalue"],
     )
 
     summary: Dict[str, Any] = {
@@ -294,6 +436,7 @@ def main(args: argparse.Namespace) -> None:
             "topk_vs_all_episodes": len(topk_vs_all),
         },
         "a6_delta_distribution": delta_stats,
+        "a6_luck_baseline": luck_baseline,
         "a7_correlation": {
             "rho_u": rho_u,
             "p_value": rho_p,
@@ -324,7 +467,8 @@ def main(args: argparse.Namespace) -> None:
 
     print(
         f"[analyze] verdict={verdict}\n"
-        f"  P(delta<=0)={p_delta_le0:.3f} rho_U={rho_u:.3f} SR_TopK-SR_All={sr_diff_point:.3f}\n"
+        f"  P(delta<=0)={p_delta_le0:.3f} rho_U={rho_u:.3f} SR_TopK-SR_All={sr_diff_point:.3f} "
+        f"luck_baseline_pvalue={luck_baseline['p_delta_le0_pvalue']:.3f}\n"
         f"  -> {failure_utility_csv}\n"
         f"  -> {proxy_corr_csv}\n"
         f"  -> {hist_path}\n"

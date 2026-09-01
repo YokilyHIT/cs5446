@@ -66,11 +66,12 @@ def main(args: argparse.Namespace) -> None:
                     adapter = build_single_game_adapter(config, split, gamefile)
                     obs, info = reset_and_attach(adapter)
                     goal = extract_goal(obs, info)
+                    run_id = new_run_id("A4")
                     result = rollout(
                         adapter,
                         llm=llm,
                         config=config,
-                        run_id=new_run_id("A4"),
+                        run_id=run_id,
                         task_id=task_id,
                         game_id_or_path=gamefile,
                         split=split,
@@ -79,13 +80,16 @@ def main(args: argparse.Namespace) -> None:
                         observation=obs,
                         lesson=lesson,
                     )
+                    forced_action_count = sum(1 for r in result.step_records if r.get("action_forced"))
                     record = {
+                        "run_id": run_id,
                         "failure_id": failure_id,
                         "task_id": task_id,
                         "condition": condition,
                         "seed": seed,
                         "success": result.success,
                         "steps": result.steps,
+                        "forced_action_count": forced_action_count,
                         **env_config_block(config, seed),
                     }
                     append_jsonl(output_file, record)

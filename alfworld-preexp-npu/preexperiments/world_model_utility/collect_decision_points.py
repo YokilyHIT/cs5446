@@ -10,10 +10,27 @@ actions taken so far in THIS episode -- which is required by
 replay_state.restore_state() downstream. Threading that same information
 through rollout()'s step_callback would require reconstructing it from
 partial EpisodeResult state, which is more fragile than just owning the loop.
+
+IMPORTANT (fixed after review): earlier versions of this script stopped an
+episode as soon as it had collected `decision_points_per_episode` qualifying
+states. Since almost every ALFWorld step has >=2 admissible actions, that
+meant every episode was cut off after its first ~5 steps -- i.e. all 150
+decision points came from the "walk to the room" opening of each task, where
+the choice of action barely affects final success. It also meant episodes
+were never allowed to finish, so this script could not report how often the
+base planner actually succeeds at all (needed to sanity-check the go/no-go
+verdict downstream, see world_model_utility/analyze.py's INCONCLUSIVE gate).
+
+This version instead runs every episode to completion (done or
+max_episode_steps), collects EVERY qualifying candidate state along the way,
+and then subsamples `decision_points_per_episode` of them spread evenly
+across the whole episode (see `_select_spread`) -- so decision points come
+from early, middle, and late game states, not just the opening.
 """
 from __future__ import annotations
 
 import argparse
+import json
 import os
 from typing import Any, Dict, List, Tuple
 
@@ -55,6 +72,20 @@ def _list_sorted_game_files(config: Dict[str, Any], split: str) -> List[str]:
     return sorted(probe.game_files)
 
 
+def _select_spread(candidates: List[Dict[str, Any]], k: int) -> List[Dict[str, Any]]:
+    """Pick up to `k` candidates evenly spread across the (step-ordered)
+    candidate list, instead of always taking the first `k` -- so decision
+    points aren't all clustered in the episode's opening steps."""
+    n = len(candidates)
+    if n <= k:
+        return list(candidates)
+    if k <= 1:
+        return [candidates[0]]
+    step_size = (n - 1) / (k - 1)
+    indices = sorted({round(i * step_size) for i in range(k)})
+    return [candidates[i] for i in indices]
+
+
 def main(args: argparse.Namespace) -> None:
     config = load_yaml_config(args.config)
     results_dir = config["paths"]["results_dir"]
@@ -83,6 +114,9 @@ def main(args: argparse.Namespace) -> None:
 
     total_points = 0
     episodes_run = 0
+    episodes_succeeded = 0
+    total_steps_run = 0
+    total_forced_actions = 0
 
     for gamefile in chosen_gamefiles:
         if total_points >= target_total:
@@ -97,26 +131,21 @@ def main(args: argparse.Namespace) -> None:
 
         history: List[Tuple[str, str]] = []
         action_prefix: List[str] = []
-        episode_points = 0
+        candidates: List[Dict[str, Any]] = []
         step = 0
         done = False
+        success = False
 
+        # Run the FULL episode (see module docstring: no early cutoff once a
+        # quota of candidates is reached) so decision points can be sampled
+        # from across the whole trajectory, and so we know whether the base
+        # planner ever actually succeeds on this task.
         while step < max_steps and not done:
             admissible = extract_admissible(info)
             history_text = format_history(history)
-            is_decision_point = (
-                episode_points < per_episode_cap
-                and len(admissible) >= 2
-                and len(history_text) <= _HISTORY_CHAR_CAP
-            )
-
-            if is_decision_point:
-                total_points += 1
-                point_id = f"D{total_points:05d}"
-                append_jsonl(
-                    dp_path,
+            if len(admissible) >= 2 and len(history_text) <= _HISTORY_CHAR_CAP:
+                candidates.append(
                     {
-                        "point_id": point_id,
                         "task_id": task_id,
                         "game_id_or_path": gamefile,
                         "seed": _BASE_SEED,
@@ -125,9 +154,8 @@ def main(args: argparse.Namespace) -> None:
                         "action_prefix": list(action_prefix),
                         "observation": observation,
                         "admissible_actions": list(admissible),
-                    },
+                    }
                 )
-                episode_points += 1
 
             action, forced, prompt_tokens, completion_tokens = choose_action(
                 llm,
@@ -139,6 +167,8 @@ def main(args: argparse.Namespace) -> None:
                 lesson=None,
             )
             next_obs, done, success, info = adapter.step(action)
+            total_steps_run += 1
+            total_forced_actions += int(forced)
 
             append_jsonl(
                 raw_path,
@@ -171,12 +201,32 @@ def main(args: argparse.Namespace) -> None:
             observation = next_obs
             step += 1
 
+        episodes_succeeded += int(success)
+
+        for cand in _select_spread(candidates, per_episode_cap):
             if total_points >= target_total:
                 break
-            if episode_points >= per_episode_cap:
-                # Spec: stop this episode early once its quota of decision
-                # points is collected -- no point running it further.
-                break
+            total_points += 1
+            point_id = f"D{total_points:05d}"
+            append_jsonl(dp_path, {"point_id": point_id, **cand})
+
+    forced_rate = (total_forced_actions / total_steps_run) if total_steps_run else float("nan")
+    success_rate = (episodes_succeeded / episodes_run) if episodes_run else float("nan")
+
+    summary_path = os.path.join(results_dir, "B_base_episode_success_summary.json")
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "episodes_run": episodes_run,
+                "episodes_succeeded": episodes_succeeded,
+                "success_rate": success_rate,
+                "total_steps": total_steps_run,
+                "forced_action_count": total_forced_actions,
+                "forced_action_rate": forced_rate,
+            },
+            f,
+            indent=2,
+        )
 
     if total_points < target_total:
         print(
@@ -185,9 +235,11 @@ def main(args: argparse.Namespace) -> None:
         )
 
     print(
-        f"[collect_decision_points] episodes_run={episodes_run} decision_points={total_points}\n"
+        f"[collect_decision_points] episodes_run={episodes_run} decision_points={total_points} "
+        f"base_success_rate={success_rate:.3f} forced_action_rate={forced_rate:.3f}\n"
         f"  -> {dp_path}\n"
-        f"  -> {raw_path}"
+        f"  -> {raw_path}\n"
+        f"  -> {summary_path}"
     )
 
 

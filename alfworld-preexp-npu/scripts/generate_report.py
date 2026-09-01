@@ -67,6 +67,7 @@ def build_report(config_path: Path, results_dir: Path) -> str:
 
     a_counts = a.get("data_counts", {})
     a_delta = a.get("a6_delta_distribution", {})
+    a_luck = a.get("a6_luck_baseline", {})
     a_corr = a.get("a7_correlation", {})
     a_sr = a.get("a8_success_rates", {})
     a_go = a.get("go_no_go", {})
@@ -95,6 +96,10 @@ def build_report(config_path: Path, results_dir: Path) -> str:
     lines.append(f"- P(delta > 0): {_fmt(a_delta.get('p_delta_gt0'))}")
     lines.append(f"- Var(delta): {_fmt(a_delta.get('var_delta'))}")
     lines.append(f"- Spearman U vs delta: {_fmt_ci(a_corr.get('rho_u'), [a_corr.get('ci_lo'), a_corr.get('ci_hi')])}")
+    lines.append(
+        f"- luck-baseline p-value for P(delta<=0) (chance-level heterogeneity check, "
+        f"n_sim={a_luck.get('n_simulations', 'N/A')}): {_fmt(a_luck.get('p_delta_le0_pvalue'))}"
+    )
     lines.append(f"- NoMemory SR: {_fmt_ci_dict(a_sr.get('NoMemory'))}")
     lines.append(f"- AllLessons SR: {_fmt_ci_dict(a_sr.get('AllLessons'))}")
     lines.append(f"- RandomK SR: {_fmt_ci_dict(a_sr.get('RandomK'))}")
@@ -130,9 +135,34 @@ def build_report(config_path: Path, results_dir: Path) -> str:
     lines.append("")
     lines.append("# Recommendation")
 
-    a_is_go = a_go.get("verdict", "").upper().startswith("GO")
-    b_is_go = b.get("verdict", "").upper().startswith("STRONG") or b.get("verdict", "").upper().startswith("GO")
-    if a_is_go and not b_is_go:
+    def _is_go(verdict: str) -> bool:
+        # Both analyze.py scripts now emit the SAME short tag convention
+        # (GO / WEAK-GO / NO-GO / INCONCLUSIVE) as `verdict`, with the
+        # required sentence-level phrasing living only in `interpretation`.
+        # An earlier version of this check compared against "STRONG"/"GO"
+        # prefixes that experiment B's verdict field never actually
+        # produced, so direction B could never be recommended regardless of
+        # its results -- fixed by using an exact tag match instead.
+        return verdict.strip().upper() == "GO"
+
+    a_verdict = a_go.get("verdict", "")
+    b_verdict = b.get("verdict", "")
+    a_is_go = _is_go(a_verdict)
+    b_is_go = _is_go(b_verdict)
+    a_inconclusive = a_verdict.strip().upper() == "INCONCLUSIVE"
+    b_inconclusive = b_verdict.strip().upper() == "INCONCLUSIVE"
+
+    if a_inconclusive or b_inconclusive:
+        inconclusive_dirs = ", ".join(
+            d for d, flag in (("A", a_inconclusive), ("B", b_inconclusive)) if flag
+        )
+        rec = (
+            f"inconclusive for direction(s) {inconclusive_dirs} -- this run did not collect enough "
+            "signal to judge (see the Interpretation section above for what to fix), so no GO/NO-GO "
+            "recommendation should be drawn for it yet; re-run after addressing the stated issue "
+            "before deciding."
+        )
+    elif a_is_go and not b_is_go:
         rec = "Candidate A"
     elif b_is_go and not a_is_go:
         rec = "Candidate B"

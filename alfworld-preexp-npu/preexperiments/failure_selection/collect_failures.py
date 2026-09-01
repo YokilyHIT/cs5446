@@ -98,6 +98,7 @@ def main(args: argparse.Namespace) -> None:
             lesson=None,
         )
         episodes_run += 1
+        forced_action_count = sum(1 for r in result.step_records if r.get("action_forced"))
 
         episode_record = {
             "run_id": run_id,
@@ -107,6 +108,7 @@ def main(args: argparse.Namespace) -> None:
             "goal": goal,
             "success": result.success,
             "steps": result.steps,
+            "forced_action_count": forced_action_count,
             "seed": seed,
             **env_config_block(config, seed),
         }
@@ -122,6 +124,7 @@ def main(args: argparse.Namespace) -> None:
                 "goal": goal,
                 "trajectory": result.step_records,
                 "final_observation": result.final_observation,
+                "forced_action_count": forced_action_count,
                 "seed": seed,
                 **env_config_block(config, seed),
             }
