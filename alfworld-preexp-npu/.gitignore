@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+
+results/*.jsonl
+results/*.csv
+results/*.json
+!results/.gitkeep
+figures/*.png
+!figures/.gitkeep
+reports/*.md
+!reports/.gitkeep
+
+requirements_lock.txt
+gpu_info.txt
+ADAMEM_COMMIT.txt

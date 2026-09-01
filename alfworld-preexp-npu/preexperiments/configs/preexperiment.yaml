@@ -1,0 +1,62 @@
+# Fixed configuration for the two pre-experiments (Selective Failure Learning / A,
+# Prediction Confidence vs Planning Utility / B).
+#
+# This file is the single source of truth for model/sampling/seed parameters.
+# Every script under preexperiments/ must read its defaults from here instead of
+# hard-coding literals, so that every result JSON/CSV can cite one config version.
+
+model:
+  name: "Qwen/Qwen3-4B-Instruct-2507"
+  # vLLM OpenAI-compatible server, started separately on the NPU host
+  # (see scripts/start_vllm_npu.sh). This machine only ever talks HTTP to it.
+  api_base: "http://127.0.0.1:8001/v1"
+  api_key: "EMPTY"          # vLLM does not check this, but the OpenAI SDK requires a value
+  request_timeout_s: 120
+  max_retries: 5
+
+sampling:
+  temperature: 0.2
+  top_p: 0.95
+  max_tokens_per_action: 256
+  max_episode_steps: 30
+
+seeds: [13, 37, 73]
+
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  # Small model; CPU is sufficient and keeps the NPU free for the LLM server.
+  # Set to "npu" to run on Ascend via torch_npu if the host has spare capacity.
+  device: "cpu"
+
+splits:
+  experience: "train"
+  evaluation: "eval_in_distribution"
+  # eval_out_of_distribution intentionally unused in phase 1 (see spec section 3)
+
+paths:
+  adamem_root: "../AdaMEM"        # relative to this repo root, set by setup script
+  results_dir: "results"
+  figures_dir: "figures"
+  reports_dir: "reports"
+
+experiment_a:
+  max_train_episodes: 50
+  min_failures: 20
+  lesson_temperature: 0.2
+  related_tasks_k: 3
+  max_failures_evaluated: 20
+  eval_subset_size: 30
+  topk_fraction: 0.4
+
+experiment_b:
+  eval_episodes: 30
+  decision_points_per_episode: 5
+  target_decision_points: 150
+  calibration_points: 50
+  evaluation_points: 100
+  confidence_gate_target_usage: 0.5
+  action_ambiguity_samples: 4
+
+stats:
+  bootstrap_resamples: 1000
+  bootstrap_seed: 2026

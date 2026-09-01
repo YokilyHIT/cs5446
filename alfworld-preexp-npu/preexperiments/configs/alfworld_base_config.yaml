@@ -1,0 +1,50 @@
+# ALFWorld's own environment config schema (NOT this project's
+# preexperiment.yaml -- ALFWorld's AlfredTWEnv expects exactly this shape).
+# {ALFWORLD_DATA} is substituted at load time (see
+# preexperiments/common/alfworld_runner.py:_load_alfworld_config) with the
+# ALFWORLD_DATA environment variable, defaulting to ~/.cache/alfworld, i.e.
+# wherever `alfworld-download` (spec section 1.3) put the dataset.
+#
+# This mirrors the base_config.yaml shipped in ALFWorld's own
+# alfworld/configs/ directory. If `python scripts/inspect_alfworld_api.py`
+# reports a schema mismatch, diff this file against the installed package's
+# `alfworld/configs/base_config.yaml` and copy over whatever changed.
+
+dataset:
+  data_path: "{ALFWORLD_DATA}/json_2.1.1/train"
+  eval_id_data_path: "{ALFWORLD_DATA}/json_2.1.1/valid_seen"
+  eval_ood_data_path: "{ALFWORLD_DATA}/json_2.1.1/valid_unseen"
+  num_train_games: -1
+  num_eval_games: -1
+
+logic:
+  domain: "{ALFWORLD_DATA}/logic/alfred.pddl"
+  grammar: "{ALFWORLD_DATA}/logic/alfred.twl2"
+
+env:
+  type: "AlfredTWEnv"
+  regen_game_files: false
+  domain_randomization: false
+  task_types: [1, 2, 3, 4, 5, 6]
+  expert_timeout_steps: 150
+  expert_type: "handcoded"
+  goal_desc_human_anns_prob: 0.0
+
+env_general:
+  random_seed: 42
+  use_thor: false
+  training_method: "dagger"
+
+general:
+  training_method: "dagger"
+  save_path: "./alfworld_ckpt/"
+  observation_pool_capacity: 3
+  hide_init_receptacles: false
+
+rl:
+  training:
+    # TextWorld's own per-env step cap, kept generous -- the actual
+    # experiment-level cap is `sampling.max_episode_steps` in
+    # preexperiment.yaml, enforced by preexperiments/common/alfworld_runner.py's
+    # rollout() loop, not by this value.
+    max_nb_steps_per_episode: 200
