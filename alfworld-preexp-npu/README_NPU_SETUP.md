@@ -16,6 +16,19 @@ torch, or an actual model must run **on the separate Ascend NPU host**. This
 repo's own code only ever talks to that host over plain HTTP (the vLLM
 OpenAI-compatible API), so the split is clean: edit here, run there.
 
+> **Validated on real hardware.** The full pipeline (setup through
+> `scripts/run_smoke_test.sh`) has been run end-to-end on Ascend 910B3 x2
+> (aarch64, Python 3.11.13, CANN 8.3.RC2, torch/torch_npu 2.7.1,
+> vllm/vllm-ascend 0.11.0, alfworld 0.4.2 / textworld 1.7.0). Every fix that
+> came out of that run is already applied in this repo -- see
+> `README_CN.md` section 8 for what broke and how it was fixed, and
+> `diagnostics/README.md` for the measured baseline success rates that
+> decided `sampling.prompt_style`'s default. If you're on a different
+> ALFWorld/CANN/vLLM version, `scripts/inspect_alfworld_api.py` is still the
+> first thing to run (section 6 below) -- some of the compatibility shims
+> here (e.g. `_import_alfred_tw_env`) exist specifically because this API
+> has already moved once.
+
 ```
 ┌─────────────────────────┐        HTTP (OpenAI API)        ┌──────────────────────────┐
 │  This dev machine        │ ───────────────────────────────▶│  Ascend NPU host          │
@@ -168,6 +181,23 @@ alfworld-download
 python -c "import alfworld; print('ALFWorld import OK')"
 ```
 
+> **aarch64 hosts**: `pip install alfworld` may fail while building TextWorld
+> from source -- its `setup.py` runs a `setup.sh` that extracts
+> `inform7-compilers_6M62_${ARCH}.tar.gz`, and Inform7 6M62 only ships
+> i386/x86_64/ppc/armv6lhf builds, no aarch64. Those binaries are only used
+> to *generate new* TextWorld games from scratch; ALFWorld ships pre-generated
+> `.tw-pddl` games (executed by TextWorld's pure-Python PDDL environment), so
+> missing them doesn't matter. Work around it with this repo's patched
+> `setup.sh` (`third_party/textworld-1.7.0-setup.sh.orig` is the unmodified
+> version, for diffing):
+> ```bash
+> cd /tmp && pip download --no-deps --no-binary :all: textworld==1.7.0
+> tar xzf textworld-1.7.0.tar.gz && cd textworld-1.7.0
+> cp /path/to/this/repo/third_party/textworld-1.7.0-setup.sh setup.sh
+> pip install .
+> ```
+> x86_64 hosts: skip this, `pip install alfworld` builds TextWorld fine on its own.
+
 `$ALFWORLD_DATA` must match the path baked into
 `preexperiments/configs/alfworld_base_config.yaml` (it's a `{ALFWORLD_DATA}`
 placeholder substituted at load time by
@@ -297,8 +327,36 @@ This runs, in spec-mandated order (section 38, steps 1-8 / section 6):
 4. the deterministic-replay assertion (the single most important
    correctness gate for Experiment B — **do not proceed past a failure
    here**, spec section 39),
-5. Experiment B's 10-decision-point mini smoke test,
+5. Experiment B's 10-decision-point mini smoke test (and everything
+   downstream of it: `evaluate_planning_gain` / `evaluate_oracle_gate` /
+   `analyze`, so a break in the analysis chain surfaces here instead of
+   after the full-scale collection has been paid for),
 6. Experiment A's 3-failure mini smoke test.
+
+Step 2b (right after the baseline episodes) is a **hard gate** on the
+forced-action rate (`scripts/check_forced_action_rate.py`) — if this fails,
+the model's raw output isn't matching admissible actions and every
+downstream success-rate number would be measuring action-formatting, not
+planning (this is exactly what caught a 51.3% forced-action rate on the
+validation host; see README_CN.md section 8.1).
+
+### 7.1 Measure the real baseline success rate first (spec section 39)
+
+Before deciding whether `max_episode_steps` or `sampling.prompt_style` need
+changing, measure the actual no-memory baseline — a handful of ad-hoc
+episodes is not enough signal to decide this on (spec section 39's remedies
+are meant to be evidence-driven, not applied preemptively):
+
+```bash
+python scripts/measure_baseline.py --workers 16 --tag spec30
+python scripts/measure_baseline.py --workers 16 --max_steps 50 --tag spec50
+python scripts/measure_baseline.py --workers 16 --prompt_style adamem_think --tag adamem30
+```
+
+See `diagnostics/README.md` for the decision rule and the numbers measured
+on the validation host (which is why `sampling.prompt_style` now defaults to
+`"adamem_think"` in `preexperiment.yaml`). Re-run this if you change the base
+model, its prompt-following behavior, or the ALFWorld dataset version.
 
 ## 8. Full experiments
 
@@ -354,6 +412,20 @@ plus a passing `python -m pytest preexperiments/tests -q`.
 
 ## 10. NPU-specific troubleshooting
 
+- **`vllm-ascend` fails with `ModuleNotFoundError: No module named 'acl'`**:
+  something overwrote `PYTHONPATH` instead of appending to it. Managed CANN
+  containers typically pre-populate `PYTHONPATH` with CANN's own
+  `python/site-packages` (which is where the `acl` module lives) — setting
+  `export PYTHONPATH=/your/repo/path` clobbers that. Always append:
+  `export PYTHONPATH=/your/repo/path${PYTHONPATH:+:$PYTHONPATH}` (see
+  `scripts/env.sh.example`).
+- **A HuggingFace/ModelScope download keeps dying after a few MB**: some
+  network paths (proxied/mainland-China links to hf-mirror.com in
+  particular) cut a single connection after ~7MB. `scripts/offline_download/`
+  has a chunked, resumable downloader for exactly this (edit the hardcoded
+  paths/filenames at the top before use) — only reach for it if the normal
+  `modelscope`/`huggingface-cli` download in `scripts/setup_env_npu.sh`
+  actually fails, most hosts don't need it.
 - **`torch_npu.npu.is_available()` is `False`**: almost always a
   torch/torch_npu/CANN version mismatch, not a real hardware problem —
   re-check the compatible-version table at https://gitee.com/ascend/pytorch

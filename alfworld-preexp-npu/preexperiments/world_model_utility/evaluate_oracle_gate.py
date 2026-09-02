@@ -42,9 +42,15 @@ def main(args: argparse.Namespace) -> None:
     records.sort(key=lambda r: r["point_id"])
 
     with open(tau_c_path, "r", encoding="utf-8") as f:
-        tau_c = json.load(f)["tau_c"]
+        tau_c_data = json.load(f)
+    tau_c = tau_c_data["tau_c"]
 
-    calibration_target = config["experiment_b"]["calibration_points"]
+    # Take the calibration size from the value evaluate_planning_gain.py
+    # actually used (recorded in B_tau_c.json) rather than re-reading the
+    # config, so the two scripts can never disagree about where the
+    # calibration/evaluation boundary is -- e.g. when a reduced-size smoke run
+    # overrode it. Still a pure function of files on disk.
+    calibration_target = tau_c_data.get("calibration_n", config["experiment_b"]["calibration_points"])
     evaluation = records[calibration_target:]
     if not evaluation:
         raise RuntimeError("evaluation subset is empty; cannot compute the oracle gate.")

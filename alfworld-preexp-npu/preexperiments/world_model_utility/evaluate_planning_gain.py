@@ -21,7 +21,7 @@ from typing import Any, Dict, List
 import numpy as np
 
 from preexperiments.common.logging_utils import ensure_dirs, load_yaml_config, read_jsonl_all
-from preexperiments.common.stats import spearman_with_ci
+from preexperiments.common.stats import bootstrap_ci, mcnemar_exact, spearman_with_ci
 
 
 def _correlations(subset: List[Dict[str, Any]], n_resamples: int, seed: int) -> Dict[str, Any]:
@@ -68,7 +68,13 @@ def main(args: argparse.Namespace) -> None:
 
     eb_cfg = config["experiment_b"]
     stats_cfg = config["stats"]
-    calibration_target = eb_cfg["calibration_points"]
+    # Spec section 28 fixes this at "first 50 of 150 points". The override
+    # exists only so a reduced-size smoke run (10 points) can still exercise
+    # this script and everything downstream of it -- with the config value of
+    # 50, a 10-point run puts every point in calibration, leaves evaluation
+    # empty, and evaluate_oracle_gate.py/analyze.py abort before they are ever
+    # tested. Real runs must leave it unset and use the config value.
+    calibration_target = args.calibration_points or eb_cfg["calibration_points"]
     target_usage = eb_cfg["confidence_gate_target_usage"]
 
     calibration = records[:calibration_target]
@@ -94,17 +100,42 @@ def main(args: argparse.Namespace) -> None:
 
     changed_eval = [r for r in evaluation if r["action_changed"]]
     n_changed = len(changed_eval)
+    n_resamples = stats_cfg["bootstrap_resamples"]
+    seed = stats_cfg["bootstrap_seed"]
 
     if n_changed > 0:
         n_high_conf_harmful = sum(1 for r in changed_eval if r["self_confidence"] >= tau_c and r["planning_gain"] == -1)
         n_low_conf_helpful = sum(1 for r in changed_eval if r["self_confidence"] < tau_c and r["planning_gain"] == 1)
         r_mismatch = (n_high_conf_harmful + n_low_conf_helpful) / n_changed
+        # Spec section 35 asks for a bootstrap 95% CI on paired-success
+        # comparisons; R_mismatch is itself a mean of a per-point 0/1
+        # indicator (mismatch or not), so the same machinery applies directly.
+        mismatch_indicator = [
+            1
+            if (r["self_confidence"] >= tau_c and r["planning_gain"] == -1)
+            or (r["self_confidence"] < tau_c and r["planning_gain"] == 1)
+            else 0
+            for r in changed_eval
+        ]
+        _, r_mismatch_ci_lo, r_mismatch_ci_hi = bootstrap_ci(
+            mismatch_indicator, n_resamples=n_resamples, seed=seed
+        )
     else:
         n_high_conf_harmful = n_low_conf_helpful = 0
         r_mismatch = float("nan")
+        r_mismatch_ci_lo = r_mismatch_ci_hi = float("nan")
 
-    n_resamples = stats_cfg["bootstrap_resamples"]
-    seed = stats_cfg["bootstrap_seed"]
+    # Spec section 35 ("对于paired success：优先额外报告McNemar exact test"): the
+    # paired comparison here is base_success vs foresight_success on the SAME
+    # decision point. b/c are the two discordant-pair counts -- these are
+    # exactly the planning_gain=-1/+1 counts over the evaluation set (points
+    # with planning_gain=0, including all unchanged-action points now that
+    # build_counterfactual_pairs.py skips re-running Branch W for them, are
+    # concordant and contribute nothing to McNemar by construction).
+    n_harmful_all = sum(1 for r in evaluation if r["planning_gain"] == -1)
+    n_helpful_all = sum(1 for r in evaluation if r["planning_gain"] == 1)
+    mcnemar_p = mcnemar_exact(n_harmful_all, n_helpful_all) if evaluation else float("nan")
+
     changed_corr = _correlations(changed_eval, n_resamples, seed)
     all_corr = _correlations(evaluation, n_resamples, seed)
 
@@ -115,8 +146,12 @@ def main(args: argparse.Namespace) -> None:
         "tau_c": tau_c,
         "target_usage": target_usage,
         "R_mismatch": r_mismatch,
+        "R_mismatch_ci": [r_mismatch_ci_lo, r_mismatch_ci_hi],
         "n_high_conf_harmful": n_high_conf_harmful,
         "n_low_conf_helpful": n_low_conf_helpful,
+        "n_harmful_all_eval": n_harmful_all,
+        "n_helpful_all_eval": n_helpful_all,
+        "mcnemar_p_value": mcnemar_p,
         "rho_self_changed": changed_corr["rho_self"],
         "rho_self_changed_p": changed_corr["rho_self_p"],
         "rho_self_changed_ci": changed_corr["rho_self_ci"],
@@ -148,6 +183,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         description="B7-B9: confidence-gate calibration, mismatch rate, confidence/gain correlations."
     )
     parser.add_argument("--config", default="preexperiments/configs/preexperiment.yaml")
+    parser.add_argument(
+        "--calibration_points",
+        type=int,
+        default=None,
+        help="Override experiment_b.calibration_points (smoke tests only; real runs use the config value).",
+    )
     return parser
 
 

@@ -277,10 +277,17 @@ def determine_verdict(
     # Fixed after review: raw P(delta<=0)/rho_U thresholds alone cannot tell
     # a real effect apart from noise at n=9 trials/condition per failure --
     # two coins each flipped 9 times can easily "look" 5-vs-3 different by
-    # chance. `luck_pvalue` (from simulate_luck_baseline, a binomial-null
-    # simulation) estimates how likely the observed P(delta<=0) is under
-    # "no failure's lesson has any true effect"; GO now additionally
-    # requires this to be unlikely under pure chance (p < _LUCK_ALPHA).
+    # chance. `luck_pvalue` is simulate_luck_baseline's `var_delta_pvalue`:
+    # the fraction of pure-chance (binomial-null) replicates whose Var(delta)
+    # is at least as large as the one actually observed. Var(delta) (not
+    # P(delta<=0)) is used for this gate because it's directly the answer to
+    # "would picking failures at random look this spread-out anyway?" --
+    # verified with synthetic data that P(delta<=0) alone has much lower
+    # power to detect genuine heterogeneity (a real 50/50 mix of harmful and
+    # helpful lessons can land P(delta<=0)~0.5, which chance also produces
+    # routinely, while that same data's Var(delta) is nowhere near the chance
+    # distribution). GO now additionally requires this to be unlikely under
+    # pure chance (p < _LUCK_ALPHA).
     if n_failures_evaluated < _MIN_FAILURES_EVALUATED:
         return "INCONCLUSIVE", (
             f"Only {n_failures_evaluated} failures had pairwise evaluation data -- too few "
@@ -295,50 +302,56 @@ def determine_verdict(
         if not np.isnan(luck_pvalue) else "luck-baseline not computable"
     )
 
+    # sr_diff comes from a much larger sample (30 tasks x 3 seeds per
+    # condition) than the per-failure delta analysis (9 trials/condition per
+    # failure) and is an independent line of evidence -- it can carry GO on
+    # its own regardless of the luck-baseline outcome below.
     if sr_diff >= 0.05:
         return "GO", (
             "Selective failure learning is supported by preliminary evidence: "
             f"SR_TopK-SR_All={sr_diff:.2f} meets the 5-point bar on its own, independent of the "
             f"per-failure delta analysis (P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f})."
         )
-    if p_delta_le0 >= 0.20 and rho_u >= 0.30 and luck_ok:
+
+    # Known-issue fix: `luck_ok` must gate every remaining branch, not just
+    # the top GO threshold. Verified with synthetic all-zero-true-effect
+    # data: without this gate, pure sampling noise could still fall into the
+    # "p_delta_le0>0" or generic fallback branches below and come out
+    # WEAK-GO -- i.e. the code would report "some support" for a
+    # relationship that provably does not exist in the generating data. If
+    # the observed per-failure heterogeneity is not distinguishable from
+    # chance, the per-failure route can conclude AT MOST "not supported" --
+    # it cannot independently produce GO or WEAK-GO, no matter how large
+    # P(delta<=0) or rho_U happen to look.
+    if not luck_ok:
+        return "NO-GO", (
+            "Selective failure learning is not supported under the current setup by the "
+            f"per-failure delta analysis: the observed heterogeneity across failures is not "
+            f"statistically distinguishable from a pure-chance (binomial-null) baseline "
+            f"({luck_note}). P(delta<=0)={p_delta_le0:.2f} and rho_U={rho_u:.2f} on their own "
+            "cannot be trusted as evidence of a real effect at this sample size "
+            f"(SR_TopK-SR_All={sr_diff:.2f} also did not independently clear its 0.05 bar)."
+        )
+
+    # From here on the per-failure heterogeneity IS distinguishable from
+    # chance; the usual threshold logic decides how strong that real signal is.
+    if p_delta_le0 >= 0.20 and rho_u >= 0.30:
         return "GO", (
             "Selective failure learning is supported by preliminary evidence: "
             f"P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}, and the observed per-failure "
             f"heterogeneity is unlikely to be pure sampling noise ({luck_note})."
         )
-    if p_delta_le0 >= 0.20 and rho_u >= 0.30 and not luck_ok:
+    if p_delta_le0 > 0:
         return "WEAK-GO", (
-            f"Raw thresholds are met (P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}) but the "
-            f"observed per-failure heterogeneity is NOT statistically distinguishable from a "
-            f"pure-chance baseline ({luck_note}) -- weakly supported until a larger sample "
-            "(more failures and/or more tasks/seeds per failure) rules out noise."
-        )
-    if p_delta_le0 > 0 and abs(rho_u) < 0.15:
-        return "WEAK-GO", (
-            "Selective failure learning is weakly supported: some failures show "
-            f"delta<=0 (P={p_delta_le0:.2f}), so selection matters in principle, "
-            f"but the current utility proxy is weak (rho_U={rho_u:.2f}, near 0). "
-            f"({luck_note})"
-        )
-    if p_delta_le0 < 0.05 and sr_diff <= 0:
-        return "NO-GO", (
-            "Selective failure learning is not supported under the current setup: "
-            f"almost all lessons show delta>0 (P(delta<=0)={p_delta_le0:.2f}) and "
-            f"SR_TopK does not exceed SR_All (diff={sr_diff:.2f})."
-        )
-    # None of the crisp rules fired cleanly; pick whichever verdict the
-    # numbers most resemble and say so explicitly rather than forcing a fit.
-    if p_delta_le0 >= 0.10 or rho_u >= 0.15 or sr_diff >= 0.0:
-        return "WEAK-GO", (
-            "Result pattern does not cleanly match the GO or NO-GO thresholds; "
-            f"weakly supported is the closest fit given P(delta<=0)={p_delta_le0:.2f}, "
-            f"rho_U={rho_u:.2f}, SR_TopK-SR_All={sr_diff:.2f} ({luck_note})."
+            f"Selective failure learning is weakly supported: the per-failure heterogeneity is "
+            f"real ({luck_note}) and some failures show delta<=0 (P={p_delta_le0:.2f}), so "
+            f"selection matters in principle, but rho_U={rho_u:.2f} means the current utility "
+            "proxy does not track it well enough yet to hit the full GO bar."
         )
     return "NO-GO", (
-        "Result pattern does not cleanly match the GO or WEAK-GO thresholds; "
-        f"not supported under the current setup is the closest fit given "
-        f"P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}, SR_TopK-SR_All={sr_diff:.2f}."
+        "Selective failure learning is not supported under the current setup: even though the "
+        f"per-failure heterogeneity is real ({luck_note}), almost all lessons show delta>0 "
+        f"(P(delta<=0)={p_delta_le0:.2f})."
     )
 
 
@@ -418,12 +431,21 @@ def main(args: argparse.Namespace) -> None:
     )
 
     # --- Go / No-Go ---
+    # Gate on var_delta_pvalue, not p_delta_le0_pvalue: verified with
+    # synthetic data that P(delta<=0) alone is a low-power statistic for
+    # detecting genuine per-failure heterogeneity -- a real mix of harmful
+    # and helpful lessons can land P(delta<=0) near 0.5, which pure chance
+    # also produces routinely, even though Var(delta)'s own null test
+    # correctly flags that same data as far from chance (p=0.000). Var(delta)
+    # is the statistic that actually answers the question this baseline
+    # exists to answer: "would picking failures completely at random look
+    # this spread-out anyway?"
     verdict, interpretation = determine_verdict(
         p_delta_le0 if not np.isnan(p_delta_le0) else 0.0,
         rho_u if not np.isnan(rho_u) else 0.0,
         sr_diff_point if not np.isnan(sr_diff_point) else 0.0,
         n_failures_evaluated=len(deltas),
-        luck_pvalue=luck_baseline["p_delta_le0_pvalue"],
+        luck_pvalue=luck_baseline["var_delta_pvalue"],
     )
 
     summary: Dict[str, Any] = {

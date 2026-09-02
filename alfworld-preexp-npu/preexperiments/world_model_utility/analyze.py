@@ -244,8 +244,10 @@ def main(args: argparse.Namespace) -> None:
     _write_csv(records, csv_path)
 
     # Same fixed split as evaluate_planning_gain.py/evaluate_oracle_gate.py:
-    # sorted point_id, skip the first calibration_points.
-    calibration_target = config["experiment_b"]["calibration_points"]
+    # sorted point_id, skip the first calibration_points. Read from the
+    # calibration count those scripts actually used (B_evaluation_stats.json)
+    # rather than the config, so all three always agree on the boundary.
+    calibration_target = eval_stats.get("calibration_n", config["experiment_b"]["calibration_points"])
     evaluation = records[calibration_target:]
     changed_eval = [r for r in evaluation if r["action_changed"]]
     changed_all = [r for r in records if r["action_changed"]]
@@ -270,6 +272,8 @@ def main(args: argparse.Namespace) -> None:
     )
 
     r_mismatch = eval_stats["R_mismatch"]
+    r_mismatch_ci = eval_stats.get("R_mismatch_ci", [float("nan"), float("nan")])
+    mcnemar_p = eval_stats.get("mcnemar_p_value", float("nan"))
     rho_self = eval_stats["rho_self_changed"]
     rho_self_ci = eval_stats["rho_self_changed_ci"]
     rho_sem = eval_stats["rho_sem_changed"]
@@ -289,6 +293,8 @@ def main(args: argparse.Namespace) -> None:
         "calibration_points": eval_stats["calibration_n"],
         "evaluation_points": eval_stats["evaluation_n"],
         "mismatch_rate": r_mismatch,
+        "mismatch_rate_ci": r_mismatch_ci,
+        "mcnemar_p_value": mcnemar_p,
         "rho_self": rho_self,
         "rho_self_ci": rho_self_ci,
         "rho_sem": rho_sem,

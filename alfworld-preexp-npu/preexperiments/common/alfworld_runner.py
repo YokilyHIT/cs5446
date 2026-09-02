@@ -41,6 +41,8 @@ import copy
 import dataclasses
 import difflib
 import os
+import re
+import threading
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
@@ -51,6 +53,53 @@ from .logging_utils import build_step_log
 
 _ALFWORLD_BASE_CONFIG_PATH = Path(__file__).resolve().parents[1] / "configs" / "alfworld_base_config.yaml"
 _alfworld_config_cache: Optional[Dict[str, Any]] = None
+
+# TextWorld is not thread-safe ANYWHERE, so every call into it -- build,
+# reset and step alike -- is serialised through this one lock. Two separate
+# pieces of module-level mutable state bite, and both fail with errors that
+# point nowhere near the real cause:
+#   * build/reset: fast_downward.pddl2sas()'s PDDL-to-SAS translator ->
+#     `KeyError: (2, 0)` inside translate.build_sas_operator.
+#   * step: textworld/envs/pddl/textgen's module-level tatsu `_PARSER`, whose
+#     `_rule_stack` two threads pop concurrently -> `IndexError: pop from
+#     empty list`.
+#
+# Serialising costs almost nothing and buys a lot. Episodes are otherwise
+# embarrassingly parallel, and vLLM batches concurrent requests: measured on
+# this host at 37 tok/s single-stream vs 513 tok/s at 16-way concurrency with
+# no per-request latency penalty. An env step is well under 0.1s against an
+# LLM call of ~0.5s (spec prompt) to ~13s (adamem_think), so the lock is held
+# for a low single-digit percentage of wall time while the expensive part --
+# waiting on the model -- stays fully parallel.
+_ENV_LOCK = threading.Lock()
+
+
+def _import_alfred_tw_env():
+    """Return the installed ALFWorld's `AlfredTWEnv` class.
+
+    ALFWorld moved this class' import path between releases. Older versions
+    re-exported it from the package root (`from alfworld.agents.environment
+    import AlfredTWEnv`); alfworld 0.4.x replaced that with a lazy
+    `get_environment(env_type)` factory and only exposes the class from the
+    submodule `alfworld.agents.environment.alfred_tw_env`, so the old import
+    raises ImportError. Try each known spelling in order rather than pinning
+    one, so this works across both layouts.
+    """
+    try:  # alfworld >= 0.4: factory function
+        from alfworld.agents.environment import get_environment
+
+        return get_environment("AlfredTWEnv")
+    except ImportError:
+        pass
+    try:  # alfworld >= 0.4: direct submodule import
+        from alfworld.agents.environment.alfred_tw_env import AlfredTWEnv
+
+        return AlfredTWEnv
+    except ImportError:
+        pass
+    from alfworld.agents.environment import AlfredTWEnv  # older layout
+
+    return AlfredTWEnv
 
 
 def _load_alfworld_config() -> Dict[str, Any]:
@@ -137,7 +186,7 @@ class ALFWorldEnvAdapter:
         self._build()
 
     def _build(self) -> None:
-        from alfworld.agents.environment import AlfredTWEnv  # lazy import
+        AlfredTWEnv = _import_alfred_tw_env()  # lazy import, version-tolerant
 
         alfworld_config = _load_alfworld_config()
         env_type = alfworld_config.get("env", {}).get("type", "AlfredTWEnv")
@@ -147,16 +196,21 @@ class ALFWorldEnvAdapter:
                 f"'AlfredTWEnv' (text-only). The pre-experiments in this repo "
                 f"are ReAct/text agents, not AlfredThorEnv/AlfredHybrid."
             )
-        self._env_wrapper = AlfredTWEnv(alfworld_config, train_eval=self.split)
-        self.game_files = list(self._env_wrapper.game_files)
-        self._env = self._env_wrapper.init_env(batch_size=1)
+        with _ENV_LOCK:
+            self._env_wrapper = AlfredTWEnv(alfworld_config, train_eval=self.split)
+            self.game_files = list(self._env_wrapper.game_files)
+            self._env = self._env_wrapper.init_env(batch_size=1)
 
     def reset(self) -> Tuple[str, Dict[str, Any]]:
-        obs, info = self._env.reset()
+        # textworld.gym loads the game lazily, so the Fast Downward PDDL
+        # translation happens on the first reset(), not in init_env().
+        with _ENV_LOCK:
+            obs, info = self._env.reset()
         return obs[0], info
 
     def step(self, action: str) -> Tuple[str, bool, bool, Dict[str, Any]]:
-        obs, scores, dones, info = self._env.step([action])
+        with _ENV_LOCK:
+            obs, scores, dones, info = self._env.step([action])
         done = bool(dones[0])
         success = extract_won(info) if done else False
         return obs[0], done, success, info
@@ -172,10 +226,11 @@ def build_single_game_adapter(config: Dict[str, Any], split: str, gamefile: str)
     adapter.config = config
     adapter.split = split
 
-    from alfworld.agents.environment import AlfredTWEnv
+    AlfredTWEnv = _import_alfred_tw_env()
 
     alfworld_config = _load_alfworld_config()
-    env_wrapper = AlfredTWEnv(alfworld_config, train_eval=split)
+    with _ENV_LOCK:
+        env_wrapper = AlfredTWEnv(alfworld_config, train_eval=split)
     all_files = list(env_wrapper.game_files)
     matches = [g for g in all_files if g == gamefile]
     if not matches:
@@ -194,7 +249,8 @@ def build_single_game_adapter(config: Dict[str, Any], split: str, gamefile: str)
 
     adapter._env_wrapper = env_wrapper
     adapter.game_files = [matches[0]]
-    adapter._env = env_wrapper.init_env(batch_size=1)
+    with _ENV_LOCK:
+        adapter._env = env_wrapper.init_env(batch_size=1)
     return adapter
 
 
@@ -214,6 +270,22 @@ def format_history(history: Sequence[Tuple[str, str]], max_turns: int = 8) -> st
 
 def format_admissible(actions: Sequence[str]) -> str:
     return "\n".join(f"- {a}" for a in actions)
+
+
+_ACTION_TAG_RE = re.compile(r"<action>(.*?)</action>", re.DOTALL | re.IGNORECASE)
+
+
+def extract_action_from_response(response: str) -> str:
+    """Pull the action out of AdaMEM's `<action> ... </action>` tag.
+
+    Copied in behaviour from AdaMEM's
+    examples/prompt_agent/gpt4o_alfworld.py::extract_action_from_response
+    (commit 4ea93e2), including its fallback of returning the whole response
+    when no tag is present -- ground_action() then handles that text the same
+    way it handles any other free-form output.
+    """
+    match = _ACTION_TAG_RE.search(response)
+    return match.group(1).strip() if match else response.strip()
 
 
 def ground_action(raw_text: str, admissible_actions: Sequence[str]) -> Tuple[str, bool]:
@@ -242,6 +314,85 @@ def ground_action(raw_text: str, admissible_actions: Sequence[str]) -> Tuple[str
     return admissible_actions[0], True
 
 
+def _think_then_act(
+    llm: LLMClient,
+    first_call_prompt: str,
+    admissible_actions: Sequence[str],
+    seed: int,
+    adamem_max_tokens: int,
+) -> Tuple[str, bool, int, int]:
+    """Shared two-call "adamem_think" mechanism: prefill `<think>` on
+    `first_call_prompt` and stop at `</think>` to get a reasoning trace (the
+    prefill is required -- this model replies to a bare "reason in <think>"
+    instruction with an immediate EOS, at any temperature, without it; see
+    llm_client.complete), then feed the reasoning back and decode ONLY the
+    action under the same guided_choice constraint the "spec" style uses.
+    Used by both `choose_action` (base/ambiguity-resample actions) and
+    `choose_foresight_action` (B4) so the two calls stay structurally
+    identical -- action_changed should measure "did it see the world-model
+    prediction", not "which of the two call sites happened to reason
+    differently".
+    """
+    think_resp = llm.complete(
+        first_call_prompt,
+        seed=seed,
+        max_tokens=adamem_max_tokens,
+        prefill="<think>",
+        stop=["</think>"],
+    )
+    reasoning = think_resp.text.strip()
+    act_resp = llm.complete(
+        first_call_prompt + prompts.ADAMEM_ACTION_AFTER_THINK_SUFFIX.format(reasoning=reasoning),
+        seed=seed,
+        choices=list(admissible_actions),
+    )
+    action, forced = ground_action(act_resp.text, admissible_actions)
+    return (
+        action,
+        forced,
+        think_resp.prompt_tokens + act_resp.prompt_tokens,
+        think_resp.completion_tokens + act_resp.completion_tokens,
+    )
+
+
+def choose_foresight_action(
+    llm: LLMClient,
+    *,
+    goal: str,
+    observation: str,
+    admissible_actions: Sequence[str],
+    base_action: str,
+    predicted_next_observation: str,
+    seed: int,
+    prompt_style: Optional[str] = None,
+    adamem_max_tokens: int = 512,
+) -> Tuple[str, bool, int, int]:
+    """B4 (spec section 23), with the same `prompt_style` switch `choose_action`
+    uses. Spec's fixed FORESIGHT_CONDITIONED_ACTION_PROMPT text is never
+    altered; when `prompt_style="adamem_think"`, `ADAMEM_THINK_FORESIGHT_SUFFIX`
+    is appended ONLY to elicit the same two-call reasoning-then-action
+    mechanism B2's base action gets under that style (known-issue fix: without
+    this, action_changed would confound "saw the prediction" with "got to
+    think at all" whenever prompt_style=adamem_think, since B2 reasons and B4
+    didn't).
+    """
+    style = prompt_style or "spec"
+    base_prompt = prompts.FORESIGHT_CONDITIONED_ACTION_PROMPT.format(
+        goal=goal,
+        observation=observation,
+        admissible_actions=format_admissible(admissible_actions),
+        base_action=base_action,
+        predicted_next_observation=predicted_next_observation,
+    )
+    if style == "adamem_think":
+        first_call_prompt = base_prompt + prompts.ADAMEM_THINK_FORESIGHT_SUFFIX
+        return _think_then_act(llm, first_call_prompt, admissible_actions, seed, adamem_max_tokens)
+
+    resp = llm.complete(base_prompt, seed=seed, choices=list(admissible_actions))
+    action, forced = ground_action(resp.text, admissible_actions)
+    return action, forced, resp.prompt_tokens, resp.completion_tokens
+
+
 def choose_action(
     llm: LLMClient,
     *,
@@ -251,8 +402,46 @@ def choose_action(
     admissible_actions: Sequence[str],
     seed: int,
     lesson: Optional[str] = None,
+    constrain_to_admissible: bool = True,
+    prompt_style: Optional[str] = None,
+    adamem_max_tokens: int = 512,
 ) -> Tuple[str, bool, int, int]:
-    """Returns (grounded_action, was_forced, prompt_tokens, completion_tokens)."""
+    """Returns (grounded_action, was_forced, prompt_tokens, completion_tokens).
+
+    `constrain_to_admissible` (spec section 5.1: "这样预实验主要研究 planning,
+    而不是 action formatting") makes the server decode into EXACTLY one of
+    `admissible_actions` via vLLM's guided_choice. This is not cosmetic --
+    measured on this host, Qwen3-4B-Instruct-2507 free-decoding this prompt
+    produced a non-admissible action on 51% of steps. They were not
+    malformed, just not currently legal (e.g. "examine bowl 1" while the
+    legal move was "take bowl 1 from desk 1"), and ground_action()'s difflib
+    fallback then silently mapped them onto a DIFFERENT object's action
+    ("examine desk 1"). Because that fallback is deterministic and leaves the
+    state unchanged, the agent re-received an identical prompt and looped on
+    the same wrong action until max_episode_steps -- i.e. most "failures"
+    measured formatting, not planning, which is exactly the confound the
+    spec's prompt design set out to avoid.
+    """
+    style = prompt_style or "spec"
+    if style == "adamem_think":
+        # Two calls per step -- see _think_then_act for why. AdaMEM's
+        # no-memory prompt already contains its own "reason in <think>" ask,
+        # so it's used verbatim as the first-call text (no extra suffix
+        # needed the way choose_foresight_action needs one).
+        template = (
+            prompts.ADAMEM_THINK_ACTION_WITH_LESSON_PROMPT
+            if lesson
+            else prompts.ADAMEM_THINK_ACTION_PROMPT
+        )
+        prompt = template.format(
+            goal=goal,
+            observation=observation,
+            history=format_history(history),
+            admissible_actions=format_admissible(admissible_actions),
+            lesson=lesson or "",
+        )
+        return _think_then_act(llm, prompt, admissible_actions, seed, adamem_max_tokens)
+
     template = prompts.REACT_ACTION_WITH_LESSON_PROMPT if lesson else prompts.REACT_ACTION_PROMPT
     prompt = template.format(
         goal=goal,
@@ -261,7 +450,11 @@ def choose_action(
         admissible_actions=format_admissible(admissible_actions),
         lesson=lesson or "",
     )
-    resp = llm.complete(prompt, seed=seed)
+    resp = llm.complete(
+        prompt,
+        seed=seed,
+        choices=list(admissible_actions) if constrain_to_admissible else None,
+    )
     action, forced = ground_action(resp.text, admissible_actions)
     return action, forced, resp.prompt_tokens, resp.completion_tokens
 
@@ -297,6 +490,7 @@ def rollout(
     lesson: Optional[str] = None,
     forced_first_action: Optional[str] = None,
     step_callback: Optional[Callable[[int, str, str, List[str], Dict[str, Any]], None]] = None,
+    max_steps: Optional[int] = None,
 ) -> EpisodeResult:
     """Run a ReAct agent from the given (already reset/restored) `adapter`
     state until success/done/max_steps.
@@ -310,9 +504,21 @@ def rollout(
     invoked before each action is chosen -- experiment B's decision-point
     collector uses this to inspect candidate states without altering control
     flow.
+
+    `max_steps`, if given, overrides `config["sampling"]["max_episode_steps"]`
+    as the absolute step-index ceiling (the loop runs `while step < max_steps`,
+    so this is compared directly against `step`/`start_step`, not added to
+    them). Known-issue fix: experiment B's branch continuations used to
+    default to the global ceiling, which left late decision points (e.g.
+    step 29 of 30) with only 1 step of remaining budget -- both branches then
+    fail identically not because foresight was unhelpful but because neither
+    branch had any room to prove itself. build_counterfactual_pairs.py passes
+    `start_step + config["sampling"]["max_episode_steps"]` here so every
+    branch gets a full fresh budget counted from the decision point, not from
+    episode start.
     """
     sampling_cfg = config["sampling"]
-    max_steps = sampling_cfg["max_episode_steps"]
+    max_steps = max_steps if max_steps is not None else sampling_cfg["max_episode_steps"]
 
     history = list(history) if history else []
     step_records: List[Dict[str, Any]] = []
@@ -351,6 +557,8 @@ def rollout(
                 admissible_actions=admissible_actions,
                 seed=seed,
                 lesson=lesson,
+                prompt_style=sampling_cfg.get("prompt_style", "spec"),
+                adamem_max_tokens=sampling_cfg.get("adamem_max_tokens", 512),
             )
 
         next_obs, done, success, info = adapter.step(action)

@@ -23,7 +23,12 @@ def main() -> int:
     problems = []
 
     try:
-        from alfworld.agents.environment import AlfredTWEnv
+        # Version-tolerant import (alfworld 0.4.x replaced the package-root
+        # re-export with a get_environment() factory) -- see
+        # preexperiments/common/alfworld_runner.py::_import_alfred_tw_env.
+        from preexperiments.common.alfworld_runner import _import_alfred_tw_env
+
+        AlfredTWEnv = _import_alfred_tw_env()
     except ImportError as e:
         print(f"FAIL: cannot import alfworld.agents.environment.AlfredTWEnv: {e}")
         print("      -> ALFWorld is not installed correctly. Re-run "

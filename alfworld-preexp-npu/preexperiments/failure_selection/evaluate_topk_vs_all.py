@@ -84,6 +84,14 @@ def main(args: argparse.Namespace) -> None:
     topk_fraction = config["experiment_a"]["topk_fraction"]
     random_seed = config["stats"]["bootstrap_seed"]  # fixed, documented seed for RandomK sampling
 
+    # --max_tasks shrinks the fixed 30-task subset for smoke tests only. At the
+    # real size this step is 4 conditions x 30 tasks x 3 seeds = 360 episodes,
+    # far too expensive for a pre-flight check -- but without running it at all,
+    # failure_selection/analyze.py and scripts/generate_report.py are never
+    # exercised until the full run. Real runs leave it unset.
+    if args.max_tasks:
+        subset_size = min(subset_size, args.max_tasks)
+
     game_files_sorted = _list_sorted_game_files(config, eval_split)
     selected_gamefiles = _select_eval_subset(game_files_sorted, subset_size)
 
@@ -197,6 +205,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         description="A8: NoMemory vs AllLessons vs RandomK vs TopK comparison."
     )
     parser.add_argument("--config", default="preexperiments/configs/preexperiment.yaml")
+    parser.add_argument(
+        "--max_tasks",
+        type=int,
+        default=None,
+        help="Cap the evaluation subset size (smoke tests only; real runs use experiment_a.eval_subset_size).",
+    )
     return parser
 
 

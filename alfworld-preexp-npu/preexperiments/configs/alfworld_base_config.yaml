@@ -36,7 +36,15 @@ env_general:
   training_method: "dagger"
 
 general:
-  training_method: "dagger"
+  # MUST stay "dqn" for this project, even though we do no RL at all.
+  # AlfredTWEnv.init_env() branches on this value: with "dagger" it reads
+  # config["dagger"]["training"]["max_nb_steps_per_episode"] (a section this
+  # config does not define -> KeyError) AND attaches ALFWorld's AlfredExpert
+  # wrapper on the train split, which runs a PDDL planner on every reset just
+  # to compute an expert plan we never use. "dqn" reads the `rl` section
+  # below and attaches no expert wrapper -- strictly less machinery, and it
+  # changes nothing about the environment the agent actually sees.
+  training_method: "dqn"
   save_path: "./alfworld_ckpt/"
   observation_pool_capacity: 3
   hide_init_receptacles: false

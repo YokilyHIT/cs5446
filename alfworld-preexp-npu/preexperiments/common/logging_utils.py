@@ -129,11 +129,35 @@ def env_config_block(config: Dict[str, Any], seed: int) -> Dict[str, Any]:
     }
 
 
+# Host-specific overrides for values in preexperiment.yaml that are paths or
+# endpoints rather than experiment parameters. Added so a machine that keeps
+# its model weights somewhere other than the config's default (e.g. an
+# air-gapped/offline host with a local snapshot of the embedding model) does
+# not have to edit -- and accidentally commit -- a machine-specific path into
+# the shared config. Nothing here can change an EXPERIMENT parameter: seeds,
+# temperature, episode caps and thresholds are deliberately not overridable,
+# so a run's protocol always matches the checked-in config.
+_ENV_OVERRIDES: Dict[str, tuple] = {
+    "PREEXP_MODEL_NAME": ("model", "name"),
+    "PREEXP_API_BASE": ("model", "api_base"),
+    "PREEXP_EMBEDDING_MODEL": ("embedding", "model_name"),
+    "PREEXP_EMBEDDING_DEVICE": ("embedding", "device"),
+}
+
+
 def load_yaml_config(path: str | Path) -> Dict[str, Any]:
     import yaml
 
     with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        config = yaml.safe_load(f)
+
+    for env_var, (section, key) in _ENV_OVERRIDES.items():
+        value = os.environ.get(env_var)
+        if value:
+            config.setdefault(section, {})[key] = value
+            print(f"[config] {section}.{key} overridden by ${env_var} -> {value}")
+
+    return config
 
 
 def ensure_dirs(*paths: str | Path) -> None:

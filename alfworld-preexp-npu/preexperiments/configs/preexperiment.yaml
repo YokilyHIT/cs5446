@@ -19,6 +19,33 @@ sampling:
   top_p: 0.95
   max_tokens_per_action: 256
   max_episode_steps: 30
+  # Which action-selection prompt the ReAct agent uses. Whichever is set here
+  # applies identically to EVERY condition in both experiments (no-lesson vs
+  # with-lesson, base vs foresight), so it can never bias a comparison -- it
+  # only sets how capable the shared base planner is.
+  #   "spec"          - the fixed prompt from spec section 5.1, decoded under a
+  #                     guided_choice constraint over the admissible actions.
+  #   "adamem_think"  - AdaMEM's own no-memory ALFWorld prompt (<think> then
+  #                     <action>), the remedy spec section 39 names for a
+  #                     too-low success rate. Costs more tokens per step and
+  #                     cannot use guided_choice (the completion is not a bare
+  #                     action string), so watch the forced-action rate via
+  #                     scripts/check_forced_action_rate.py.
+  #
+  # Default is "adamem_think" per the spec section 39 decision process
+  # actually run on real Ascend hardware (see diagnostics/README.md):
+  # "spec" measured only 10.0% success (23% of episodes stuck looping among
+  # ~12 actions) at max_episode_steps=30, and raising max_episode_steps to 50
+  # bought +1 success for 62% more compute (ruled out as the bottleneck --
+  # successful episodes only ever needed 5-12 steps). "adamem_think" measured
+  # 26.7% success with only 10% looping under the same seed/task subset.
+  # Re-run scripts/measure_baseline.py and update this default if the base
+  # model, its prompt-following behavior, or the dataset version changes.
+  prompt_style: "adamem_think"
+  # Token budget for "adamem_think" only: the reasoning and the action share
+  # one completion, and at max_tokens_per_action=256 the model gets cut off
+  # mid-<think> and never emits an <action> tag.
+  adamem_max_tokens: 512
 
 seeds: [13, 37, 73]
 

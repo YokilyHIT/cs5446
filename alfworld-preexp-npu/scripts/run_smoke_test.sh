@@ -55,14 +55,35 @@ assert len(game_files) == 5, "expected 5 eval_in_distribution smoke episodes"
 PY
 
 echo ""
+echo "== Step 2b: forced-action rate gate (EARLY, mandatory) =="
+echo "   Runs here rather than at the end: ground_action() silently steers the"
+echo "   agent onto a fallback action whenever the model's raw output matches no"
+echo "   admissible action, so a broken prompt/parse produces normal-looking logs"
+echo "   and a real (bad) success rate. Catch it now, on the 15 cheap episodes"
+echo "   above, instead of after the ~2000 LLM calls that steps 4-5 cost."
+python scripts/check_forced_action_rate.py
+
+echo ""
 echo "== Step 3: deterministic replay unit test (mandatory gate, spec section 39) =="
 python -m pytest preexperiments/tests/test_replay.py -v
 
 echo ""
 echo "== Step 4: Experiment B mini-smoke-test (10 decision points) =="
-python -m preexperiments.world_model_utility.collect_decision_points
-python -m preexperiments.world_model_utility.generate_foresight
+echo "   Capped at 3 episodes / 10 decision points so this really is a smoke"
+echo "   test (spec section 38 step 7). scripts/run_experiment_B.sh re-runs all"
+echo "   three of these uncapped for the real collection."
+python -m preexperiments.world_model_utility.collect_decision_points --max_episodes 3 --max_points 10
+python -m preexperiments.world_model_utility.generate_foresight --max_points 10
 python -m preexperiments.world_model_utility.build_counterfactual_pairs --max_points 10
+# Also exercise everything DOWNSTREAM of the branch rollouts. Without this the
+# smoke test never touched evaluate_planning_gain/evaluate_oracle_gate/analyze,
+# so a break there only surfaced after the full-scale collection had been paid
+# for. --calibration_points 4 keeps a non-empty evaluation subset at this
+# reduced size (the config's 50 would swallow all 10 points); the real run in
+# scripts/run_experiment_B.sh uses the config value unchanged.
+python -m preexperiments.world_model_utility.evaluate_planning_gain --calibration_points 4
+python -m preexperiments.world_model_utility.evaluate_oracle_gate
+python -m preexperiments.world_model_utility.analyze
 
 echo ""
 echo "== Step 5: Experiment A mini-smoke-test (a handful of failures, capped at 3 evaluated) =="

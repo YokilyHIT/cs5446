@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import dataclasses
 import time
-from typing import Optional
+from typing import Optional, Sequence
 
 import openai
 
@@ -76,11 +76,28 @@ class LLMClient:
         top_p: Optional[float] = None,
         max_tokens: Optional[int] = None,
         system_prompt: Optional[str] = None,
+        choices: Optional[Sequence[str]] = None,
+        prefill: Optional[str] = None,
+        stop: Optional[Sequence[str]] = None,
     ) -> LLMResponse:
+        """`choices`, when given, constrains decoding so the completion is
+        EXACTLY one of those strings (vLLM's `guided_choice` structured
+        output). Used for action selection -- see
+        alfworld_runner.choose_action for why this is needed.
+        """
         messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
+        if prefill:
+            # Seed the assistant turn and let the model continue it, instead of
+            # starting a fresh reply. Needed because Qwen3-4B-Instruct-2507
+            # answers a prompt that asks for "<think> </think>" reasoning by
+            # emitting EOS as its very first token (empty completion, 1 token,
+            # finish_reason="stop") -- prefilling "<think>" makes it write the
+            # reasoning it was asked for. Not a vLLM/Ascend quirk: the same
+            # prompt returns an empty string at temperature 0.2 and 0.7 alike.
+            messages.append({"role": "assistant", "content": prefill})
 
         temperature = self.temperature if temperature is None else temperature
         top_p = self.top_p if top_p is None else top_p
@@ -89,6 +106,13 @@ class LLMClient:
         extra_body = {}
         if seed is not None:
             extra_body["seed"] = seed
+        if choices:
+            extra_body["guided_choice"] = list(choices)
+        if prefill:
+            extra_body["continue_final_message"] = True
+            extra_body["add_generation_prompt"] = False
+        if stop:
+            extra_body["stop"] = list(stop)
 
         last_err: Optional[Exception] = None
         for attempt in range(self.max_retries):

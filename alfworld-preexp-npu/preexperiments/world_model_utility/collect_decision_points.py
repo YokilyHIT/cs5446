@@ -98,19 +98,36 @@ def main(args: argparse.Namespace) -> None:
 
     split = config["splits"]["evaluation"]
     eb_cfg = config["experiment_b"]
-    n_episodes = eb_cfg["eval_episodes"]
+    # CLI caps exist so scripts/run_smoke_test.sh can run a genuinely cheap
+    # mini version of this step (spec section 38 step 7 asks for a ~10
+    # decision-point smoke test). Without them the "smoke test" ran the full
+    # 30-episode / 150-point collection -- ~2000 LLM calls -- before the
+    # cheap correctness gates downstream ever got a chance to fail.
+    n_episodes = args.max_episodes or eb_cfg["eval_episodes"]
     per_episode_cap = eb_cfg["decision_points_per_episode"]
-    target_total = eb_cfg["target_decision_points"]
+    target_total = args.max_points or eb_cfg["target_decision_points"]
     max_steps = config["sampling"]["max_episode_steps"]
 
     llm = load_client_from_config(config)
+    prompt_style = config["sampling"].get("prompt_style", "spec")
+    adamem_max_tokens = config["sampling"].get("adamem_max_tokens", 512)
     all_gamefiles = _list_sorted_game_files(config, split)
     if len(all_gamefiles) < n_episodes:
         print(
             f"[collect_decision_points] warning: split {split!r} has only "
             f"{len(all_gamefiles)} games, fewer than requested {n_episodes} episodes."
         )
-    chosen_gamefiles = all_gamefiles[:n_episodes]
+    # Evenly-strided (not first-N) selection over the sorted game list, the
+    # same rule failure_selection/evaluate_topk_vs_all.py::_select_eval_subset
+    # already uses and for the same reason: ALFWorld game paths begin with the
+    # task type, so taking the first N alphabetically yields 30 episodes drawn
+    # almost entirely from `look_at_obj_in_light` / `pick_and_place_simple`
+    # instead of all six task families. Still fully deterministic.
+    if len(all_gamefiles) <= n_episodes:
+        chosen_gamefiles = list(all_gamefiles)
+    else:
+        stride = len(all_gamefiles) / n_episodes
+        chosen_gamefiles = [all_gamefiles[int(i * stride)] for i in range(n_episodes)]
 
     total_points = 0
     episodes_run = 0
@@ -135,6 +152,16 @@ def main(args: argparse.Namespace) -> None:
         step = 0
         done = False
         success = False
+        # The env's own text for the current state, kept separately from
+        # `observation`. They differ ONLY at step 0: reset() returns the goal
+        # sentence ("Your task is to: ...") embedded in the observation, and
+        # extract_goal_and_observation() strips it out for prompting. Replay
+        # verification must compare against what the env actually emits, so a
+        # step-0 decision point needs the unstripped text -- comparing the
+        # stripped one made every step-0 point fail restore_state() (~1 in 6
+        # of all points, enough to trip the 10% abort limit in
+        # build_counterfactual_pairs.py).
+        raw_state_obs = raw_obs
 
         # Run the FULL episode (see module docstring: no early cutoff once a
         # quota of candidates is reached) so decision points can be sampled
@@ -153,10 +180,17 @@ def main(args: argparse.Namespace) -> None:
                         "goal": goal,
                         "action_prefix": list(action_prefix),
                         "observation": observation,
+                        # what restore_state() must reproduce (see raw_state_obs above)
+                        "restore_observation": raw_state_obs,
                         "admissible_actions": list(admissible),
                     }
                 )
 
+            # Known-issue fix: thread the configured prompt_style through --
+            # without it this call silently stayed on "spec" regardless of
+            # config, while build_counterfactual_pairs.py's branch
+            # continuations (via rollout()) DO read it, mixing strategies
+            # within one experiment run.
             action, forced, prompt_tokens, completion_tokens = choose_action(
                 llm,
                 goal=goal,
@@ -165,6 +199,8 @@ def main(args: argparse.Namespace) -> None:
                 admissible_actions=admissible,
                 seed=_BASE_SEED,
                 lesson=None,
+                prompt_style=prompt_style,
+                adamem_max_tokens=adamem_max_tokens,
             )
             next_obs, done, success, info = adapter.step(action)
             total_steps_run += 1
@@ -199,6 +235,7 @@ def main(args: argparse.Namespace) -> None:
             history.append((action, next_obs))
             action_prefix.append(action)
             observation = next_obs
+            raw_state_obs = next_obs  # from step 1 on the two are identical
             step += 1
 
         episodes_succeeded += int(success)
@@ -248,6 +285,18 @@ def build_arg_parser() -> argparse.ArgumentParser:
         description="B1: collect base-ReAct decision points on eval_in_distribution."
     )
     parser.add_argument("--config", default="preexperiments/configs/preexperiment.yaml")
+    parser.add_argument(
+        "--max_episodes",
+        type=int,
+        default=None,
+        help="Override experiment_b.eval_episodes (smoke tests); default uses the config value.",
+    )
+    parser.add_argument(
+        "--max_points",
+        type=int,
+        default=None,
+        help="Override experiment_b.target_decision_points (smoke tests); default uses the config value.",
+    )
     return parser
 
 

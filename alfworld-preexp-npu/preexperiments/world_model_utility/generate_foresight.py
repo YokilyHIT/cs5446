@@ -20,7 +20,7 @@ from collections import Counter
 from typing import Any, Dict
 
 from preexperiments.common import prompts
-from preexperiments.common.alfworld_runner import choose_action, format_admissible, ground_action
+from preexperiments.common.alfworld_runner import choose_action, choose_foresight_action, format_admissible
 from preexperiments.common.llm_client import load_client_from_config
 from preexperiments.common.logging_utils import append_jsonl, ensure_dirs, load_yaml_config, read_jsonl_all
 from preexperiments.world_model_utility._common import (
@@ -35,7 +35,7 @@ _BASE_SEED = 13
 _AMBIGUITY_SEEDS = [1001, 1002, 1003, 1004]
 
 
-def _process_point(llm, dp: Dict[str, Any]) -> Dict[str, Any]:
+def _process_point(llm, dp: Dict[str, Any], prompt_style: str, adamem_max_tokens: int) -> Dict[str, Any]:
     goal = dp["goal"]
     observation = dp["observation"]
     admissible_actions = dp["admissible_actions"]
@@ -47,6 +47,14 @@ def _process_point(llm, dp: Dict[str, Any]) -> Dict[str, Any]:
     # intermediate observations, and `observation` already reflects the true
     # current state after all prior actions, which is what matters for
     # choosing the next one.
+    #
+    # Known-issue fix: `prompt_style`/`adamem_max_tokens` are threaded through
+    # from config here (and to the B11 resamples below) -- without them this
+    # call silently defaulted to "spec" regardless of config, while branch
+    # continuations in build_counterfactual_pairs.py go through rollout(),
+    # which DOES read the configured prompt_style. That mismatch would run
+    # the base planner under two different strategies within the same
+    # experiment depending only on which script happened to call it.
     base_action, _, _, _ = choose_action(
         llm,
         goal=goal,
@@ -55,6 +63,8 @@ def _process_point(llm, dp: Dict[str, Any]) -> Dict[str, Any]:
         admissible_actions=admissible_actions,
         seed=_BASE_SEED,
         lesson=None,
+        prompt_style=prompt_style,
+        adamem_max_tokens=adamem_max_tokens,
     )
 
     # B3: world-model prediction + self confidence.
@@ -67,16 +77,23 @@ def _process_point(llm, dp: Dict[str, Any]) -> Dict[str, Any]:
     wm_resp = llm.complete(wm_prompt, seed=_BASE_SEED)
     wm_prediction, self_confidence = parse_prediction_confidence(wm_resp.text)
 
-    # B4: foresight-conditioned re-planning at the same state.
-    foresight_prompt = prompts.FORESIGHT_CONDITIONED_ACTION_PROMPT.format(
+    # B4: foresight-conditioned re-planning at the same state. Uses the same
+    # prompt_style as B2 (see choose_foresight_action's docstring): both
+    # a_t^(0) and a_t^(W) must be drawn from the identical admissible set by
+    # the identical mechanism -- including the same reasoning opportunity --
+    # otherwise action_changed would partly measure which call happened to
+    # reason/emit a parseable action rather than a genuine change of plan.
+    foresight_action, _, _, _ = choose_foresight_action(
+        llm,
         goal=goal,
         observation=observation,
-        admissible_actions=format_admissible(admissible_actions),
+        admissible_actions=admissible_actions,
         base_action=base_action,
         predicted_next_observation=wm_prediction,
+        seed=_BASE_SEED,
+        prompt_style=prompt_style,
+        adamem_max_tokens=adamem_max_tokens,
     )
-    foresight_resp = llm.complete(foresight_prompt, seed=_BASE_SEED)
-    foresight_action, _ = ground_action(foresight_resp.text, admissible_actions)
     action_changed = foresight_action != base_action
 
     # B11: action ambiguity via 4 independently-seeded base-planner resamples.
@@ -90,6 +107,8 @@ def _process_point(llm, dp: Dict[str, Any]) -> Dict[str, Any]:
             admissible_actions=admissible_actions,
             seed=seed,
             lesson=None,
+            prompt_style=prompt_style,
+            adamem_max_tokens=adamem_max_tokens,
         )
         ambiguity_samples.append(sample_action)
     counts = Counter(ambiguity_samples)
@@ -125,12 +144,20 @@ def main(args: argparse.Namespace) -> None:
     decision_points = read_jsonl_all(dp_path)
     if not decision_points:
         raise RuntimeError(f"{dp_path} contains no decision points; nothing to do.")
+    if args.max_points is not None:
+        # Smoke-test cap: each decision point costs 7 LLM calls here (base
+        # action + world model + foresight re-plan + 4 ambiguity resamples),
+        # so an uncapped run on the full 150 points is ~1000 calls -- far too
+        # expensive for a pre-flight check.
+        decision_points = decision_points[: args.max_points]
 
     reset_output_file(output_path)
     llm = load_client_from_config(config)
+    prompt_style = config["sampling"].get("prompt_style", "spec")
+    adamem_max_tokens = config["sampling"].get("adamem_max_tokens", 512)
 
     for i, dp in enumerate(decision_points):
-        record = _process_point(llm, dp)
+        record = _process_point(llm, dp, prompt_style, adamem_max_tokens)
         append_jsonl(output_path, record)
         if (i + 1) % 10 == 0 or (i + 1) == len(decision_points):
             print(f"[generate_foresight] processed {i + 1}/{len(decision_points)}")
@@ -143,6 +170,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
         description="B2-B4, B11: base action, world-model prediction, foresight action, ambiguity."
     )
     parser.add_argument("--config", default="preexperiments/configs/preexperiment.yaml")
+    parser.add_argument(
+        "--max_points",
+        type=int,
+        default=None,
+        help="Process only the first N decision points (by file order); for cheap smoke tests.",
+    )
     return parser
 
 

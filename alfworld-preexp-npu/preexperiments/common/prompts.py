@@ -35,6 +35,67 @@ Use it only if it is relevant to the current task."""
 REACT_ACTION_WITH_LESSON_PROMPT = REACT_ACTION_PROMPT + "\n" + LESSON_INJECTION_BLOCK
 
 # ---------------------------------------------------------------------------
+# Section 39 remedy #3: AdaMEM's own no-memory ALFWorld prompt.
+#
+# The spec (section 39) says that if Qwen3-4B's success rate is too low, one
+# sanctioned check is whether "AdaMEM 官方 no-memory runner 的 prompt 是否可直接
+# 复用". Measured on this host with the section 5.1 prompt above, the answer to
+# the first two checks was: prompt already constrains to admissible actions
+# (forced-action rate 0.0%), and raising max_episode_steps 30 -> 50 bought one
+# extra success out of 30 for 62% more compute -- so neither is the bottleneck.
+# What the trajectories actually show is an agent cycling among ~12 actions,
+# stuck repeating "look"/"examine <receptacle>" instead of executing ALFWorld's
+# task grammar (go to X -> open X -> take Y -> go to Z -> use/put).
+#
+# The one substantive difference in AdaMEM's prompt is that it gives the model
+# an explicit reasoning scratchpad before committing to an action. Copied from
+# AdaMEM commit 4ea93e239f8dbec2fa6013a28bc8555419037e12,
+# agent_system/environments/prompts/alfworld.py::ALFWORLD_TEMPLATE (wording
+# preserved; the {goal}/{observation}/{history}/{admissible_actions} field
+# names are renamed to match this repo's call sites).
+#
+# NOTE this is AdaMEM's NO-MEMORY path (a single call emitting <think> then
+# <action>). AdaMEM's two-stage strategy pathway is deliberately NOT used: its
+# "strategy items accumulated from past interactions" are a memory mechanism,
+# and injecting them into the no-lesson baseline would contaminate exactly the
+# comparison experiment A exists to make.
+# ---------------------------------------------------------------------------
+ADAMEM_THINK_ACTION_PROMPT = """You are an expert agent operating in the ALFRED Embodied Environment. Your task is to: {goal}
+Below are the most recent observations and the corresponding actions you took: {history}
+Your current observation is: {observation}
+Your admissible actions of the current situation are: [{admissible_actions}].
+
+Now it's your turn to take an action.
+You should first reason step-by-step about the current situation. This reasoning process MUST be enclosed within <think> </think> tags.
+Once you've finished your reasoning, you should choose an admissible action for current step and present it within <action> </action> tags."""
+
+ADAMEM_THINK_ACTION_WITH_LESSON_PROMPT = ADAMEM_THINK_ACTION_PROMPT + "\n" + LESSON_INJECTION_BLOCK
+
+# Second half of the "adamem_think" two-call step: the reasoning produced by
+# the prompt above is fed back, and only the action is decoded -- under the
+# same guided_choice constraint the "spec" style uses.
+ADAMEM_ACTION_AFTER_THINK_SUFFIX = """
+
+<think>{reasoning}</think>
+
+Based on that reasoning, output exactly one action from the admissible actions above, and nothing else."""
+
+# Known-issue fix: gives B4's foresight-conditioned re-plan (spec section 23)
+# the same reasoning opportunity B2's base action gets under prompt_style=
+# "adamem_think", so action_changed measures only "did it see the world-model
+# prediction" and not "did it get to think at all". Appended to spec's fixed
+# FORESIGHT_CONDITIONED_ACTION_PROMPT text ONLY to elicit the <think> stage
+# via the same two-call mechanism as ADAMEM_THINK_ACTION_PROMPT -- the spec's
+# own wording above is never altered.
+ADAMEM_THINK_FORESIGHT_SUFFIX = """
+
+You should first reason step-by-step about whether to keep or change the
+action given the world model's prediction. This reasoning process MUST be
+enclosed within <think> </think> tags. Once you've finished your reasoning,
+choose an admissible action for the current step and present it within
+<action> </action> tags."""
+
+# ---------------------------------------------------------------------------
 # Section 9 (A2): failure -> single reusable lesson.
 # ---------------------------------------------------------------------------
 FAILURE_LESSON_PROMPT = """You are analyzing a failed household-planning trajectory.

@@ -66,17 +66,35 @@ def _run_branches(
     game_id_or_path = dp["game_id_or_path"]
     action_prefix = dp["action_prefix"]
     observation = dp["observation"]
+    # What the env actually emits at this state -- equals `observation` except
+    # at step 0, where the goal sentence was stripped for prompting. See
+    # collect_decision_points.py::raw_state_obs. Falls back to `observation`
+    # for decision-point files written before that field existed.
+    restore_observation = dp.get("restore_observation", observation)
     goal = dp["goal"]
     step = dp["step"]
     base_action = fr["base_action"]
     foresight_action = fr["foresight_action"]
+    action_changed = fr["action_changed"]
+    # Known-issue fix: both branches get a FULL fresh step budget counted
+    # from the decision point, not "global max_episode_steps minus the
+    # decision point's step index". Decision points sampled late in an
+    # episode (e.g. step 29 of 30) used to leave only 1 remaining step for
+    # either branch to prove itself -- both then fail identically not
+    # because foresight was unhelpful but because neither branch had any
+    # room left. This does mean a branch continuation can run past the
+    # original episode's max_episode_steps in absolute step count; that's
+    # deliberate here (it's an offline counterfactual analysis, not the
+    # online episode itself, which already ran to its real spec-mandated
+    # length in collect_decision_points.py).
+    branch_budget = config["sampling"]["max_episode_steps"]
 
     restored0 = restore_state(
         config=config,
         split=split,
         game_id_or_path=game_id_or_path,
         action_prefix=action_prefix,
-        expected_observation=observation,
+        expected_observation=restore_observation,
         strict=True,
     )
 
@@ -104,37 +122,53 @@ def _run_branches(
             observation=o_next_true,
             history=[(base_action, o_next_true)],
             start_step=step + 1,
+            max_steps=step + 1 + branch_budget,
             lesson=None,
         )
         y0 = result0.success
 
-    # Branch W needs a fresh, second restore -- Branch 0 already advanced the
-    # first restored env and cannot be reused for the counterfactual.
-    restoredw = restore_state(
-        config=config,
-        split=split,
-        game_id_or_path=game_id_or_path,
-        action_prefix=action_prefix,
-        expected_observation=observation,
-        strict=True,
-    )
-    resultw = rollout(
-        restoredw.adapter,
-        llm=llm,
-        config=config,
-        run_id=new_run_id("BW"),
-        task_id=task_id,
-        game_id_or_path=game_id_or_path,
-        split=split,
-        seed=_SEED,
-        goal=goal,
-        observation=observation,
-        history=[],
-        start_step=step,
-        forced_first_action=foresight_action,
-        lesson=None,
-    )
-    yw = resultw.success
+    # Known-issue fix: when foresight didn't actually change the action,
+    # Branch W would restore fresh and re-execute the IDENTICAL action Branch
+    # 0 already took, then continue with the identical base planner -- any
+    # difference between Y_W and Y_0 in that case can only come from
+    # non-determinism (e.g. batch-composition effects under concurrent vLLM
+    # requests), not from foresight, since foresight had no effect on what
+    # was actually done. That would fabricate a fake mismatch signal, which
+    # is exactly what R_mismatch (experiment B's core metric) measures.
+    # Skipping the re-run when action_changed is False also roughly halves
+    # compute for the majority of points, where foresight agrees with the
+    # base action.
+    if not action_changed:
+        yw = y0
+    else:
+        # Branch W needs a fresh, second restore -- Branch 0 already advanced
+        # the first restored env and cannot be reused for the counterfactual.
+        restoredw = restore_state(
+            config=config,
+            split=split,
+            game_id_or_path=game_id_or_path,
+            action_prefix=action_prefix,
+            expected_observation=restore_observation,
+            strict=True,
+        )
+        resultw = rollout(
+            restoredw.adapter,
+            llm=llm,
+            config=config,
+            run_id=new_run_id("BW"),
+            task_id=task_id,
+            game_id_or_path=game_id_or_path,
+            split=split,
+            seed=_SEED,
+            goal=goal,
+            observation=observation,
+            history=[],
+            start_step=step,
+            max_steps=step + branch_budget,
+            forced_first_action=foresight_action,
+            lesson=None,
+        )
+        yw = resultw.success
 
     return {
         "point_id": dp["point_id"],

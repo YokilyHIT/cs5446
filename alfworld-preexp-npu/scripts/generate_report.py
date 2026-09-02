@@ -53,6 +53,19 @@ def _fmt_ci_dict(d):
     return _fmt_ci(d.get("point"), [d.get("ci_lo"), d.get("ci_hi")])
 
 
+def _alfworld_version() -> str:
+    """Spec section 36's report template asks for the ALFWorld version. Read it
+    from the actually-installed distribution rather than leaving a pointer to
+    requirements_lock.txt -- the version that produced the results is part of
+    the result."""
+    try:
+        from importlib.metadata import version
+
+        return version("alfworld")
+    except Exception:
+        return "(not installed / see requirements_lock.txt)"
+
+
 def build_report(config_path: Path, results_dir: Path) -> str:
     import yaml
 
@@ -60,7 +73,16 @@ def build_report(config_path: Path, results_dir: Path) -> str:
 
     adamem_commit = _read_text(PROJECT_ROOT / "ADAMEM_COMMIT.txt")
     gpu_info = _read_text(PROJECT_ROOT / "gpu_info.txt")
-    gpu_info_line = gpu_info.splitlines()[0] if gpu_info != "(not recorded)" else gpu_info
+    # gpu_info.txt is `npu-smi info` output on Ascend hosts (nvidia-smi on GPU
+    # hosts). Its first line is an ASCII table border, so take the first line
+    # that actually carries text -- e.g. "npu-smi 25.5.1  Version: 25.5.1".
+    gpu_info_line = gpu_info
+    if gpu_info != "(not recorded)":
+        informative = [
+            ln.strip() for ln in gpu_info.splitlines()
+            if ln.strip().strip("+-|= ")
+        ]
+        gpu_info_line = informative[0].strip("| ") if informative else gpu_info.splitlines()[0]
 
     a = _read_json(results_dir / "A_summary.json") or {}
     b = _read_json(results_dir / "B_summary.json") or {}
@@ -77,7 +99,7 @@ def build_report(config_path: Path, results_dir: Path) -> str:
     lines.append("")
     lines.append("## Environment")
     lines.append(f"- AdaMEM commit: {adamem_commit}")
-    lines.append(f"- ALFWorld version: {a.get('alfworld_version', b.get('alfworld_version', '(see requirements_lock.txt)'))}")
+    lines.append(f"- ALFWorld version: {_alfworld_version()}")
     lines.append(f"- Qwen model: {config['model']['name']}")
     lines.append(f"- GPU: {gpu_info_line}")
     lines.append(f"- seeds: {config['seeds']}")
