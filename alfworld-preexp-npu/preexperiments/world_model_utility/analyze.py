@@ -274,6 +274,15 @@ def main(args: argparse.Namespace) -> None:
     r_mismatch = eval_stats["R_mismatch"]
     r_mismatch_ci = eval_stats.get("R_mismatch_ci", [float("nan"), float("nan")])
     mcnemar_p = eval_stats.get("mcnemar_p_value", float("nan"))
+    # Disclosure only (spec section 39/known-issue: confidence and ambiguity
+    # were observed to be degenerate on real hardware -- e.g. confidence
+    # clustered in 0.95-0.99, ambiguity always 0 -- which can make R_mismatch
+    # look like a real gate result when tau_c barely gates anything). A
+    # reader needs these to judge whether R_mismatch is trustworthy; this
+    # script does not attempt to correct for it.
+    gate_usage_rate_eval = eval_stats.get("gate_usage_rate_eval", float("nan"))
+    confidence_distribution_eval = eval_stats.get("confidence_distribution_eval")
+    ambiguity_bucket_counts_eval = eval_stats.get("ambiguity_bucket_counts_eval")
     rho_self = eval_stats["rho_self_changed"]
     rho_self_ci = eval_stats["rho_self_changed_ci"]
     rho_sem = eval_stats["rho_sem_changed"]
@@ -295,6 +304,9 @@ def main(args: argparse.Namespace) -> None:
         "mismatch_rate": r_mismatch,
         "mismatch_rate_ci": r_mismatch_ci,
         "mcnemar_p_value": mcnemar_p,
+        "gate_usage_rate_eval": gate_usage_rate_eval,
+        "confidence_distribution_eval": confidence_distribution_eval,
+        "ambiguity_bucket_counts_eval": ambiguity_bucket_counts_eval,
         "rho_self": rho_self,
         "rho_self_ci": rho_self_ci,
         "rho_sem": rho_sem,

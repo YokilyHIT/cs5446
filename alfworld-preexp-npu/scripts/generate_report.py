@@ -117,6 +117,7 @@ def build_report(config_path: Path, results_dir: Path) -> str:
     lines.append(f"- P(delta = 0): {_fmt(a_delta.get('p_delta_eq0'))}")
     lines.append(f"- P(delta > 0): {_fmt(a_delta.get('p_delta_gt0'))}")
     lines.append(f"- Var(delta): {_fmt(a_delta.get('var_delta'))}")
+    lines.append(f"- mean pairwise episode success rate (floor-effect check): {_fmt(a_go.get('mean_pairwise_success'))}")
     lines.append(f"- Spearman U vs delta: {_fmt_ci(a_corr.get('rho_u'), [a_corr.get('ci_lo'), a_corr.get('ci_hi')])}")
     lines.append(
         f"- luck-baseline p-value for P(delta<=0) (chance-level heterogeneity check, "

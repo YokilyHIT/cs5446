@@ -87,7 +87,9 @@ def _run_branches(
     # deliberate here (it's an offline counterfactual analysis, not the
     # online episode itself, which already ran to its real spec-mandated
     # length in collect_decision_points.py).
-    branch_budget = config["sampling"]["max_episode_steps"]
+    branch_budget = config["experiment_b"].get(
+        "branch_rollout_budget", config["sampling"]["max_episode_steps"]
+    )
 
     restored0 = restore_state(
         config=config,

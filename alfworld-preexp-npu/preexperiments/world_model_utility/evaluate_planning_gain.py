@@ -139,6 +139,35 @@ def main(args: argparse.Namespace) -> None:
     changed_corr = _correlations(changed_eval, n_resamples, seed)
     all_corr = _correlations(evaluation, n_resamples, seed)
 
+    # Known-issue disclosure (not a fix -- this is a property of the model's
+    # actual behavior, not a code defect): if confidence is degenerate (e.g.
+    # clustered near 0.95-0.99) and/or ambiguity is degenerate (e.g. always
+    # 0), tau_c's gate usage rate can land far from the target_usage it was
+    # calibrated for, and R_mismatch/the ambiguity-bucket breakdown can be
+    # dominated by a single cell with no way to tell from R_mismatch alone.
+    # Report the actual usage rate and confidence spread so a reader can
+    # judge whether R_mismatch is trustworthy, rather than silently trusting
+    # a gate that never actually gates anything on this data.
+    eval_confidences = [r["self_confidence"] for r in evaluation]
+    gate_usage_rate_eval = (
+        float(np.mean([c >= tau_c for c in eval_confidences])) if eval_confidences else float("nan")
+    )
+    confidence_distribution_eval = (
+        {
+            "min": float(np.min(eval_confidences)),
+            "p25": float(np.quantile(eval_confidences, 0.25)),
+            "median": float(np.quantile(eval_confidences, 0.5)),
+            "p75": float(np.quantile(eval_confidences, 0.75)),
+            "max": float(np.max(eval_confidences)),
+        }
+        if eval_confidences else None
+    )
+    ambiguity_bucket_counts_eval = {
+        "Low: A=0": sum(1 for r in evaluation if r["ambiguity"] == 0),
+        "Medium: 0<A<=0.5": sum(1 for r in evaluation if 0 < r["ambiguity"] <= 0.5),
+        "High: A>0.5": sum(1 for r in evaluation if r["ambiguity"] > 0.5),
+    }
+
     output = {
         "calibration_n": len(calibration),
         "evaluation_n": len(evaluation),
@@ -152,6 +181,9 @@ def main(args: argparse.Namespace) -> None:
         "n_harmful_all_eval": n_harmful_all,
         "n_helpful_all_eval": n_helpful_all,
         "mcnemar_p_value": mcnemar_p,
+        "gate_usage_rate_eval": gate_usage_rate_eval,
+        "confidence_distribution_eval": confidence_distribution_eval,
+        "ambiguity_bucket_counts_eval": ambiguity_bucket_counts_eval,
         "rho_self_changed": changed_corr["rho_self"],
         "rho_self_changed_p": changed_corr["rho_self_p"],
         "rho_self_changed_ci": changed_corr["rho_self_ci"],
