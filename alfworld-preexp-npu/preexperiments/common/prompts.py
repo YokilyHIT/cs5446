@@ -63,37 +63,33 @@ REACT_ACTION_WITH_LESSON_PROMPT = REACT_ACTION_PROMPT + "\n" + LESSON_INJECTION_
 ADAMEM_THINK_ACTION_PROMPT = """You are an expert agent operating in the ALFRED Embodied Environment. Your task is to: {goal}
 Below are the most recent observations and the corresponding actions you took: {history}
 Your current observation is: {observation}
-Your admissible actions of the current situation are: [{admissible_actions}].
+Your admissible actions of the current situation are: [{admissible_actions}]."""
+
+ADAMEM_THINK_ACTION_WITH_LESSON_PROMPT = ADAMEM_THINK_ACTION_PROMPT + "\n" + LESSON_INJECTION_BLOCK
+
+# The reasoning instruction is kept SEPARATE from the state description above
+# and appended by alfworld_runner.decide_action_from_prompt to whatever
+# action-selection prompt is in play. That is what lets experiment B's
+# foresight-conditioned re-planning call (spec section 23, whose prompt text is
+# fixed by the spec and reproduced verbatim) get exactly the same reasoning
+# scaffold as the base planner. Without that, a_t^(0) would come from a
+# two-call reasoning pipeline and a_t^(W) from a single bare call, and
+# D_t = 1[a_t^(W) != a_t^(0)] would measure "did the model get to reason"
+# on top of "did the world-model prediction change the plan".
+ADAMEM_THINK_INSTRUCTION_SUFFIX = """
 
 Now it's your turn to take an action.
 You should first reason step-by-step about the current situation. This reasoning process MUST be enclosed within <think> </think> tags.
 Once you've finished your reasoning, you should choose an admissible action for current step and present it within <action> </action> tags."""
 
-ADAMEM_THINK_ACTION_WITH_LESSON_PROMPT = ADAMEM_THINK_ACTION_PROMPT + "\n" + LESSON_INJECTION_BLOCK
-
-# Second half of the "adamem_think" two-call step: the reasoning produced by
-# the prompt above is fed back, and only the action is decoded -- under the
-# same guided_choice constraint the "spec" style uses.
+# Second half of the "adamem_think" two-call step: the reasoning produced above
+# is fed back, and only the action is decoded -- under the same guided_choice
+# constraint the "spec" style uses.
 ADAMEM_ACTION_AFTER_THINK_SUFFIX = """
 
 <think>{reasoning}</think>
 
 Based on that reasoning, output exactly one action from the admissible actions above, and nothing else."""
-
-# Known-issue fix: gives B4's foresight-conditioned re-plan (spec section 23)
-# the same reasoning opportunity B2's base action gets under prompt_style=
-# "adamem_think", so action_changed measures only "did it see the world-model
-# prediction" and not "did it get to think at all". Appended to spec's fixed
-# FORESIGHT_CONDITIONED_ACTION_PROMPT text ONLY to elicit the <think> stage
-# via the same two-call mechanism as ADAMEM_THINK_ACTION_PROMPT -- the spec's
-# own wording above is never altered.
-ADAMEM_THINK_FORESIGHT_SUFFIX = """
-
-You should first reason step-by-step about whether to keep or change the
-action given the world model's prediction. This reasoning process MUST be
-enclosed within <think> </think> tags. Once you've finished your reasoning,
-choose an admissible action for the current step and present it within
-<action> </action> tags."""
 
 # ---------------------------------------------------------------------------
 # Section 9 (A2): failure -> single reusable lesson.

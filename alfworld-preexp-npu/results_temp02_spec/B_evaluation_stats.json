@@ -1,0 +1,34 @@
+{
+  "calibration_n": 50,
+  "evaluation_n": 98,
+  "changed_n_eval": 35,
+  "tau_c": 0.95,
+  "target_usage": 0.5,
+  "R_mismatch": 0.08571428571428572,
+  "n_high_conf_harmful": 3,
+  "n_low_conf_helpful": 0,
+  "rho_self_changed": -0.10795167912317863,
+  "rho_self_changed_p": 0.5370601069170323,
+  "rho_self_changed_ci": [
+    -0.3130058665321237,
+    0.07376585207757388
+  ],
+  "rho_sem_changed": -0.40312736366463736,
+  "rho_sem_changed_p": 0.01634104953773997,
+  "rho_sem_changed_ci": [
+    -0.6184292277817154,
+    -0.12011041299825728
+  ],
+  "rho_self_all": -0.0677761402821496,
+  "rho_self_all_p": 0.5072639638575204,
+  "rho_self_all_ci": [
+    -0.19168335985702714,
+    0.044055674321523755
+  ],
+  "rho_sem_all": -0.2594920372540951,
+  "rho_sem_all_p": 0.009873177188732925,
+  "rho_sem_all_ci": [
+    -0.4135026153984271,
+    -0.056099940707020665
+  ]
+}

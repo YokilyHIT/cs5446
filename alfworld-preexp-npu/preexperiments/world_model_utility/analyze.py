@@ -32,6 +32,9 @@ _CSV_COLUMNS = [
     "point_id", "task_id", "step", "base_action", "foresight_action",
     "action_changed", "wm_prediction", "self_confidence", "semantic_correctness",
     "base_success", "foresight_success", "planning_gain", "ambiguity",
+    # 规范 §32 要求的字段之外，另记三个预注册的替代信号：
+    # 文档 §8 的独立评估置信度、token logprob、被替换动作是否为空动作。
+    "confidence_separate", "logprob_prob", "base_action_is_noop",
 ]
 
 
@@ -40,7 +43,7 @@ def _write_csv(records: List[Dict[str, Any]], path: str) -> None:
         writer = csv.DictWriter(f, fieldnames=_CSV_COLUMNS)
         writer.writeheader()
         for r in records:
-            writer.writerow({col: r[col] for col in _CSV_COLUMNS})
+            writer.writerow({col: r.get(col) for col in _CSV_COLUMNS})
 
 
 def _ambiguity_bucket(a: float) -> str:

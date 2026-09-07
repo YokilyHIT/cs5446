@@ -260,7 +260,7 @@ def plot_condition_bar_chart(sr_by_condition: Dict[str, Tuple[float, float, floa
 
 _MIN_FAILURES_EVALUATED = 5
 _LUCK_ALPHA = 0.10  # observed heterogeneity must beat pure chance at this significance to count as "real"
-_MIN_MEAN_SUCCESS = 0.05  # below this, pairwise episodes are a floor effect, not a measurement
+_MIN_MEAN_SUCCESS = 0.05  # below this the pairwise episodes are a floor effect, not a measurement
 
 
 def determine_verdict(
@@ -269,7 +269,7 @@ def determine_verdict(
     sr_diff: float,
     n_failures_evaluated: int,
     luck_pvalue: float,
-    mean_pairwise_success: float = float("nan"),
+    mean_pairwise_success: float,
     var_pvalue: float = float("nan"),
 ) -> Tuple[str, str]:
     # Hard requirement (spec section 16): never claim "our hypothesis is
@@ -280,17 +280,10 @@ def determine_verdict(
     # Fixed after review: raw P(delta<=0)/rho_U thresholds alone cannot tell
     # a real effect apart from noise at n=9 trials/condition per failure --
     # two coins each flipped 9 times can easily "look" 5-vs-3 different by
-    # chance. `luck_pvalue` is simulate_luck_baseline's `p_delta_le0_pvalue`:
-    # the fraction of pure-chance (binomial-null) replicates whose P(delta<=0)
-    # is at least as extreme as the one actually observed -- gating on the
-    # SAME statistic spec section 16 uses for the decision itself, rather than
-    # a different one (Var(delta), reported via `var_pvalue` as disclosure
-    # only, never as a gate: it has inconsistent power at this sample size --
-    # confirmed with synthetic data both ways, sometimes failing to flag a
-    # real effect and sometimes flagging pure noise as significant -- so it
-    # cannot be trusted to override what P(delta<=0) itself says). GO now
-    # additionally requires the observed P(delta<=0) to be unlikely under
-    # pure chance (p < _LUCK_ALPHA).
+    # chance. `luck_pvalue` (from simulate_luck_baseline, a binomial-null
+    # simulation) estimates how likely the observed P(delta<=0) is under
+    # "no failure's lesson has any true effect"; GO now additionally
+    # requires this to be unlikely under pure chance (p < _LUCK_ALPHA).
     if n_failures_evaluated < _MIN_FAILURES_EVALUATED:
         return "INCONCLUSIVE", (
             f"Only {n_failures_evaluated} failures had pairwise evaluation data -- too few "
@@ -299,88 +292,100 @@ def determine_verdict(
             "drawing a conclusion."
         )
 
-    # Floor effect: if the base agent essentially can't finish these tasks
-    # regardless of condition, delta is ~0 for nearly every failure BECAUSE
-    # the agent is too weak to register any effect, not because lessons are
-    # equally valuable. Must be checked before any GO/WEAK-GO/NO-GO reading,
-    # same rationale as experiment B's any_success_rate gate.
+    luck_ok = (not np.isnan(luck_pvalue)) and luck_pvalue < _LUCK_ALPHA
+    if np.isnan(luck_pvalue):
+        luck_note = "luck-baseline not computable"
+    elif luck_ok:
+        luck_note = (
+            f"luck-baseline p={luck_pvalue:.2f} < {_LUCK_ALPHA}, i.e. distinguishable "
+            "from pure chance"
+        )
+    else:
+        # Must not read as an endorsement: an earlier version appended the
+        # "< alpha = distinguishable from pure chance" gloss unconditionally,
+        # so a run with p=1.00 reported "luck-baseline p=1.00 (< 0.1 =
+        # distinguishable from pure chance)" -- a statement contradicting its
+        # own number, in the final report.
+        luck_note = (
+            f"luck-baseline p={luck_pvalue:.2f} >= {_LUCK_ALPHA}, i.e. NOT distinguishable "
+            "from pure chance"
+        )
+
+    # Degenerate-data gates, BEFORE any GO/WEAK-GO/NO-GO reading. Delta_i is a
+    # difference of two 9-trial success rates; when those trials are almost all
+    # failures, or when the spread across failures is no larger than binomial
+    # noise would produce on its own, the delta distribution carries no
+    # information about lesson quality. Reporting WEAK-GO off such data would
+    # claim "selection matters in principle" from noise -- verified against
+    # synthetic data where every lesson had exactly zero true effect.
     if (not np.isnan(mean_pairwise_success)) and mean_pairwise_success < _MIN_MEAN_SUCCESS:
         return "INCONCLUSIVE", (
             f"Only {mean_pairwise_success:.1%} of pairwise evaluation episodes succeeded in "
             "EITHER condition, so delta is ~0 for nearly every failure by construction. That "
             "reflects the base agent being unable to finish these tasks, not the lessons being "
-            "equally valuable. Raise the base success rate first (spec section 39: check the "
-            "prompt, max_episode_steps, and AdaMEM's runner prompt, in that order) and re-run."
+            "equally valuable. Raise the base success rate first (see spec section 39: check the "
+            "prompt, max_episode_steps, and AdaMEM's runner prompt in that order) and re-run."
+        )
+    if not luck_ok and sr_diff < 0.05:
+        var_note = (
+            "" if np.isnan(var_pvalue)
+            else f" Var(delta) against the same null: p={var_pvalue:.2f}."
+        )
+        return "INCONCLUSIVE", (
+            f"The rate of non-positive lesson transfer, P(delta<=0)={p_delta_le0:.2f}, is no higher "
+            f"than a pure-chance binomial null produces ({luck_note}), and the Top-K vs All "
+            f"comparison does not clear the 5-point bar on its own (SR_TopK-SR_All={sr_diff:.2f})."
+            f"{var_note} With {n_failures_evaluated} failures x 9 paired trials per condition, "
+            "delta_i has a resolution of 1/9 and its spread is dominated by binomial noise, so "
+            "this run cannot establish the negative-transfer phenomenon the direction is premised "
+            "on -- nor rule it out. Increase the failures evaluated and/or tasks-and-seeds per "
+            "failure and re-run."
         )
 
-    luck_ok = (not np.isnan(luck_pvalue)) and luck_pvalue < _LUCK_ALPHA
-    if np.isnan(luck_pvalue):
-        luck_note = "luck-baseline not computable"
-    elif luck_ok:
-        luck_note = f"luck-baseline p={luck_pvalue:.2f} < {_LUCK_ALPHA}, i.e. distinguishable from pure chance"
-    else:
-        # Fixed after review: an earlier version appended the "< alpha =
-        # distinguishable from pure chance" gloss unconditionally, so a run
-        # with p=1.00 printed "luck-baseline p=1.00 (< 0.1 = distinguishable
-        # from pure chance)" -- a statement contradicting its own number, in
-        # the final report.
-        luck_note = f"luck-baseline p={luck_pvalue:.2f} >= {_LUCK_ALPHA}, i.e. NOT distinguishable from pure chance"
-
-    # sr_diff comes from a much larger sample (30 tasks x 3 seeds per
-    # condition) than the per-failure delta analysis (9 trials/condition per
-    # failure) and is an independent line of evidence -- it can carry GO on
-    # its own regardless of the luck-baseline outcome below.
     if sr_diff >= 0.05:
         return "GO", (
             "Selective failure learning is supported by preliminary evidence: "
             f"SR_TopK-SR_All={sr_diff:.2f} meets the 5-point bar on its own, independent of the "
             f"per-failure delta analysis (P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f})."
         )
-
-    # Known-issue fix: `luck_ok` must gate every remaining branch, not just
-    # the top GO threshold. Verified with synthetic all-zero-true-effect
-    # data: without this gate, pure sampling noise could still fall into the
-    # "p_delta_le0>0" or generic fallback branches below and come out
-    # WEAK-GO -- i.e. the code would report "some support" for a
-    # relationship that provably does not exist in the generating data.
-    #
-    # This is reported as INCONCLUSIVE, not NO-GO: "not distinguishable from
-    # chance" is not the same claim as "distinguishable from chance in the
-    # negative direction" -- the former is an absence of evidence either way,
-    # the latter would be evidence against the hypothesis, which this data
-    # does not provide.
-    if not luck_ok:
-        var_note = "" if np.isnan(var_pvalue) else f" (Var(delta) against the same null: p={var_pvalue:.2f}, disclosure only.)"
-        return "INCONCLUSIVE", (
-            f"The rate of non-positive lesson transfer, P(delta<=0)={p_delta_le0:.2f}, is not "
-            f"statistically distinguishable from a pure-chance (binomial-null) baseline "
-            f"({luck_note}), and SR_TopK-SR_All={sr_diff:.2f} does not independently clear its "
-            f"0.05 bar either.{var_note} With {n_failures_evaluated} failures x 9 paired trials "
-            "per condition, delta_i has a resolution of 1/9 and its spread is dominated by "
-            "binomial noise, so this run can neither establish nor rule out the negative-transfer "
-            "phenomenon the direction is premised on. Increase the failures evaluated and/or "
-            "tasks-and-seeds per failure and re-run before drawing a conclusion."
-        )
-
-    # From here on the per-failure heterogeneity IS distinguishable from
-    # chance; the usual threshold logic decides how strong that real signal is.
-    if p_delta_le0 >= 0.20 and rho_u >= 0.30:
+    if p_delta_le0 >= 0.20 and rho_u >= 0.30 and luck_ok:
         return "GO", (
             "Selective failure learning is supported by preliminary evidence: "
             f"P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}, and the observed per-failure "
             f"heterogeneity is unlikely to be pure sampling noise ({luck_note})."
         )
-    if p_delta_le0 > 0:
+    if p_delta_le0 >= 0.20 and rho_u >= 0.30 and not luck_ok:
         return "WEAK-GO", (
-            f"Selective failure learning is weakly supported: the per-failure heterogeneity is "
-            f"real ({luck_note}) and some failures show delta<=0 (P={p_delta_le0:.2f}), so "
-            f"selection matters in principle, but rho_U={rho_u:.2f} means the current utility "
-            "proxy does not track it well enough yet to hit the full GO bar."
+            f"Raw thresholds are met (P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}) but the "
+            f"observed per-failure heterogeneity is NOT statistically distinguishable from a "
+            f"pure-chance baseline ({luck_note}) -- weakly supported until a larger sample "
+            "(more failures and/or more tasks/seeds per failure) rules out noise."
+        )
+    if p_delta_le0 > 0 and abs(rho_u) < 0.15:
+        return "WEAK-GO", (
+            "Selective failure learning is weakly supported: some failures show "
+            f"delta<=0 (P={p_delta_le0:.2f}), so selection matters in principle, "
+            f"but the current utility proxy is weak (rho_U={rho_u:.2f}, near 0). "
+            f"({luck_note})"
+        )
+    if p_delta_le0 < 0.05 and sr_diff <= 0:
+        return "NO-GO", (
+            "Selective failure learning is not supported under the current setup: "
+            f"almost all lessons show delta>0 (P(delta<=0)={p_delta_le0:.2f}) and "
+            f"SR_TopK does not exceed SR_All (diff={sr_diff:.2f})."
+        )
+    # None of the crisp rules fired cleanly; pick whichever verdict the
+    # numbers most resemble and say so explicitly rather than forcing a fit.
+    if p_delta_le0 >= 0.10 or rho_u >= 0.15 or sr_diff >= 0.0:
+        return "WEAK-GO", (
+            "Result pattern does not cleanly match the GO or NO-GO thresholds; "
+            f"weakly supported is the closest fit given P(delta<=0)={p_delta_le0:.2f}, "
+            f"rho_U={rho_u:.2f}, SR_TopK-SR_All={sr_diff:.2f} ({luck_note})."
         )
     return "NO-GO", (
-        "Selective failure learning is not supported under the current setup: even though the "
-        f"per-failure heterogeneity is real ({luck_note}), almost all lessons show delta>0 "
-        f"(P(delta<=0)={p_delta_le0:.2f})."
+        "Result pattern does not cleanly match the GO or WEAK-GO thresholds; "
+        f"not supported under the current setup is the closest fit given "
+        f"P(delta<=0)={p_delta_le0:.2f}, rho_U={rho_u:.2f}, SR_TopK-SR_All={sr_diff:.2f}."
     )
 
 
@@ -460,12 +465,6 @@ def main(args: argparse.Namespace) -> None:
     )
 
     # --- Go / No-Go ---
-    # Gate on p_delta_le0_pvalue -- the same statistic spec section 16 uses
-    # for the decision itself (see determine_verdict's docstring for why
-    # Var(delta) is disclosed but not used as the gate: it has inconsistent
-    # power at this sample size, sometimes missing a real effect and
-    # sometimes flagging pure noise as significant, confirmed with synthetic
-    # data on both sides).
     mean_pairwise_success = (
         float(np.mean([bool(r["success"]) for r in pairwise_episodes]))
         if pairwise_episodes else float("nan")

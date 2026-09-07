@@ -20,6 +20,7 @@ import numpy as np
 from preexperiments.common.alfworld_runner import ALFWorldEnvAdapter, build_single_game_adapter, reset_and_attach, rollout
 from preexperiments.common.embeddings import Embedder, cosine_sim
 from preexperiments.common.llm_client import load_client_from_config
+from preexperiments.common.parallel import add_workers_arg, ordered_map
 from preexperiments.common.logging_utils import append_jsonl, ensure_dirs, env_config_block, load_yaml_config, new_run_id, read_jsonl_all
 from preexperiments.failure_selection._common import extract_goal, get_or_build_candidate_record, load_candidate_pool_cache, reset_output_file
 
@@ -152,47 +153,60 @@ def main(args: argparse.Namespace) -> None:
     seeds = config["seeds"]
     llm = load_client_from_config(config)
 
-    episode_count = 0
+    # Retrieval (which lesson each condition injects for each task) is decided
+    # up front and is pure CPU; only the rollouts go through the pool. Episodes
+    # are independent, and ordered_map preserves job order so the JSONL stays
+    # deterministic regardless of completion order.
+    jobs = []
     for condition in ("NoMemory", "AllLessons", "RandomK", "TopK"):
         pool = retrieval_pools[condition]
         for task in selected_tasks:
             injected = _top1_from_pool(task["goal_vec"], pool) if pool is not None else None
-            injected_id = injected["failure_id"] if injected else None
-            injected_lesson_text = injected["lesson"] if injected else None
-
             for seed in seeds:
-                adapter = build_single_game_adapter(config, split, task["gamefile"])
-                obs, info = reset_and_attach(adapter)
-                goal = extract_goal(obs, info)
-                run_id = new_run_id("A8")
-
-                result = rollout(
-                    adapter,
-                    llm=llm,
-                    config=config,
-                    run_id=run_id,
-                    task_id=task["task_id"],
-                    game_id_or_path=task["gamefile"],
-                    split=split,
-                    seed=seed,
-                    goal=goal,
-                    observation=obs,
-                    lesson=injected_lesson_text,
-                )
-                forced_action_count = sum(1 for r in result.step_records if r.get("action_forced"))
-                record = {
-                    "run_id": run_id,
+                jobs.append({
                     "condition": condition,
                     "task_id": task["task_id"],
+                    "gamefile": task["gamefile"],
                     "seed": seed,
-                    "success": result.success,
-                    "steps": result.steps,
-                    "injected_lesson_failure_id": injected_id,
-                    "forced_action_count": forced_action_count,
-                    **env_config_block(config, seed),
-                }
-                append_jsonl(output_file, record)
-                episode_count += 1
+                    "injected_id": injected["failure_id"] if injected else None,
+                    "lesson": injected["lesson"] if injected else None,
+                })
+
+    def run_job(job):
+        adapter = build_single_game_adapter(config, split, job["gamefile"])
+        obs, info = reset_and_attach(adapter)
+        goal = extract_goal(obs, info)
+        run_id = new_run_id("A8")
+        result = rollout(
+            adapter,
+            llm=llm,
+            config=config,
+            run_id=run_id,
+            task_id=job["task_id"],
+            game_id_or_path=job["gamefile"],
+            split=split,
+            seed=job["seed"],
+            goal=goal,
+            observation=obs,
+            lesson=job["lesson"],
+        )
+        return {
+            "run_id": run_id,
+            "condition": job["condition"],
+            "task_id": job["task_id"],
+            "seed": job["seed"],
+            "success": result.success,
+            "steps": result.steps,
+            "injected_lesson_failure_id": job["injected_id"],
+            "forced_action_count": sum(1 for r in result.step_records if r.get("action_forced")),
+            **env_config_block(config, job["seed"]),
+        }
+
+    records = ordered_map(run_job, jobs, workers=args.workers,
+                          label="evaluate_topk_vs_all", progress_every=20)
+    for record in records:
+        append_jsonl(output_file, record)
+    episode_count = len(records)
 
     print(
         f"[evaluate_topk_vs_all] lesson_pool={len(all_lessons)} K={k} tasks={len(selected_tasks)} "
@@ -211,6 +225,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Cap the evaluation subset size (smoke tests only; real runs use experiment_a.eval_subset_size).",
     )
+    add_workers_arg(parser)
     return parser
 
 

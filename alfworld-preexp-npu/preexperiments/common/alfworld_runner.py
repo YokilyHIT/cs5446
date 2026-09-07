@@ -258,7 +258,18 @@ def build_single_game_adapter(config: Dict[str, Any], split: str, gamefile: str)
 # Action selection (ReAct-style, one call per step)
 # ---------------------------------------------------------------------------
 
-def format_history(history: Sequence[Tuple[str, str]], max_turns: int = 8) -> str:
+def format_history(history: Sequence[Tuple[str, str]], max_turns: int = 50) -> str:
+    """Render the recent interaction history for the ReAct prompt.
+
+    Default raised 8 -> 50 to match AdaMEM's own ALFWorld runner
+    (`AlfWorldEnvironmentManager.build_text_obs` uses
+    `env_history_length = 50`). At 8 turns an agent 30+ steps into an episode
+    cannot see most of what it has already tried, which makes repeating a
+    failed action look reasonable to it -- and repetition-until-timeout was
+    the dominant failure mode measured here (23% of episodes under the spec
+    prompt). Not a spec-mandated value: spec section 2 fixes the model,
+    temperature, seeds and episode cap, but says nothing about history length.
+    """
     if not history:
         return "(no actions taken yet)"
     trimmed = history[-max_turns:]
@@ -268,8 +279,23 @@ def format_history(history: Sequence[Tuple[str, str]], max_turns: int = 8) -> st
     return "\n".join(lines)
 
 
+# AdaMEM drops 'help' from the action list it shows the model
+# (env_manager.py: `if s != 'help'`). Keeping it is not harmless: the stage-0
+# baseline measurement caught an episode that burned its whole budget
+# repeating `help`, which does nothing and never changes the state.
+_EXCLUDED_ACTIONS = {"help"}
+
+
+def visible_actions(actions: Sequence[str]) -> List[str]:
+    """The admissible actions actually offered to the model."""
+    kept = [a for a in actions if a not in _EXCLUDED_ACTIONS]
+    return kept or list(actions)  # never hand back an empty menu
+
+
 def format_admissible(actions: Sequence[str]) -> str:
-    return "\n".join(f"- {a}" for a in actions)
+    """Match AdaMEM's rendering: one quoted action per line.
+    (env_manager.py: `"\n ".join(f"'{s}'" for s in admissible_actions[i] if s != 'help')`)"""
+    return "\n ".join(f"'{a}'" for a in visible_actions(actions))
 
 
 _ACTION_TAG_RE = re.compile(r"<action>(.*?)</action>", re.DOTALL | re.IGNORECASE)
@@ -314,81 +340,78 @@ def ground_action(raw_text: str, admissible_actions: Sequence[str]) -> Tuple[str
     return admissible_actions[0], True
 
 
-def _think_then_act(
+def decide_action_from_prompt(
     llm: LLMClient,
-    first_call_prompt: str,
+    prompt: str,
     admissible_actions: Sequence[str],
-    seed: int,
-    adamem_max_tokens: int,
-) -> Tuple[str, bool, int, int]:
-    """Shared two-call "adamem_think" mechanism: prefill `<think>` on
-    `first_call_prompt` and stop at `</think>` to get a reasoning trace (the
-    prefill is required -- this model replies to a bare "reason in <think>"
-    instruction with an immediate EOS, at any temperature, without it; see
-    llm_client.complete), then feed the reasoning back and decode ONLY the
-    action under the same guided_choice constraint the "spec" style uses.
-    Used by both `choose_action` (base/ambiguity-resample actions) and
-    `choose_foresight_action` (B4) so the two calls stay structurally
-    identical -- action_changed should measure "did it see the world-model
-    prediction", not "which of the two call sites happened to reason
-    differently".
-    """
-    think_resp = llm.complete(
-        first_call_prompt,
-        seed=seed,
-        max_tokens=adamem_max_tokens,
-        prefill="<think>",
-        stop=["</think>"],
-    )
-    reasoning = think_resp.text.strip()
-    act_resp = llm.complete(
-        first_call_prompt + prompts.ADAMEM_ACTION_AFTER_THINK_SUFFIX.format(reasoning=reasoning),
-        seed=seed,
-        choices=list(admissible_actions),
-    )
-    action, forced = ground_action(act_resp.text, admissible_actions)
-    return (
-        action,
-        forced,
-        think_resp.prompt_tokens + act_resp.prompt_tokens,
-        think_resp.completion_tokens + act_resp.completion_tokens,
-    )
-
-
-def choose_foresight_action(
-    llm: LLMClient,
     *,
-    goal: str,
-    observation: str,
-    admissible_actions: Sequence[str],
-    base_action: str,
-    predicted_next_observation: str,
     seed: int,
     prompt_style: Optional[str] = None,
     adamem_max_tokens: int = 512,
+    constrain_to_admissible: bool = True,
 ) -> Tuple[str, bool, int, int]:
-    """B4 (spec section 23), with the same `prompt_style` switch `choose_action`
-    uses. Spec's fixed FORESIGHT_CONDITIONED_ACTION_PROMPT text is never
-    altered; when `prompt_style="adamem_think"`, `ADAMEM_THINK_FORESIGHT_SUFFIX`
-    is appended ONLY to elicit the same two-call reasoning-then-action
-    mechanism B2's base action gets under that style (known-issue fix: without
-    this, action_changed would confound "saw the prediction" with "got to
-    think at all" whenever prompt_style=adamem_think, since B2 reasons and B4
-    didn't).
-    """
-    style = prompt_style or "spec"
-    base_prompt = prompts.FORESIGHT_CONDITIONED_ACTION_PROMPT.format(
-        goal=goal,
-        observation=observation,
-        admissible_actions=format_admissible(admissible_actions),
-        base_action=base_action,
-        predicted_next_observation=predicted_next_observation,
-    )
-    if style == "adamem_think":
-        first_call_prompt = base_prompt + prompts.ADAMEM_THINK_FORESIGHT_SUFFIX
-        return _think_then_act(llm, first_call_prompt, admissible_actions, seed, adamem_max_tokens)
+    """Turn ANY already-rendered action-selection prompt into one admissible
+    action, applying whatever reasoning scaffold `prompt_style` calls for.
 
-    resp = llm.complete(base_prompt, seed=seed, choices=list(admissible_actions))
+    Factored out so that every place an action is chosen -- the base ReAct
+    planner (choose_action below) and experiment B's foresight-conditioned
+    re-planning call (spec section 23) -- goes through the identical
+    mechanism. That symmetry is load-bearing for experiment B: if the base
+    action came from a two-call reasoning pipeline while the foresight action
+    came from a single bare call, then D_t = 1[a_t^(W) != a_t^(0)] would
+    conflate two changes at once -- "did the world-model prediction change the
+    plan" and "did the model get to reason" -- and D_t is exactly what
+    experiment B is built to isolate.
+
+    Returns (grounded_action, was_forced, prompt_tokens, completion_tokens).
+    """
+    # The menu shown to the model, the guided_choice constraint and the
+    # grounding fallback must all use the SAME list, or the agent could be
+    # grounded onto an action it was never offered.
+    admissible_actions = visible_actions(admissible_actions)
+
+    style = prompt_style or "spec"
+    if style == "adamem_think":
+        # Two calls:
+        #   1. Prefill the assistant turn with "<think>" and stop at
+        #      "</think>" to get step-by-step reasoning. The prefill is
+        #      required, not stylistic: without it this model answers a
+        #      prompt asking for <think> reasoning with an immediate EOS
+        #      (see llm_client.complete).
+        #   2. Feed the reasoning back and decode the ACTION under the same
+        #      guided_choice constraint the "spec" style uses, so the
+        #      forced-action rate stays structurally 0 and the two styles
+        #      remain comparable on that axis. (Extracting the action from
+        #      AdaMEM's <action> tag instead would reintroduce exactly the
+        #      non-admissible-output problem guided_choice was added for.)
+        think_resp = llm.complete(
+            prompt + prompts.ADAMEM_THINK_INSTRUCTION_SUFFIX,
+            seed=seed,
+            max_tokens=adamem_max_tokens,
+            prefill="<think>",
+            stop=["</think>"],
+        )
+        act_resp = llm.complete(
+            prompt
+            + prompts.ADAMEM_ACTION_AFTER_THINK_SUFFIX.format(
+                reasoning=think_resp.text.strip()
+            ),
+            seed=seed,
+            choices=list(admissible_actions),
+        )
+        action, forced = ground_action(act_resp.text, admissible_actions)
+        return (
+            action,
+            forced,
+            think_resp.prompt_tokens + act_resp.prompt_tokens,
+            think_resp.completion_tokens + act_resp.completion_tokens,
+        )
+
+    resp = llm.complete(
+        prompt,
+        seed=seed,
+        choices=list(admissible_actions) if constrain_to_admissible else None,
+    )
     action, forced = ground_action(resp.text, admissible_actions)
     return action, forced, resp.prompt_tokens, resp.completion_tokens
 
@@ -405,6 +428,7 @@ def choose_action(
     constrain_to_admissible: bool = True,
     prompt_style: Optional[str] = None,
     adamem_max_tokens: int = 512,
+    history_length: int = 50,
 ) -> Tuple[str, bool, int, int]:
     """Returns (grounded_action, was_forced, prompt_tokens, completion_tokens).
 
@@ -424,39 +448,31 @@ def choose_action(
     """
     style = prompt_style or "spec"
     if style == "adamem_think":
-        # Two calls per step -- see _think_then_act for why. AdaMEM's
-        # no-memory prompt already contains its own "reason in <think>" ask,
-        # so it's used verbatim as the first-call text (no extra suffix
-        # needed the way choose_foresight_action needs one).
         template = (
             prompts.ADAMEM_THINK_ACTION_WITH_LESSON_PROMPT
             if lesson
             else prompts.ADAMEM_THINK_ACTION_PROMPT
         )
-        prompt = template.format(
-            goal=goal,
-            observation=observation,
-            history=format_history(history),
-            admissible_actions=format_admissible(admissible_actions),
-            lesson=lesson or "",
+    else:
+        template = (
+            prompts.REACT_ACTION_WITH_LESSON_PROMPT if lesson else prompts.REACT_ACTION_PROMPT
         )
-        return _think_then_act(llm, prompt, admissible_actions, seed, adamem_max_tokens)
-
-    template = prompts.REACT_ACTION_WITH_LESSON_PROMPT if lesson else prompts.REACT_ACTION_PROMPT
     prompt = template.format(
         goal=goal,
         observation=observation,
-        history=format_history(history),
+        history=format_history(history, max_turns=history_length),
         admissible_actions=format_admissible(admissible_actions),
         lesson=lesson or "",
     )
-    resp = llm.complete(
+    return decide_action_from_prompt(
+        llm,
         prompt,
+        admissible_actions,
         seed=seed,
-        choices=list(admissible_actions) if constrain_to_admissible else None,
+        prompt_style=style,
+        adamem_max_tokens=adamem_max_tokens,
+        constrain_to_admissible=constrain_to_admissible,
     )
-    action, forced = ground_action(resp.text, admissible_actions)
-    return action, forced, resp.prompt_tokens, resp.completion_tokens
 
 
 # ---------------------------------------------------------------------------
@@ -489,8 +505,8 @@ def rollout(
     start_step: int = 0,
     lesson: Optional[str] = None,
     forced_first_action: Optional[str] = None,
-    step_callback: Optional[Callable[[int, str, str, List[str], Dict[str, Any]], None]] = None,
     max_steps: Optional[int] = None,
+    step_callback: Optional[Callable[[int, str, str, List[str], Dict[str, Any]], None]] = None,
 ) -> EpisodeResult:
     """Run a ReAct agent from the given (already reset/restored) `adapter`
     state until success/done/max_steps.
@@ -504,21 +520,13 @@ def rollout(
     invoked before each action is chosen -- experiment B's decision-point
     collector uses this to inspect candidate states without altering control
     flow.
-
-    `max_steps`, if given, overrides `config["sampling"]["max_episode_steps"]`
-    as the absolute step-index ceiling (the loop runs `while step < max_steps`,
-    so this is compared directly against `step`/`start_step`, not added to
-    them). Known-issue fix: experiment B's branch continuations used to
-    default to the global ceiling, which left late decision points (e.g.
-    step 29 of 30) with only 1 step of remaining budget -- both branches then
-    fail identically not because foresight was unhelpful but because neither
-    branch had any room to prove itself. build_counterfactual_pairs.py passes
-    `start_step + config["sampling"]["max_episode_steps"]` here so every
-    branch gets a full fresh budget counted from the decision point, not from
-    episode start.
     """
     sampling_cfg = config["sampling"]
-    max_steps = max_steps if max_steps is not None else sampling_cfg["max_episode_steps"]
+    # `max_steps` is an ABSOLUTE step index to stop at, not a count. Callers
+    # normally leave it unset and get the config's episode cap. Experiment B's
+    # branch rollouts override it so both branches get the same budget counted
+    # FROM the decision point -- see build_counterfactual_pairs.py.
+    max_steps = sampling_cfg["max_episode_steps"] if max_steps is None else max_steps
 
     history = list(history) if history else []
     step_records: List[Dict[str, Any]] = []
@@ -559,6 +567,7 @@ def rollout(
                 lesson=lesson,
                 prompt_style=sampling_cfg.get("prompt_style", "spec"),
                 adamem_max_tokens=sampling_cfg.get("adamem_max_tokens", 512),
+                history_length=sampling_cfg.get("history_length", 50),
             )
 
         next_obs, done, success, info = adapter.step(action)

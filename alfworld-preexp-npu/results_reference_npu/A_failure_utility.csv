@@ -1,0 +1,21 @@
+failure_id,task_type,lesson,mean_success_no_lesson,mean_success_with_lesson,delta
+F0001,look_at_obj_in_light,Always confirm the target location and state before moving an object to ensure alignment with planning goals.,0.6666666666666666,0.3333333333333333,-0.3333333333333333
+F0002,look_at_obj_in_light,Always verify hidden or obscured areas before concluding an object is absent or misplaced.,0.2222222222222222,0.1111111111111111,-0.1111111111111111
+F0003,look_at_obj_in_light,Always confirm an object's intended use or purpose before relocating it in a planning sequence.,0.5555555555555556,0.2222222222222222,-0.33333333333333337
+F0004,look_at_obj_in_light,Always move toward the goal location after each action to avoid redundant cycles and ensure forward progress in planning.,0.3333333333333333,0.3333333333333333,0.0
+F0005,look_at_obj_in_light,"After identifying an object, act on it or move to a new location to advance toward the intended objective.",0.5555555555555556,0.3333333333333333,-0.22222222222222227
+F0006,look_at_obj_in_light,Always move beyond initial observations by actively seeking or interacting with relevant objects to advance toward the intended objective.,0.6666666666666666,0.6666666666666666,0.0
+F0007,look_at_obj_in_light,"Always verify progress toward a goal after each action, rather than repeating redundant observations.",0.6666666666666666,0.6666666666666666,0.0
+F0008,look_at_obj_in_light,Always expand exploration to unexamined locations to avoid redundant checks and ensure comprehensive coverage.,0.4444444444444444,0.3333333333333333,-0.1111111111111111
+F0009,look_at_obj_in_light,Always move beyond initial observations by acting on objects to explore new contexts or relationships.,0.4444444444444444,0.8888888888888888,0.4444444444444444
+F0010,look_at_obj_in_light,Always verify all visible surfaces and lighting areas before assuming object locations are fully explored.,0.5555555555555556,0.2222222222222222,-0.33333333333333337
+F0011,look_at_obj_in_light,Always verify object properties and context before moving items to ensure meaningful planning progress.,0.4444444444444444,0.3333333333333333,-0.1111111111111111
+F0012,look_at_obj_in_light,Always expand exploration beyond immediate observations to discover unseen or unexamined areas and objects.,0.5555555555555556,0.4444444444444444,-0.11111111111111116
+F0013,look_at_obj_in_light,"Always move toward the goal by systematically checking relevant locations and actions, avoiding redundant cycles.",0.4444444444444444,0.5555555555555556,0.11111111111111116
+F0014,look_at_obj_in_light,Always move beyond initial observations to explore new areas or actions that advance the objective.,0.6666666666666666,0.6666666666666666,0.0
+F0015,look_at_obj_in_light,Always move beyond initial observations by exploring new areas or actions to advance toward the intended objective.,0.6666666666666666,0.6666666666666666,0.0
+F0016,look_at_obj_in_light,Always expand exploration by systematically moving between locations and checking adjacent areas to avoid missing critical context.,0.4444444444444444,0.3333333333333333,-0.1111111111111111
+F0017,look_at_obj_in_light,Always confirm the state of a location before concluding it contains nothing.,0.6666666666666666,0.3333333333333333,-0.3333333333333333
+F0018,look_at_obj_in_light,Always confirm object accessibility before relying on its presence in planning.,0.5555555555555556,0.3333333333333333,-0.22222222222222227
+F0019,look_at_obj_in_light,Always verify the current state after each action to avoid redundant checks and ensure movement toward the intended objective.,0.4444444444444444,0.3333333333333333,-0.1111111111111111
+F0020,look_at_obj_in_light,"Focus on objects with potential significance or actions that advance the primary objective, not those with no observable properties or utility.",0.3333333333333333,0.4444444444444444,0.1111111111111111

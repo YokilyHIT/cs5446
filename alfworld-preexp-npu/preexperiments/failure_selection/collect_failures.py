@@ -22,6 +22,7 @@ from preexperiments.common.alfworld_runner import (
     rollout,
 )
 from preexperiments.common.llm_client import load_client_from_config
+from preexperiments.common.parallel import add_workers_arg, ordered_map
 from preexperiments.common.logging_utils import (
     append_jsonl,
     ensure_dirs,
@@ -61,35 +62,30 @@ def main(args: argparse.Namespace) -> None:
     llm = load_client_from_config(config)
     game_files = _list_sorted_game_files(config, split)
 
-    failure_count = 0
-    episodes_run = 0
-    stop_reason = "exhausted_game_files"
+    # Concurrency changes WHICH episodes get run, but not which failures get
+    # kept. Sequentially the loop stops as soon as `min_failures` is reached;
+    # here all `max_episodes` candidates run and the first `min_failures`
+    # failures IN SORTED GAMEFILE ORDER are kept. Because the sequential
+    # version walked that same sorted order, both select the identical failure
+    # set -- this one just does more episodes to get there.
+    #
+    # Keeping the order matters beyond tidiness: failure_id is assigned by
+    # position, and score_failure_proxies computes each lesson's novelty
+    # against strictly-earlier lessons in file order, so a shuffled file would
+    # silently change the proxy scores.
+    candidates = game_files[:max_episodes]
 
-    for gamefile in game_files:
-        if episodes_run >= max_episodes:
-            stop_reason = "max_train_episodes_reached"
-            break
-        if failure_count >= min_failures:
-            stop_reason = "min_failures_reached"
-            break
-
-        # Rebuilding a single-game adapter per episode re-parses AlfredTWEnv
-        # for the whole split each time, which is wasteful but simple and
-        # the documented safe default (see alfworld_runner module docstring)
-        # -- swap in a cached env_wrapper here if this becomes too slow.
+    def run_episode(gamefile):
         adapter = build_single_game_adapter(config, split, gamefile)
         obs, info = reset_and_attach(adapter)
         goal = extract_goal(obs, info)
-        task_id = extract_task_id(gamefile)
-        task_type = extract_task_type(gamefile)
-
         run_id = new_run_id("A1")
         result = rollout(
             adapter,
             llm=llm,
             config=config,
             run_id=run_id,
-            task_id=task_id,
+            task_id=extract_task_id(gamefile),
             game_id_or_path=gamefile,
             split=split,
             seed=seed,
@@ -97,38 +93,52 @@ def main(args: argparse.Namespace) -> None:
             observation=obs,
             lesson=None,
         )
-        episodes_run += 1
-        forced_action_count = sum(1 for r in result.step_records if r.get("action_forced"))
-
-        episode_record = {
+        return {
             "run_id": run_id,
-            "task_id": task_id,
-            "task_type": task_type,
             "gamefile": gamefile,
+            "task_id": extract_task_id(gamefile),
+            "task_type": extract_task_type(gamefile),
             "goal": goal,
+            "result": result,
+        }
+
+    outcomes = ordered_map(run_episode, candidates, workers=args.workers,
+                           label="collect_failures", progress_every=10)
+    episodes_run = len(outcomes)
+
+    failure_count = 0
+    for o in outcomes:
+        result = o["result"]
+        forced_action_count = sum(1 for r in result.step_records if r.get("action_forced"))
+        append_jsonl(all_episodes_file, {
+            "run_id": o["run_id"],
+            "task_id": o["task_id"],
+            "task_type": o["task_type"],
+            "gamefile": o["gamefile"],
+            "goal": o["goal"],
             "success": result.success,
             "steps": result.steps,
-            "forced_action_count": forced_action_count,
             "seed": seed,
+            "forced_action_count": forced_action_count,
             **env_config_block(config, seed),
-        }
-        append_jsonl(all_episodes_file, episode_record)
-
-        if not result.success:
-            failure_count += 1
-            failure_record = {
-                "failure_id": f"F{failure_count:04d}",
-                "task_id": task_id,
-                "task_type": task_type,
-                "gamefile": gamefile,
-                "goal": goal,
-                "trajectory": result.step_records,
-                "final_observation": result.final_observation,
-                "forced_action_count": forced_action_count,
-                "seed": seed,
-                **env_config_block(config, seed),
-            }
-            append_jsonl(output_file, failure_record)
+        })
+        if result.success or failure_count >= min_failures:
+            continue
+        failure_count += 1
+        append_jsonl(output_file, {
+            "failure_id": f"F{failure_count:04d}",
+            "task_id": o["task_id"],
+            "task_type": o["task_type"],
+            "gamefile": o["gamefile"],
+            "goal": o["goal"],
+            "trajectory": result.step_records,
+            "final_observation": result.final_observation,
+            "seed": seed,
+            "forced_action_count": forced_action_count,
+            **env_config_block(config, seed),
+        })
+    stop_reason = ("min_failures_reached" if failure_count >= min_failures
+                   else "max_train_episodes_reached")
 
     print(
         f"[collect_failures] episodes_run={episodes_run} failures_found={failure_count} "
@@ -146,6 +156,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max_episodes", type=int, default=None)
     parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--output_file", default=None)
+    add_workers_arg(parser)
     return parser
 
 

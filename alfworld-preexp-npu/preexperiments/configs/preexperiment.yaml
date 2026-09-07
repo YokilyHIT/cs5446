@@ -15,7 +15,14 @@ model:
   max_retries: 5
 
 sampling:
-  temperature: 0.2
+  # 规范 §2 规定 0.2；AdaMEM 自己的 runner 用 0.7
+  # (examples/prompt_agent/gpt4o_alfworld.py: TEMPERATURE 默认 0.7)。
+  # 本轮按 AdaMEM 复现取 0.7 —— 这是一处对规范的显式偏离，已记录，
+  # 而非"偷偷沿用不确定的默认值"（规范 §2 对此有明确要求）。
+  # 副作用：0.2 + 约束解码会让 B11 的 4 次重采样几乎必然一致，
+  # ambiguity 特征因此全为 0；0.7 才可能有方差。
+  # temp 0.2 那一轮的结果已归档在 results_temp02_spec/。
+  temperature: 0.7
   top_p: 0.95
   max_tokens_per_action: 256
   max_episode_steps: 30
@@ -31,29 +38,16 @@ sampling:
   #                     cannot use guided_choice (the completion is not a bare
   #                     action string), so watch the forced-action rate via
   #                     scripts/check_forced_action_rate.py.
-  #
-  # Default stays "spec", even though the spec section 39 decision process
-  # actually run on real Ascend hardware (see diagnostics/README.md) measured
-  # "adamem_think" performing meaningfully better: "spec" got only 10.0%
-  # success (23% of episodes stuck looping among ~12 actions) at
-  # max_episode_steps=30, raising max_episode_steps to 50 bought +1 success
-  # for 62% more compute (ruled out as the bottleneck -- successful episodes
-  # only ever needed 5-12 steps), and "adamem_think" measured 26.7% success
-  # with only 10% looping under the same seed/task subset.
-  #
-  # Reconciled after review (an earlier version of this file defaulted to
-  # "adamem_think" based on that same data): switching prompt_style changes
-  # what population the results generalize to -- delta is then "value of a
-  # lesson to a reasoning agent", not "to the spec section 5.1 agent" -- and
-  # that scope change should be a deliberate, visible choice made per run
-  # (and stated in the report), not a silent default. Set this explicitly to
-  # "adamem_think" (or pass --prompt_style if a script exposes it) when the
-  # baseline measured in diagnostics/ justifies it, and say so in the report.
-  prompt_style: "spec"
+  prompt_style: "adamem_think"
   # Token budget for "adamem_think" only: the reasoning and the action share
   # one completion, and at max_tokens_per_action=256 the model gets cut off
   # mid-<think> and never emits an <action> tag.
-  adamem_max_tokens: 512
+  adamem_max_tokens: 1024
+  # 与 AdaMEM 对齐的两项（其 env_manager.build_text_obs / config_tw.yaml）：
+  #   history_length 50  —— 我们原本只给 8 轮，30 步之后 agent 看不到自己试过什么
+  #   排除 help          —— AdaMEM 明确过滤掉它；实测有 episode 卡在 help 上耗尽预算
+  # 二者都不是规范 §2 规定的量（§2 只固定模型/温度/seed/步数上限）。
+  history_length: 50
 
 seeds: [13, 37, 73]
 
@@ -95,9 +89,8 @@ experiment_b:
   # not the remainder of the global episode cap. Decision points are spread
   # across the whole episode, so a point at step 29 would otherwise leave both
   # branches one step each: both fail, Delta_t = 0, and that 0 reflects the
-  # budget rather than the foresight. Both branches always get the same
-  # number, so the paired comparison stays valid. Falls back to
-  # sampling.max_episode_steps if unset.
+  # budget rather than the foresight. Both branches always get the same number,
+  # so the paired comparison stays valid.
   branch_rollout_budget: 30
 
 stats:

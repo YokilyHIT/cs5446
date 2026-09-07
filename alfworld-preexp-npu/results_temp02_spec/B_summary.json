@@ -1,0 +1,27 @@
+{
+  "decision_points": 148,
+  "changed_points": 54,
+  "calibration_points": 50,
+  "evaluation_points": 98,
+  "mismatch_rate": 0.08571428571428572,
+  "rho_self": -0.10795167912317863,
+  "rho_self_ci": [
+    -0.3130058665321237,
+    0.07376585207757388
+  ],
+  "rho_sem": -0.40312736366463736,
+  "rho_sem_ci": [
+    -0.6184292277817154,
+    -0.12011041299825728
+  ],
+  "oracle_gain": 0.030612244897959183,
+  "oracle_gain_ci": [
+    0.0,
+    0.07142857142857142
+  ],
+  "helpful_rate": 0.08571428571428572,
+  "harmful_rate": 0.08571428571428572,
+  "any_success_rate_eval": 0.29591836734693877,
+  "verdict": "WEAK-GO",
+  "interpretation": "Only 1/3 go/no-go criteria hold (mismatch_rate=0.086, oracle_gain=0.031, rho_self=-0.108); weakly supported by preliminary evidence and any follow-up should proceed cautiously."
+}

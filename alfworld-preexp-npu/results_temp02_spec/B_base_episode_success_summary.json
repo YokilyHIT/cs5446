@@ -1,0 +1,8 @@
+{
+  "episodes_run": 30,
+  "episodes_succeeded": 11,
+  "success_rate": 0.36666666666666664,
+  "total_steps": 694,
+  "forced_action_count": 0,
+  "forced_action_rate": 0.0
+}

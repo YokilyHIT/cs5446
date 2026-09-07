@@ -14,3 +14,9 @@ reports/*.md
 requirements_lock.txt
 gpu_info.txt
 ADAMEM_COMMIT.txt
+
+# diagnostics/ 是 Stage 0 的证据（成功率测量），属于实验记录的一部分，必须提交；
+# results/ figures/ reports/ 仍然忽略：那些是每次运行都会被覆盖的中间产物。
+!diagnostics/
+!diagnostics/*.jsonl
+!diagnostics/*.md

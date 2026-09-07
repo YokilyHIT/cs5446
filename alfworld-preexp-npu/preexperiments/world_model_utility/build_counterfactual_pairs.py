@@ -26,6 +26,7 @@ from preexperiments.common.alfworld_runner import rollout
 from preexperiments.common.embeddings import Embedder, cosine_sim
 from preexperiments.common.llm_client import load_client_from_config
 from preexperiments.common.logging_utils import append_jsonl, ensure_dirs, load_yaml_config, new_run_id, read_jsonl_all
+from preexperiments.common.parallel import add_workers_arg, ordered_map
 from preexperiments.common.replay_state import StateRestoreError, restore_state
 from preexperiments.world_model_utility._common import reset_output_file
 
@@ -75,18 +76,14 @@ def _run_branches(
     step = dp["step"]
     base_action = fr["base_action"]
     foresight_action = fr["foresight_action"]
-    action_changed = fr["action_changed"]
-    # Known-issue fix: both branches get a FULL fresh step budget counted
-    # from the decision point, not "global max_episode_steps minus the
-    # decision point's step index". Decision points sampled late in an
-    # episode (e.g. step 29 of 30) used to leave only 1 remaining step for
-    # either branch to prove itself -- both then fail identically not
-    # because foresight was unhelpful but because neither branch had any
-    # room left. This does mean a branch continuation can run past the
-    # original episode's max_episode_steps in absolute step count; that's
-    # deliberate here (it's an offline counterfactual analysis, not the
-    # online episode itself, which already ran to its real spec-mandated
-    # length in collect_decision_points.py).
+
+    # Both branches get the SAME step budget counted from the decision point,
+    # rather than sharing the global episode cap. With decision points now
+    # spread across the whole episode (steps 0..29 observed), the old
+    # "max_episode_steps - t" budget left a point at step 29 with one step per
+    # branch: both fail, Delta_t = 0, and that 0 says nothing about foresight --
+    # only that neither branch was given room to finish. Identical budgets keep
+    # the paired comparison valid.
     branch_budget = config["experiment_b"].get(
         "branch_rollout_budget", config["sampling"]["max_episode_steps"]
     )
@@ -124,23 +121,28 @@ def _run_branches(
             observation=o_next_true,
             history=[(base_action, o_next_true)],
             start_step=step + 1,
-            max_steps=step + 1 + branch_budget,
+            # Branch 0 already spent one step executing base_action above, so
+            # it resumes at step+1 and stops at the same absolute index as
+            # Branch W: both get exactly `branch_budget` steps from the
+            # decision point.
+            max_steps=step + branch_budget,
             lesson=None,
         )
         y0 = result0.success
 
-    # Known-issue fix: when foresight didn't actually change the action,
-    # Branch W would restore fresh and re-execute the IDENTICAL action Branch
-    # 0 already took, then continue with the identical base planner -- any
-    # difference between Y_W and Y_0 in that case can only come from
-    # non-determinism (e.g. batch-composition effects under concurrent vLLM
-    # requests), not from foresight, since foresight had no effect on what
-    # was actually done. That would fabricate a fake mismatch signal, which
-    # is exactly what R_mismatch (experiment B's core metric) measures.
-    # Skipping the re-run when action_changed is False also roughly halves
-    # compute for the majority of points, where foresight agrees with the
-    # base action.
-    if not action_changed:
+    if not fr["action_changed"]:
+        # a_t^(W) == a_t^(0): Branch W would execute the identical action from
+        # the identical restored state and then continue with the identical
+        # planner, so Y_W == Y_0 by construction and Delta_t == 0. Asserting
+        # that is strictly better than measuring it, for two reasons:
+        #   * Correctness. vLLM's batched sampling is not reproducible under
+        #     concurrency (same prompt + same seed diverges when the batch
+        #     composition differs -- verified on this host). Re-running the
+        #     identical branch could therefore split into Delta_t = +-1 purely
+        #     from batch numerics, manufacturing mismatch signal in exactly the
+        #     statistic experiment B reports.
+        #   * Cost. Unchanged points are typically the majority, and this
+        #     halves their rollout cost.
         yw = y0
     else:
         # Branch W needs a fresh, second restore -- Branch 0 already advanced
@@ -181,6 +183,10 @@ def _run_branches(
         "action_changed": fr["action_changed"],
         "wm_prediction": fr["wm_prediction"],
         "self_confidence": fr["self_confidence"],
+        # 预注册的替代信号，见 generate_foresight.py 顶部注释
+        "confidence_separate": fr.get("confidence_separate", float("nan")),
+        "logprob_prob": fr.get("logprob_prob", float("nan")),
+        "base_action_is_noop": fr.get("base_action_is_noop", None),
         "semantic_correctness": semantic_correctness,
         "base_success": bool(y0),
         "foresight_success": bool(yw),
@@ -215,31 +221,37 @@ def main(args: argparse.Namespace) -> None:
     embedder = Embedder(config)
 
     n_total = len(joined)
-    n_written = 0
-    n_failed = 0
 
-    for dp, fr in joined:
-        point_id = dp["point_id"]
+    def run_pair(pair):
+        dp, fr = pair
         try:
-            record = _run_branches(config=config, llm=llm, embedder=embedder, split=split, dp=dp, fr=fr)
+            return ("ok", _run_branches(config=config, llm=llm, embedder=embedder,
+                                        split=split, dp=dp, fr=fr))
         except StateRestoreError as e:
-            n_failed += 1
-            append_jsonl(
-                fail_path,
-                {
-                    "point_id": point_id,
-                    "task_id": dp["task_id"],
-                    "game_id_or_path": dp["game_id_or_path"],
-                    "error": str(e),
-                },
-            )
-            print(f"[build_counterfactual_pairs] WARNING: restore failed for {point_id}: {e}")
-            continue
+            # Caught per-point rather than allowed to propagate: a handful of
+            # unrestorable points is expected and is what the fail_ratio check
+            # below exists to judge, so one of them must not kill the pool and
+            # discard every other point's rollouts.
+            return ("restore_failed", {
+                "point_id": dp["point_id"],
+                "task_id": dp["task_id"],
+                "game_id_or_path": dp["game_id_or_path"],
+                "error": str(e),
+            })
 
-        append_jsonl(out_path, record)
-        n_written += 1
-        if (n_written + n_failed) % 5 == 0 or (n_written + n_failed) == n_total:
-            print(f"[build_counterfactual_pairs] progress {n_written + n_failed}/{n_total} (failed={n_failed})")
+    outcomes = ordered_map(run_pair, joined, workers=args.workers,
+                           label="build_counterfactual_pairs", progress_every=5)
+
+    n_written = n_failed = 0
+    for status, payload in outcomes:
+        if status == "ok":
+            append_jsonl(out_path, payload)
+            n_written += 1
+        else:
+            append_jsonl(fail_path, payload)
+            n_failed += 1
+            print(f"[build_counterfactual_pairs] WARNING: restore failed for "
+                  f"{payload['point_id']}: {payload['error']}")
 
     fail_ratio = (n_failed / n_total) if n_total else 0.0
     print(
@@ -268,6 +280,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Process only the first N decision points (by point_id); for cheap smoke tests.",
     )
+    add_workers_arg(parser)
     return parser
 
 

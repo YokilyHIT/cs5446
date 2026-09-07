@@ -1,0 +1,11 @@
+{
+  "G_oracle": 0.030612244897959183,
+  "G_oracle_ci": [
+    0.0,
+    0.07142857142857142
+  ],
+  "evaluation_n": 98,
+  "mean_base_success": 0.2653061224489796,
+  "mean_foresight_success": 0.2653061224489796,
+  "mean_confidence_gate_success": 0.2653061224489796
+}

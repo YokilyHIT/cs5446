@@ -1,0 +1,64 @@
+{
+  "data_counts": {
+    "train_episodes": 50,
+    "failures_collected": 20,
+    "failures_with_lessons": 20,
+    "failures_evaluated_pairwise": 20,
+    "pairwise_episodes": 360,
+    "topk_vs_all_episodes": 360
+  },
+  "a6_delta_distribution": {
+    "p_delta_lt0": 0.6,
+    "p_delta_eq0": 0.25,
+    "p_delta_gt0": 0.15,
+    "var_delta": 0.034074074074074076
+  },
+  "a6_luck_baseline": {
+    "n_failures": 20,
+    "n_simulations": 1000,
+    "var_delta_pvalue": 0.829,
+    "p_delta_le0_pvalue": 0.015,
+    "note": "p-values are the fraction of pure-chance (binomial-null) simulated replicates at least as extreme as the observed statistic; small p-value = observed heterogeneity is unlikely to be sampling noise alone."
+  },
+  "a7_correlation": {
+    "rho_u": -0.19643461924821506,
+    "p_value": 0.406510516688415,
+    "ci_lo": -0.5999134802129188,
+    "ci_hi": 0.21753419373622343,
+    "n_resamples": 1000,
+    "bootstrap_seed": 2026
+  },
+  "a8_success_rates": {
+    "NoMemory": {
+      "point": 0.34444444444444444,
+      "ci_lo": 0.24444444444444444,
+      "ci_hi": 0.43333333333333335
+    },
+    "AllLessons": {
+      "point": 0.3333333333333333,
+      "ci_lo": 0.23333333333333334,
+      "ci_hi": 0.43333333333333335
+    },
+    "RandomK": {
+      "point": 0.23333333333333334,
+      "ci_lo": 0.14444444444444443,
+      "ci_hi": 0.32222222222222224
+    },
+    "TopK": {
+      "point": 0.3,
+      "ci_lo": 0.2111111111111111,
+      "ci_hi": 0.4
+    }
+  },
+  "a8_sr_topk_minus_all": {
+    "point": -0.033333333333333326,
+    "ci_lo": -0.15555555555555556,
+    "ci_hi": 0.1111111111111111
+  },
+  "go_no_go": {
+    "p_delta_le0": 0.85,
+    "mean_pairwise_success": 0.4722222222222222,
+    "verdict": "WEAK-GO",
+    "interpretation": "Result pattern does not cleanly match the GO or NO-GO thresholds; weakly supported is the closest fit given P(delta<=0)=0.85, rho_U=-0.20, SR_TopK-SR_All=-0.03 (luck-baseline p=0.01 < 0.1, i.e. distinguishable from pure chance)."
+  }
+}

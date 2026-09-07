@@ -44,6 +44,7 @@ from preexperiments.common.alfworld_runner import (
     reset_and_attach,
 )
 from preexperiments.common.llm_client import load_client_from_config
+from preexperiments.common.parallel import add_workers_arg, ordered_map
 from preexperiments.common.logging_utils import (
     append_jsonl,
     build_step_log,
@@ -106,11 +107,10 @@ def main(args: argparse.Namespace) -> None:
     n_episodes = args.max_episodes or eb_cfg["eval_episodes"]
     per_episode_cap = eb_cfg["decision_points_per_episode"]
     target_total = args.max_points or eb_cfg["target_decision_points"]
-    max_steps = config["sampling"]["max_episode_steps"]
+    sampling_cfg = config["sampling"]
+    max_steps = sampling_cfg["max_episode_steps"]
 
     llm = load_client_from_config(config)
-    prompt_style = config["sampling"].get("prompt_style", "spec")
-    adamem_max_tokens = config["sampling"].get("adamem_max_tokens", 512)
     all_gamefiles = _list_sorted_game_files(config, split)
     if len(all_gamefiles) < n_episodes:
         print(
@@ -129,68 +129,43 @@ def main(args: argparse.Namespace) -> None:
         stride = len(all_gamefiles) / n_episodes
         chosen_gamefiles = [all_gamefiles[int(i * stride)] for i in range(n_episodes)]
 
-    total_points = 0
-    episodes_run = 0
-    episodes_succeeded = 0
-    total_steps_run = 0
-    total_forced_actions = 0
-
-    for gamefile in chosen_gamefiles:
-        if total_points >= target_total:
-            break
-
+    # Each episode is run independently and returns its own candidate decision
+    # points; point_id is assigned afterwards, in sorted-gamefile order, so the
+    # ids and the calibration/evaluation split downstream (which is "the first
+    # N point_ids") stay deterministic no matter what order episodes finish in.
+    def run_episode(gamefile):
         adapter = build_single_game_adapter(config, split, gamefile)
         raw_obs, info = reset_and_attach(adapter)
         goal, observation = extract_goal_and_observation(raw_obs)
         task_id = extract_task_id(gamefile)
         run_id = new_run_id("B1base")
-        episodes_run += 1
 
         history: List[Tuple[str, str]] = []
         action_prefix: List[str] = []
         candidates: List[Dict[str, Any]] = []
+        step_logs: List[Dict[str, Any]] = []
         step = 0
         done = False
         success = False
-        # The env's own text for the current state, kept separately from
-        # `observation`. They differ ONLY at step 0: reset() returns the goal
-        # sentence ("Your task is to: ...") embedded in the observation, and
-        # extract_goal_and_observation() strips it out for prompting. Replay
-        # verification must compare against what the env actually emits, so a
-        # step-0 decision point needs the unstripped text -- comparing the
-        # stripped one made every step-0 point fail restore_state() (~1 in 6
-        # of all points, enough to trip the 10% abort limit in
-        # build_counterfactual_pairs.py).
+        forced_count = 0
         raw_state_obs = raw_obs
 
-        # Run the FULL episode (see module docstring: no early cutoff once a
-        # quota of candidates is reached) so decision points can be sampled
-        # from across the whole trajectory, and so we know whether the base
-        # planner ever actually succeeds on this task.
         while step < max_steps and not done:
             admissible = extract_admissible(info)
             history_text = format_history(history)
             if len(admissible) >= 2 and len(history_text) <= _HISTORY_CHAR_CAP:
-                candidates.append(
-                    {
-                        "task_id": task_id,
-                        "game_id_or_path": gamefile,
-                        "seed": _BASE_SEED,
-                        "step": step,
-                        "goal": goal,
-                        "action_prefix": list(action_prefix),
-                        "observation": observation,
-                        # what restore_state() must reproduce (see raw_state_obs above)
-                        "restore_observation": raw_state_obs,
-                        "admissible_actions": list(admissible),
-                    }
-                )
+                candidates.append({
+                    "task_id": task_id,
+                    "game_id_or_path": gamefile,
+                    "seed": _BASE_SEED,
+                    "step": step,
+                    "goal": goal,
+                    "action_prefix": list(action_prefix),
+                    "observation": observation,
+                    "restore_observation": raw_state_obs,
+                    "admissible_actions": list(admissible),
+                })
 
-            # Known-issue fix: thread the configured prompt_style through --
-            # without it this call silently stayed on "spec" regardless of
-            # config, while build_counterfactual_pairs.py's branch
-            # continuations (via rollout()) DO read it, mixing strategies
-            # within one experiment run.
             action, forced, prompt_tokens, completion_tokens = choose_action(
                 llm,
                 goal=goal,
@@ -199,53 +174,54 @@ def main(args: argparse.Namespace) -> None:
                 admissible_actions=admissible,
                 seed=_BASE_SEED,
                 lesson=None,
-                prompt_style=prompt_style,
-                adamem_max_tokens=adamem_max_tokens,
+                prompt_style=sampling_cfg.get("prompt_style", "spec"),
+                adamem_max_tokens=sampling_cfg.get("adamem_max_tokens", 512),
+                history_length=sampling_cfg.get("history_length", 50),
             )
             next_obs, done, success, info = adapter.step(action)
-            total_steps_run += 1
-            total_forced_actions += int(forced)
+            forced_count += int(forced)
 
-            append_jsonl(
-                raw_path,
-                build_step_log(
-                    run_id=run_id,
-                    task_id=task_id,
-                    game_id_or_path=gamefile,
-                    split=split,
-                    seed=_BASE_SEED,
-                    step=step,
-                    goal=goal,
-                    observation=observation,
-                    admissible_actions=list(admissible),
-                    action=action,
-                    next_observation=next_obs,
-                    done=done,
-                    success=success,
-                    prompt_tokens=prompt_tokens,
-                    completion_tokens=completion_tokens,
-                    model=config["model"]["name"],
-                    temperature=config["sampling"]["temperature"],
-                    top_p=config["sampling"]["top_p"],
-                    max_episode_steps=max_steps,
-                    extra={"action_forced": forced},
-                ),
-            )
+            step_logs.append(build_step_log(
+                run_id=run_id, task_id=task_id, game_id_or_path=gamefile, split=split,
+                seed=_BASE_SEED, step=step, goal=goal, observation=observation,
+                admissible_actions=list(admissible), action=action, next_observation=next_obs,
+                done=done, success=success, prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens, model=config["model"]["name"],
+                temperature=sampling_cfg["temperature"], top_p=sampling_cfg["top_p"],
+                max_episode_steps=max_steps, extra={"action_forced": forced},
+            ))
 
             history.append((action, next_obs))
             action_prefix.append(action)
             observation = next_obs
-            raw_state_obs = next_obs  # from step 1 on the two are identical
+            raw_state_obs = next_obs
             step += 1
 
-        episodes_succeeded += int(success)
+        return {
+            "candidates": _select_spread(candidates, per_episode_cap),
+            "step_logs": step_logs,
+            "success": success,
+            "steps": step,
+            "forced": forced_count,
+        }
 
-        for cand in _select_spread(candidates, per_episode_cap):
+    outcomes = ordered_map(run_episode, chosen_gamefiles, workers=args.workers,
+                           label="collect_decision_points", progress_every=5)
+
+    episodes_run = len(outcomes)
+    episodes_succeeded = sum(int(o["success"]) for o in outcomes)
+    total_steps_run = sum(o["steps"] for o in outcomes)
+    total_forced_actions = sum(o["forced"] for o in outcomes)
+
+    total_points = 0
+    for o in outcomes:
+        for rec in o["step_logs"]:
+            append_jsonl(raw_path, rec)
+        for cand in o["candidates"]:
             if total_points >= target_total:
                 break
             total_points += 1
-            point_id = f"D{total_points:05d}"
-            append_jsonl(dp_path, {"point_id": point_id, **cand})
+            append_jsonl(dp_path, {"point_id": f"D{total_points:05d}", **cand})
 
     forced_rate = (total_forced_actions / total_steps_run) if total_steps_run else float("nan")
     success_rate = (episodes_succeeded / episodes_run) if episodes_run else float("nan")
@@ -297,6 +273,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
         default=None,
         help="Override experiment_b.target_decision_points (smoke tests); default uses the config value.",
     )
+    add_workers_arg(parser)
     return parser
 
 

@@ -25,8 +25,9 @@ class LLMResponse:
     model: str
     seed: Optional[int]
     temperature: float
-    top_p: float
     raw_finish_reason: Optional[str] = None
+    top_p: float = 0.95
+    mean_logprob: float = float("nan")
 
 
 class LLMClient:
@@ -79,6 +80,7 @@ class LLMClient:
         choices: Optional[Sequence[str]] = None,
         prefill: Optional[str] = None,
         stop: Optional[Sequence[str]] = None,
+        logprobs: bool = False,
     ) -> LLMResponse:
         """`choices`, when given, constrains decoding so the completion is
         EXACTLY one of those strings (vLLM's `guided_choice` structured
@@ -117,6 +119,14 @@ class LLMClient:
         last_err: Optional[Exception] = None
         for attempt in range(self.max_retries):
             try:
+                kwargs = {}
+                if logprobs:
+                    # Mean token logprob of the completion: the model's own
+                    # uncertainty about the text it just produced, as an
+                    # alternative to asking it to verbalise a confidence number
+                    # (which this model reports as a near-constant 0.95).
+                    kwargs["logprobs"] = True
+                    kwargs["top_logprobs"] = 1
                 resp = self._client.chat.completions.create(
                     model=self.model,
                     messages=messages,
@@ -124,8 +134,14 @@ class LLMClient:
                     top_p=top_p,
                     max_tokens=max_tokens,
                     extra_body=extra_body,
+                    **kwargs,
                 )
                 choice = resp.choices[0]
+                mean_lp = float("nan")
+                if logprobs and getattr(choice, "logprobs", None) and choice.logprobs.content:
+                    lps = [t.logprob for t in choice.logprobs.content]
+                    if lps:
+                        mean_lp = sum(lps) / len(lps)
                 usage = resp.usage
                 return LLMResponse(
                     text=(choice.message.content or "").strip(),
@@ -136,6 +152,7 @@ class LLMClient:
                     temperature=temperature,
                     top_p=top_p,
                     raw_finish_reason=choice.finish_reason,
+                    mean_logprob=mean_lp,
                 )
             except Exception as e:  # noqa: BLE001 - deliberately broad, we retry any transient error
                 last_err = e

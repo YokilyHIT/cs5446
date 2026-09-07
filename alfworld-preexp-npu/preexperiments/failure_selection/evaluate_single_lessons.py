@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 
 from preexperiments.common.alfworld_runner import build_single_game_adapter, reset_and_attach, rollout
 from preexperiments.common.llm_client import load_client_from_config
+from preexperiments.common.parallel import add_workers_arg, ordered_map
 from preexperiments.common.logging_utils import append_jsonl, ensure_dirs, env_config_block, load_yaml_config, new_run_id, read_jsonl_all
 from preexperiments.failure_selection._common import extract_goal, reset_output_file
 
@@ -55,45 +56,60 @@ def main(args: argparse.Namespace) -> None:
     seeds = config["seeds"]
     llm = load_client_from_config(config)
 
-    episode_count = 0
+    # Build the full (failure, task, seed, condition) job list first, then run
+    # it through the pool. Episodes are entirely independent -- each builds its
+    # own single-game env -- so the only thing concurrency changes is wall
+    # clock. ordered_map returns results in job order, so the JSONL is written
+    # deterministically no matter what order they finish in.
+    jobs = []
     for failure_id in selected_failure_ids:
         for pair in pairs_by_failure[failure_id]:
-            lesson_text = pair["lesson"]
-            gamefile = pair["related_gamefile"]
-            task_id = pair["related_task_id"]
             for seed in seeds:
-                for condition, lesson in (("no_lesson", None), ("with_lesson", lesson_text)):
-                    adapter = build_single_game_adapter(config, split, gamefile)
-                    obs, info = reset_and_attach(adapter)
-                    goal = extract_goal(obs, info)
-                    run_id = new_run_id("A4")
-                    result = rollout(
-                        adapter,
-                        llm=llm,
-                        config=config,
-                        run_id=run_id,
-                        task_id=task_id,
-                        game_id_or_path=gamefile,
-                        split=split,
-                        seed=seed,
-                        goal=goal,
-                        observation=obs,
-                        lesson=lesson,
-                    )
-                    forced_action_count = sum(1 for r in result.step_records if r.get("action_forced"))
-                    record = {
-                        "run_id": run_id,
+                for condition, lesson in (("no_lesson", None), ("with_lesson", pair["lesson"])):
+                    jobs.append({
                         "failure_id": failure_id,
-                        "task_id": task_id,
-                        "condition": condition,
+                        "task_id": pair["related_task_id"],
+                        "gamefile": pair["related_gamefile"],
                         "seed": seed,
-                        "success": result.success,
-                        "steps": result.steps,
-                        "forced_action_count": forced_action_count,
-                        **env_config_block(config, seed),
-                    }
-                    append_jsonl(output_file, record)
-                    episode_count += 1
+                        "condition": condition,
+                        "lesson": lesson,
+                    })
+
+    def run_job(job):
+        adapter = build_single_game_adapter(config, split, job["gamefile"])
+        obs, info = reset_and_attach(adapter)
+        goal = extract_goal(obs, info)
+        run_id = new_run_id("A4")
+        result = rollout(
+            adapter,
+            llm=llm,
+            config=config,
+            run_id=run_id,
+            task_id=job["task_id"],
+            game_id_or_path=job["gamefile"],
+            split=split,
+            seed=job["seed"],
+            goal=goal,
+            observation=obs,
+            lesson=job["lesson"],
+        )
+        return {
+            "run_id": run_id,
+            "failure_id": job["failure_id"],
+            "task_id": job["task_id"],
+            "condition": job["condition"],
+            "seed": job["seed"],
+            "success": result.success,
+            "steps": result.steps,
+            "forced_action_count": sum(1 for r in result.step_records if r.get("action_forced")),
+            **env_config_block(config, job["seed"]),
+        }
+
+    records = ordered_map(run_job, jobs, workers=args.workers,
+                          label="evaluate_single_lessons", progress_every=20)
+    for record in records:
+        append_jsonl(output_file, record)
+    episode_count = len(records)
 
     print(
         f"[evaluate_single_lessons] failures_evaluated={len(selected_failure_ids)} "
@@ -107,6 +123,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--config", default="preexperiments/configs/preexperiment.yaml")
     parser.add_argument("--max_failures", type=int, default=None)
+    add_workers_arg(parser)
     return parser
 
 

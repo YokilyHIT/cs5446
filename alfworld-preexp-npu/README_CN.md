@@ -407,4 +407,77 @@ B4 套推理脚手架、未变道点不跑 Branch W），我这边在上一轮"�
 
 ---
 
+## 10. 第三次交接（`part01-11`）：完整实验真的跑完了
+
+这次收到的是 11 个小包（`part01`~`part11`，每包 ≤57KB），本质是**同一条 GitHub 血统**
+（`YokilyHIT/cs5446`）的最新快照，相对我这边的 `4f3fe6f`（"Fix 5 methodology/correctness
+issues found in review"）commit 生成的完整 `git diff` 补丁，**这次不再是增量**，
+而是从那个 commit 到 2026-09-07 的全部累积改动（32 个文件，+2714/−303 行）。
+
+### 10.1 怎么处理的
+
+`4f3fe6f` 正好是我本地历史里真实存在的一个 commit，所以这次没有像上次那样只能"读懂再手动
+搬"——我把这个 commit 单独检出到一个临时目录，把 part01/part02 的 `.patch` 用 `git apply`
+干净地打了上去（验证通过：跟真机上的目录逐字节一致），再拿这个"打过补丁的干净基线"和我
+现在的代码逐文件 diff，精确定位哪些文件对方是纯粹的超集（可以直接整份覆盖）、哪些文件我
+这边有对方没有的独有内容（需要在覆盖后重新叠上去）。
+
+**结果**：`preexperiments/common/`、`world_model_utility/`（除 `analyze.py` 和
+`evaluate_planning_gain.py`）、`failure_selection/`（除 `analyze.py`，内容其实跟我这边
+完全一致）、`scripts/`、新增的 `tools/` 目录、`.gitignore`、两份配置文件——这些直接整份
+换成对方的版本。`world_model_utility/analyze.py` 和 `evaluate_planning_gain.py` 我这边
+多出 McNemar 检验、`R_mismatch` 置信区间、置信度/ambiguity 退化披露（`gate_usage_rate_eval`
+等字段）——对方目前还没修这两条（他们自己的"已知未修"清单也这么写），所以是换成对方版本后
+把这几块重新叠上去。`third_party/`、`scripts/offline_download/`、`scripts/env.sh.example`
+这几个我这边独有、对方没碰的补充文件原样保留。
+
+### 10.2 真正新增的能力（不只是把之前几轮的修复合并到一起）
+
+- **`preexperiments/common/parallel.py`（新文件）+ 全线路并发改造**：一个保序、失败不丢弃
+  的线程池封装（`ordered_map`），现在 `collect_failures.py`、`evaluate_single_lessons.py`、
+  `evaluate_topk_vs_all.py`、`generate_foresight.py`、`build_counterfactual_pairs.py` 都
+  支持 `--workers N` 并发跑多个 episode。之前测出的 14 倍吞吐提升（16 路并发 513 tok/s
+  vs 单路 37 tok/s）现在真正用在了正式实验上，不再只是 `measure_baseline.py` 自己的能力。
+- **`format_admissible`/`format_history` 对齐 AdaMEM 原版渲染方式**：动作列表改成 AdaMEM
+  的 `'action'` 逐行加引号格式，历史长度默认从 8 轮提到 50 轮（AdaMEM 自己用 50，8 轮的话
+  跑到 30 步之后 agent 根本看不到自己试过什么），并且过滤掉 `help`（AdaMEM 也过滤，
+  真机测出过一个 episode 把整个步数预算耗在反复 `help` 上）。
+- **一个改变实验 B 解读方式的发现**：`tools/probe_confidence_elicitation.py` 测出，规范
+  §22 那种"写完预测紧接着写置信度"的行内自报置信度，148 个决策点里 102 个恰好是 0.95，
+  跟真实预测准确性的相关只有 **+0.034 (p=0.68)**——基本不相关。WorldEvolver 路线"置信度
+  ≈ 预测正确概率"这个前提在这份数据上不成立。作为回应，`generate_foresight.py` 现在额外
+  记录两个预注册的替代信号：`confidence_separate`（预测写完之后**另开一次独立调用**去评估，
+  分布散开到 0.30–0.90）和 `logprob_prob`（用 token logprob 算出的置信度代理），跟规范
+  合规的 `self_confidence` 一起写进 CSV，供以后对照。另外还发现真正预测 Δ_t 的其实不是
+  预测质量，而是"被打断的动作本身值不值钱"（打断空动作如 `look`/`examine` 净赚 +2，打断
+  有实际效果的动作净亏 -1）——`base_action_is_noop` 字段把这个也记了下来。
+- **`temperature: 0.7`**（偏离规范 §2 的 0.2，写在配置注释里的显式决定）：按 AdaMEM 自己
+  runner 的默认值复现。副作用是 0.2 配上约束解码会让 B11 的 4 次重采样几乎必然给出同一个
+  动作，ambiguity 特征因此恒为 0——0.7 才可能有方差。0.2 那一轮的完整结果原样保留在本仓库
+  `results_temp02_spec/`，没有被覆盖丢弃。
+
+### 10.3 实验真的跑完了，结论是什么
+
+跟前两次交接不同，这次实验 A 全量跑完、实验 B（temp 0.2 + spec 提示词）也全量跑完并归档在
+`results_temp02_spec/`（temp 0.7 + adamem_think 那一轮快照时还在跑）。我把这两份真实结果
+拷进了本仓库的 `results_reference_npu/`、`results_temp02_spec/`、`reports_reference_npu/`
+（起了跟 `results/`/`reports/` 不同的名字，避免以后自己重新跑一遍时和这份参考数据搞混），
+并且**用我这边重新整理过的 `generate_report.py` 跑了一遍**，端到端验证了整条分析链路在真实
+数据上真的能跑通、字段都对得上。结果：
+
+- **实验 A：`WEAK-GO`**——P(Δ≤0)=0.85，运气基线 p=0.015（能排除纯噪声，说明教训之间确实
+  存在真实的价值差异），但 rho_U=-0.20（当前的新颖度+可迁移性代理信号完全没找对方向，
+  跟真实价值负相关）、SR_TopK-SR_All=-0.03（挑出来的"高价值"教训实际效果反而不如全量）。
+  翻译成大白话：**"有些教训确实比别的更差"这件事是真的，但我们现在这套"怎么挑出好教训"
+  的方法目前还挑不对。**
+- **实验 B：`WEAK-GO`**——3 条判据里只过了 1 条（mismatch_rate=0.086，oracle_gain=0.031，
+  rho_self=-0.108）。翻译成大白话：**置信度和"参考预测是否真的有帮助"之间确实存在偏差，
+  但偏差幅度和 oracle 上限空间目前都不算大，值得继续跟但不算强信号。**
+- **两个方向都没有干脆利落地清出 GO**，`generate_report.py` 的最终建议是"neither"——
+  但也都没有被 NO-GO 排除掉，是"值得用更大样本量再验证一次，而不是现在就下定论"的状态。
+
+详细数字见 `reports_reference_npu/preliminary_results_A_and_tempB0.2spec.md`。
+
+---
+
 如果你想让我在真机上跑之前先review一遍某个具体脚本的逻辑，或者想让我针对某一部分（比如实验 A 的相关任务挑选逻辑）再详细讲一遍，随时说。
