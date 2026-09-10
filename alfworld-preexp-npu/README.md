@@ -21,9 +21,18 @@ the mandatory smoke tests) before running anything here.
 
 **Validated on real hardware** (Ascend 910B3 x2, aarch64, CANN 8.3.RC2) —
 every fix that came out of that run is already applied. See
-[README_CN.md](README_CN.md) section 8 (in Chinese) for what broke on real
-hardware and how it was fixed, and [diagnostics/README.md](diagnostics/README.md)
-for the measured baseline numbers.
+[README_CN.md](README_CN.md) (in Chinese) for what broke on real hardware and
+how it was fixed, and [diagnostics/README.md](diagnostics/README.md) for the
+measured baseline numbers.
+
+**A third experiment line, `preexperiments/direction_b/`**, re-implements
+"Planning Utility vs Prediction Confidence" closer to WorldEvolver's own
+methodology (Episodic Memory retrieval, Weak/Strong world-model arms,
+action-level + episode-level analysis) as a follow-up to Experiment B above.
+See **[EXPERIMENT_STATUS.md](EXPERIMENT_STATUS.md)** for full status,
+results, and known issues across all three lines — in particular §3.3's
+action-level-vs-episode-level result reversal (episode-level is the one to
+trust; see that section before citing any action-level number).
 
 ## Layout
 
@@ -55,6 +64,12 @@ preexperiments/
 │   ├── evaluate_planning_gain.py
 │   ├── evaluate_oracle_gate.py
 │   └── analyze.py
+├── direction_b/                   # follow-up: closer WorldEvolver replication (see EXPERIMENT_STATUS.md)
+│   ├── pipeline.py                 # planner + world model, {foresight_block}/{memory_block} symmetry
+│   ├── episodic_memory.py          # action-token Jaccard retrieval, no model
+│   ├── run_action_level.py / run_episode_level.py
+│   ├── run_strong_wm.py / run_gate_comparison.py / run_multiseed_acr.py / run_framing_ablation.py
+│   └── analyze_confidence_utility.py
 └── tests/                        # spec section 37's mandatory test list
 
 scripts/

@@ -96,3 +96,23 @@ experiment_b:
 stats:
   bootstrap_resamples: 1000
   bootstrap_seed: 2026
+
+# ---------------------------------------------------------------------------
+# 方向二预实验（Planning Utility vs Prediction Confidence）
+# 独立成段，避免改动已完成的实验 A/B 的配置。
+# 解码参数对齐 WorldEvolver 原文：temperature 0, top_p 0.5, seed 42, 最多 30 步。
+# 方案 §40 同样要求 temperature=0 与固定 seed —— 二者一致。
+# ---------------------------------------------------------------------------
+direction_b:
+  temperature: 0.0
+  top_p: 0.5
+  seed: 42
+  max_tokens_action: 64
+  max_tokens_prediction: 256
+  # 方案 §35.2：固定单步预测，不做 adaptive horizon
+  wm_horizon: 1
+  # 方案 §22 用 tau_C=0.7 举例；自报 confidence 按绝对阈值扫，
+  # logprob confidence 因为分布压在 1 附近（实测 p10=0.907），
+  # 必须按分位数扫覆盖率 —— 这也是 WorldEvolver Figure 11 的做法。
+  tau_c_sweep: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  coverage_sweep: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]

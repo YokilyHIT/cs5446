@@ -480,4 +480,62 @@ issues found in review"）commit 生成的完整 `git diff` 补丁，**这次不
 
 ---
 
+## 11. 第四次交接（新的 `part1-7`）：新增"方向二"，旧实验 B 结论也更新了
+
+这次的 7 个包还是同一条 GitHub 血统、还是相对 `4f3fe6f` 生成的完整累积补丁（这次 48 个文件，
++5465/−303 行），处理方式跟上一轮完全一样（检出干净基线、打补丁、逐文件 diff）。这次
+diff 出来的范围比上次小很多——`common/`、`failure_selection/`、`world_model_utility/`
+除 `analyze.py`/`evaluate_planning_gain.py` 之外全部跟我这边一致（说明上一轮的"整份覆盖 +
+叠加我方独有内容"策略是对的，双方没再各自往不同方向漂）。这两个文件里我独有的 McNemar
+检验/置信区间/置信度退化披露照上次的方式重新叠了上去，叠完跟已提交的版本逐字节相同。
+
+### 11.1 真正新增的内容
+
+- **`preexperiments/direction_b/`（12 个新文件）**：一条全新的实验线，比"旧实验 B"更贴近
+  WorldEvolver 论文原本的方法——真的实现了 Episodic Memory（用动作词元的 Jaccard 相似度做
+  检索，不用模型）、Weak/Strong 两档世界模型、动作级和 episode 级两种粒度的分析、门控对比、
+  多 seed 复测、提示词 framing 消融。配置独立成 `preexperiment.yaml` 里的 `direction_b:` 段
+  （temperature=0、top_p=0.5、seed=42，照 WorldEvolver 原文设的，不影响实验 A/旧实验 B 的配置）。
+  `alfworld_base_config.yaml` 也加了 `dagger:` 段——方向二的动作级实验需要从 ALFWorld 的
+  expert 轨迹里采样决策点，这个功能只在 `training_method: dagger` 时才会挂载。
+- **旧实验 B 之前"跑到一半"的那一轮（temp 0.7 + adamem_think）现在跑完了，结论从
+  WEAK-GO 变成了 `GO`**：oracle_gain=0.060（CI [0.02, 0.11]），3 条判据过了 2 条。
+  已经把这份新结果合并进 `results_reference_npu/`（覆盖了里面的 B_* 文件，A_* 部分数据
+  跟之前完全一致，没有变化）。
+
+### 11.2 方向二本轮最重要的发现：两个粒度的指标结论正好相反
+
+- **动作级**（在 train 划分上，逐步问"选的动作是不是跟 expert 一样"）：foresight 净有害
+  （−0.6pp）。
+- **episode 级**（在 eval_in_distribution 上，只看任务最后有没有做完）：foresight 净有益
+  （**+4.29pp**，比 WorldEvolver 论文自己报的 +2.24pp 还高）。
+
+`EXPERIMENT_STATUS.md` 的判断（我认同）：**这不是 bug，是两个指标本来就没在测同一件事**——
+动作级把"偏离 expert 走的路"一律算成犯错，但 ALFWorld 里经常有不止一条可行路径，
+偏离 expert 不等于任务失败；episode 级只认"最后有没有做完"这一件事。**在 episode 级复现
+出来之前，动作级的结论不能直接当结论用**——比如"foresight 有害"这种话，只能加上"在单步
+expert-match 这个指标下"这个限定语，不能不加限定地引用。
+
+置信度这边的发现也很关键：置信度门控在动作级测出来**省钱有效、提分无效**——选择性 foresight
+只花了 16.3% 的调用量就打平了"每次都用 foresight"的效果，但没有比"每次都用"更好；而且
+自报置信度对"baseline 这一步本来对不对"几乎没有信息量（两组之间只差 0.0016），换成
+"检测 baseline 是不是错了"这种门控直接打到 Oracle 上界，而且这是可学的信号——这才是方向二
+真正想验证的方法主张，但目前还没有专门训练这样一个门控，只是发现了这个可能性。
+
+### 11.3 已知问题清单里最该注意的两条
+
+- **Cosine 那一列指标跨论文不可比**：我们用的 all-MiniLM-L6-v2 和 WorldEvolver 用的
+  Qwen3-Embedding-8B 数值尺度完全不同（MiniLM 上两句毫不相关的 ALFWorld 观察中位数
+  cosine 就有 0.399），"三项指标全面超过完整系统"这个说法里 Cosine 那一项站不住，
+  Exact Match 和 Token F1 两项可比、也确实更好。
+- **episode 级目前只跑了一个 seed（42）**，13 vs 19 只差 6 个 episode，作者自己也说
+  "不足以下结论"，`EXPERIMENT_STATUS.md` 第 7 节把"多 seed 复测"列成了下一步的第一优先级。
+
+详细的三条线现状、配置差异、代码索引、复现命令，都在新增的 `EXPERIMENT_STATUS.md` 里，
+比这里写的详细得多。方向二的原始逐条数据（`data/*.jsonl`，7.1MB）和图（`figures/dirB_*.png`）
+这次没有打包，只有汇总表 `outputs/tables/dirB_*.json` 和 `reports_reference_npu/direction_b_strong_wm.md`
+——想要图的话在有真实结果数据之后跑一遍 `analyze_confidence_utility.py` 就能生成。
+
+---
+
 如果你想让我在真机上跑之前先review一遍某个具体脚本的逻辑，或者想让我针对某一部分（比如实验 A 的相关任务挑选逻辑）再详细讲一遍，随时说。

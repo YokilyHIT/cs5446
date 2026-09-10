@@ -1,0 +1,35 @@
+{
+  "split": "eval_in_distribution",
+  "n_games": 6,
+  "max_steps": 30,
+  "tau": 0.999,
+  "memory": true,
+  "k_ME": 5,
+  "model": "Qwen/Qwen3-4B-Instruct-2507",
+  "temperature": 0.0,
+  "arms": {
+    "none": {
+      "n": 6,
+      "success_rate": 0.16666666666666666,
+      "mean_steps": 25.666666666666668,
+      "foresight_usage": 0.0,
+      "wm_calls": 0
+    },
+    "always": {
+      "n": 6,
+      "success_rate": 0.16666666666666666,
+      "mean_steps": 26.0,
+      "foresight_usage": 1.0,
+      "wm_calls": 156
+    },
+    "selective": {
+      "n": 6,
+      "success_rate": 0.16666666666666666,
+      "mean_steps": 25.666666666666668,
+      "foresight_usage": 0.2861111111111111,
+      "wm_calls": 154
+    }
+  },
+  "selective_minus_always": 0.0,
+  "selective_minus_none": 0.0
+}

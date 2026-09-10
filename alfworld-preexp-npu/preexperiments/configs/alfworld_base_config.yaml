@@ -56,3 +56,11 @@ rl:
     # preexperiment.yaml, enforced by preexperiments/common/alfworld_runner.py's
     # rollout() loop, not by this value.
     max_nb_steps_per_episode: 200
+
+# dagger 段是取 expert action 的前提：AlfredTWEnv.init_env() 只有在
+# training_method=="dagger" 且 split=="train" 时才挂 AlfredExpert wrapper，
+# 并把 "expert_plan" 加进 request_infos.extras。
+# （方向二预实验 §7 要求从 expert 轨迹采样 decision state 并保留 expert next action。）
+dagger:
+  training:
+    max_nb_steps_per_episode: 50
