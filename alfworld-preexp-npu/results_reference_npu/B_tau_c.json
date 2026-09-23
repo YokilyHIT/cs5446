@@ -1,0 +1,5 @@
+{
+  "tau_c": 0.95,
+  "target_usage": 0.5,
+  "calibration_n": 50
+}

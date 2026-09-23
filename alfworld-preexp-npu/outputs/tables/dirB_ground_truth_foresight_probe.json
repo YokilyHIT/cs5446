@@ -1,0 +1,28 @@
+{
+  "n_states": 60,
+  "n_replayed_ok": 50,
+  "n_restore_error": 0,
+  "n_episode_ended_on_base": 10,
+  "modes": {
+    "direct": {
+      "n": 50,
+      "ACR": 0.14,
+      "AIR": 0.0,
+      "AHR": 0.04,
+      "net": -0.04,
+      "skip_like_rate": 0.0,
+      "fore_match_expert": 0.16,
+      "action_forced_rate": 0.0
+    },
+    "react": {
+      "n": 50,
+      "ACR": 0.18,
+      "AIR": 0.06,
+      "AHR": 0.0,
+      "net": 0.06,
+      "skip_like_rate": 0.0,
+      "fore_match_expert": 0.26,
+      "action_forced_rate": 0.0
+    }
+  }
+}

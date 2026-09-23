@@ -1,0 +1,66 @@
+# ALFWorld's own environment config schema (NOT this project's
+# preexperiment.yaml -- ALFWorld's AlfredTWEnv expects exactly this shape).
+# {ALFWORLD_DATA} is substituted at load time (see
+# preexperiments/common/alfworld_runner.py:_load_alfworld_config) with the
+# ALFWORLD_DATA environment variable, defaulting to ~/.cache/alfworld, i.e.
+# wherever `alfworld-download` (spec section 1.3) put the dataset.
+#
+# This mirrors the base_config.yaml shipped in ALFWorld's own
+# alfworld/configs/ directory. If `python scripts/inspect_alfworld_api.py`
+# reports a schema mismatch, diff this file against the installed package's
+# `alfworld/configs/base_config.yaml` and copy over whatever changed.
+
+dataset:
+  data_path: "{ALFWORLD_DATA}/json_2.1.1/train"
+  eval_id_data_path: "{ALFWORLD_DATA}/json_2.1.1/valid_seen"
+  eval_ood_data_path: "{ALFWORLD_DATA}/json_2.1.1/valid_unseen"
+  num_train_games: -1
+  num_eval_games: -1
+
+logic:
+  domain: "{ALFWORLD_DATA}/logic/alfred.pddl"
+  grammar: "{ALFWORLD_DATA}/logic/alfred.twl2"
+
+env:
+  type: "AlfredTWEnv"
+  regen_game_files: false
+  domain_randomization: false
+  task_types: [1, 2, 3, 4, 5, 6]
+  expert_timeout_steps: 150
+  expert_type: "handcoded"
+  goal_desc_human_anns_prob: 0.0
+
+env_general:
+  random_seed: 42
+  use_thor: false
+  training_method: "dagger"
+
+general:
+  # MUST stay "dqn" for this project, even though we do no RL at all.
+  # AlfredTWEnv.init_env() branches on this value: with "dagger" it reads
+  # config["dagger"]["training"]["max_nb_steps_per_episode"] (a section this
+  # config does not define -> KeyError) AND attaches ALFWorld's AlfredExpert
+  # wrapper on the train split, which runs a PDDL planner on every reset just
+  # to compute an expert plan we never use. "dqn" reads the `rl` section
+  # below and attaches no expert wrapper -- strictly less machinery, and it
+  # changes nothing about the environment the agent actually sees.
+  training_method: "dqn"
+  save_path: "./alfworld_ckpt/"
+  observation_pool_capacity: 3
+  hide_init_receptacles: false
+
+rl:
+  training:
+    # TextWorld's own per-env step cap, kept generous -- the actual
+    # experiment-level cap is `sampling.max_episode_steps` in
+    # preexperiment.yaml, enforced by preexperiments/common/alfworld_runner.py's
+    # rollout() loop, not by this value.
+    max_nb_steps_per_episode: 200
+
+# dagger 段是取 expert action 的前提：AlfredTWEnv.init_env() 只有在
+# training_method=="dagger" 且 split=="train" 时才挂 AlfredExpert wrapper，
+# 并把 "expert_plan" 加进 request_infos.extras。
+# （方向二预实验 §7 要求从 expert 轨迹采样 decision state 并保留 expert next action。）
+dagger:
+  training:
+    max_nb_steps_per_episode: 50

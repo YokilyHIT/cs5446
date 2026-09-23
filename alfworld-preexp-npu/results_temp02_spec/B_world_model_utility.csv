@@ -1,0 +1,149 @@
+point_id,task_id,step,base_action,foresight_action,action_changed,wm_prediction,self_confidence,semantic_correctness,base_success,foresight_success,planning_gain,ambiguity
+D00001,trial_T20190909_044715_250790,0,go to desk 1,go to desk 1,False,"You are at desk 1. Under the desklamp, you see an alarmclock.",0.97,0.7032139897346497,True,True,0,0.0
+D00002,trial_T20190909_044715_250790,1,use desklamp 1,use desklamp 1,False,"The desklamp 1 turns on, illuminating the alarmclock 2, book 1, bowl 1, cd 2, mug 2, mug 1, pen 2, and pen 1.",0.97,0.6025707721710205,True,True,0,0.5
+D00003,trial_T20190909_044715_250790,2,look,look,False,I see the alarm clock under the desklamp.,0.95,0.48948171734809875,True,True,0,0.5
+D00004,trial_T20190909_044715_250790,3,use desklamp 1,use desklamp 1,False,The desk lamp is on and illuminates the alarm clock under it.,0.95,0.46943673491477966,True,True,0,0.0
+D00005,trial_T20190907_154618_526741,0,go to desk 1,go to desk 1,False,You are now at desk 1. You see a desklamp 1 and a cd 1 on the desk.,0.95,0.55914705991745,False,False,0,0.0
+D00006,trial_T20190907_154618_526741,7,look,go to desk 1,True,You see a creditcard 1 in drawer 2.,0.99,0.5040556192398071,False,False,0,0.5
+D00007,trial_T20190907_154618_526741,14,look,go to shelf 1,True,"On the desk 1, you see a alarmclock 1, a book 3, a creditcard 3, a creditcard 2, a pencil 3, a pencil 2, and a pencil 1.",1.0,0.4620656669139862,False,False,0,0.25
+D00008,trial_T20190907_154618_526741,22,examine cd 1,examine desk 1,True,You already examined cd 1; no new observation is made.,0.997,0.5319936871528625,False,False,0,0.0
+D00009,trial_T20190907_154618_526741,29,look,go to desk 1,True,You see a creditcard 1 in drawer 2.,0.98,0.5040556192398071,False,False,0,0.0
+D00010,trial_T20190909_150916_682139,0,go to desk 1,go to desk 1,False,You are now at desk 1. You see a desklamp 1 and a pillow under the desklamp.,0.97,0.6155103445053101,False,False,0,0.0
+D00011,trial_T20190909_150916_682139,7,look,look,False,You see a pillow under the desklamp on desk 1.,0.95,0.6524550914764404,False,False,0,0.0
+D00012,trial_T20190909_150916_682139,14,go to desk 1,go to desk 1,False,"You arrive at desk 1. On the desk 1, you see a lamp 1, a pen 1, and a notebook 1.",0.95,0.7944464683532715,False,False,0,0.0
+D00013,trial_T20190909_150916_682139,22,go to desk 1,go to desk 1,False,"You arrive at desk 1. On the desk 1, you see a lamp 1, a notebook 1, and a pen 1.",0.95,0.7905917763710022,False,False,0,0.0
+D00014,trial_T20190909_150916_682139,29,examine pillow 1,look,True,You examine the pillow 1 and notice it is white with a small blue patch on one corner.,0.95,0.5193567276000977,False,True,1,0.0
+D00015,trial_T20190907_042856_259139,0,go to drawer 1,go to drawer 1,False,"You are in the middle of a room. Looking quickly around you, you see a armchair 1, a coffeetable 1, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a dresser 1, a garbagecan 1, a sidetable 3, a sidetable 2, a sidetable 1, and a sofa 1. You are now at drawer 1.",0.95,0.5654513239860535,False,False,0,0.0
+D00016,trial_T20190907_042856_259139,7,open drawer 3,examine drawer 3,True,Drawer 3 is now open.,0.98,0.7886073589324951,False,False,0,0.0
+D00017,trial_T20190907_042856_259139,14,go to dresser 1,go to dresser 1,False,You are now at dresser 1. The drawer 3 is open and contains a book.,0.95,0.6681051254272461,False,False,0,0.5
+D00018,trial_T20190907_042856_259139,20,go to drawer 2,go to coffeetable 1,True,"You arrive at drawer 2. The drawer 2 is open. In it, you see nothing.",0.95,0.7317401170730591,False,False,0,0.5
+D00019,trial_T20190907_042856_259139,27,examine book 1,go to drawer 1,True,"You examine book 1 and notice it has a title ""The Art of Everyday Living"" and is in good condition.",0.95,0.5308580994606018,True,True,0,0.0
+D00020,trial_T20190909_055248_059513,0,go to cabinet 1,go to cabinet 1,False,"You are now in cabinet 1. Inside, you see a candle, a bottle of lotion, and a pair of scissors.",0.95,0.6249762773513794,True,True,0,0.0
+D00021,trial_T20190909_055248_059513,2,go to cabinet 2,go to cabinet 2,False,"You open cabinet 2. The cabinet 2 is open. In it, you see a candle 1.",0.95,0.7521331310272217,True,True,0,0.0
+D00022,trial_T20190909_055248_059513,4,go to toilet 1,go to toilet 1,False,You go to toilet 1.,0.98,0.7174508571624756,True,True,0,0.0
+D00023,trial_T20190909_055248_059513,5,go to cabinet 1,move candle 3 to countertop 1,True,Nothing happens; cabinet 1 is already open and accessible.,0.95,0.6327019333839417,True,True,0,0.5
+D00024,trial_T20190909_055248_059513,7,examine candle 3,examine candle 3,False,You examine candle 3 and notice it is intact and ready to use.,0.95,0.4870298504829407,True,True,0,0.0
+D00025,trial_T20190909_010644_297017,0,inventory,go to drawer 1,True,You see a credit card in your inventory.,0.95,0.2636813819408417,False,False,0,0.0
+D00026,trial_T20190909_010644_297017,7,inventory,examine cabinet 1,True,I see the credit card in my inventory.,0.95,0.26307693123817444,False,False,0,0.25
+D00027,trial_T20190909_010644_297017,14,inventory,inventory,False,You see a credit card in your inventory.,0.95,0.2636813819408417,False,False,0,0.5
+D00028,trial_T20190909_010644_297017,22,go to cabinet 1,go to cabinet 1,False,You are at cabinet 1. Drawer 3 is still open and empty.,0.95,0.7738725543022156,False,False,0,0.5
+D00029,trial_T20190909_010644_297017,29,go to drawer 1,go to shelf 1,True,"You are at drawer 1. It is open. Inside, you see nothing.",0.95,0.931325376033783,False,False,0,0.25
+D00030,trial_T20190909_032340_274147,0,go to diningtable 1,look,True,You are now at the diningtable 1.,0.997,0.6146179437637329,True,True,0,0.25
+D00031,trial_T20190909_032340_274147,1,take mug 3 from diningtable 1,take mug 3 from diningtable 1,False,"On the diningtable 1, you see a creditcard 3, a creditcard 2, a keychain 3, a keychain 2, a mug 2, a mug 1, a pen 2, a pen 1, a pencil 3, and a pencil 1. You now hold mug 3.",0.98,0.6776798367500305,True,True,0,0.25
+D00032,trial_T20190909_032340_274147,2,go to sidetable 1,go to sidetable 1,False,You place mug 1 on sidetable 1.,0.97,0.6012648344039917,True,True,0,0.0
+D00033,trial_T20190909_032340_274147,3,examine mug 1,examine mug 1,False,"On the sidetable 1, you see a keychain 1 and a mug 1.",0.95,0.5026662349700928,True,True,0,0.0
+D00034,trial_T20190909_021000_274398,0,go to sidetable 1,go to sidetable 1,False,You are now at sidetable 1. You see a remotecontrol on sidetable 1.,0.95,0.6196593642234802,True,True,0,0.25
+D00035,trial_T20190909_021000_274398,2,examine armchair 1,examine armchair 1,False,"On the armchair 1, you see a creditcard 1 and a remotecontrol 1.",0.85,0.8188076019287109,True,True,0,0.5
+D00036,trial_T20190909_021000_274398,4,go to sidetable 1,go to armchair 1,True,"On the sidetable 1, you see an armchair 1 and no remote control.",0.95,0.5988509058952332,True,True,0,0.5
+D00037,trial_T20190909_021000_274398,5,take remotecontrol 1 from coffeetable 1,go to armchair 1,True,"On the coffeetable 1, you see a candle 1, a houseplant 2, a laptop 1, a remotecontrol 2, and an empty space where remotecontrol 1 was.",0.97,0.7408537268638611,True,True,0,0.25
+D00038,trial_T20190909_021000_274398,7,examine armchair 1,examine armchair 1,False,"On the armchair 1, you see a creditcard 1 and a remotecontrol 1.",0.95,0.8188076019287109,True,True,0,0.0
+D00039,trial_T20190907_114931_692464,0,go to cabinet 1,go to cabinet 1,False,"You are now in cabinet 1. Inside, you see a spraybottle.",0.95,0.6366754770278931,True,True,0,0.5
+D00040,trial_T20190907_114931_692464,7,examine garbagecan 1,go to drawer 1,True,The cabinet 2 is open. You see nothing.,0.95,0.2901919484138489,True,True,0,0.5
+D00041,trial_T20190907_114931_692464,14,go to cabinet 1,go to cabinet 2,True,"You arrive at cabinet 1. On cabinet 1, you see nothing.",0.95,0.7749311923980713,True,True,0,0.0
+D00042,trial_T20190907_114931_692464,22,open cabinet 2,open cabinet 2,False,Cabinet 2 is now open.,0.997,0.7190612554550171,False,False,0,0.25
+D00043,trial_T20190907_114931_692464,29,go to cabinet 1,go to cabinet 1,False,You pick up the soapbar 2 from the countertop 1.,0.95,0.3802545368671417,False,False,0,0.25
+D00044,trial_T20190908_122858_883968,0,go to cabinet 1,go to toiletpaperhanger 1,True,"You are in the middle of a room. Looking quickly around you, you see a bathtubbasin 1, a cabinet 2, a cabinet 1, a countertop 1, a garbagecan 1, a handtowelholder 1, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, and a towelholder 1. You are now inside cabinet 1.",0.95,0.5892220139503479,True,True,0,0.0
+D00045,trial_T20190908_122858_883968,1,open cabinet 1,open cabinet 1,False,Cabinet 1 is now open.,0.98,0.6421037912368774,True,True,0,0.0
+D00046,trial_T20190908_122858_883968,2,take toiletpaper 1 from cabinet 1,take toiletpaper 1 from cabinet 1,False,You take toiletpaper 1 from cabinet 1.,0.997,0.9264901280403137,True,True,0,0.0
+D00047,trial_T20190908_122858_883968,3,go to toiletpaperhanger 1,go to toiletpaperhanger 1,False,You go to the toiletpaperhanger 1 and place the toiletpaper 1 on it.,0.97,0.7878293395042419,True,True,0,0.0
+D00048,trial_T20190908_122858_883968,4,examine toiletpaper 1,examine toiletpaper 1,False,You examine toiletpaper 1 and see it is rolled and intact.,0.95,0.6061283946037292,True,True,0,0.0
+D00049,trial_T20190909_051813_197569,0,go to drawer 1,go to drawer 1,False,"You are in the middle of a room. Looking quickly around you, you see a armchair 1, a coffeetable 1, a drawer 7, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a sidetable 3, a sidetable 2, a sidetable 1, a sofa 2, a sofa 1, and a tvstand 1. You are now inside drawer 1.",0.95,0.4869074523448944,False,False,0,0.5
+D00050,trial_T20190909_051813_197569,7,look,go to drawer 1,True,sidetable 1 has a newspaper 1,0.95,0.5954951643943787,False,False,0,0.25
+D00051,trial_T20190909_051813_197569,14,examine sidetable 3,examine sidetable 3,False,"On the sidetable 3, you see a creditcard 3 and a watch.",0.95,0.916828989982605,False,False,0,0.5
+D00052,trial_T20190909_051813_197569,22,go to drawer 1,go to drawer 1,False,Nothing observable changes on sidetable 2.,0.95,0.1612764596939087,False,False,0,0.25
+D00053,trial_T20190909_051813_197569,29,look,go to drawer 1,True,"On the sidetable 3, you see a creditcard 3.",0.95,0.5761467218399048,False,False,0,0.5
+D00054,trial_T20190908_052007_212776,0,go to cabinet 1,go to drawer 1,True,,0.5,0.09741152077913284,False,False,0,0.5
+D00055,trial_T20190908_052007_212776,7,open cabinet 2,open cabinet 2,False,Cabinet 2 is now open.,0.98,0.7500329613685608,False,False,0,0.0
+D00056,trial_T20190908_052007_212776,14,open drawer 3,open drawer 3,False,Drawer 3 is now open.,0.98,0.7886073589324951,False,False,0,0.0
+D00057,trial_T20190908_052007_212776,22,inventory,inventory,False,You see a clean butterknife in drawer 1.,0.95,0.14675156772136688,False,False,0,0.25
+D00058,trial_T20190908_052007_212776,29,go to drawer 1,go to drawer 1,False,Drawer 1 is open.,0.95,0.8595108985900879,False,False,0,0.25
+D00059,trial_T20190908_144357_621068,0,go to cabinet 1,go to cabinet 1,False,"You are now in cabinet 1. Inside, you see a dishsponge, a knife, and a spoon.",0.95,0.6726871132850647,True,True,0,0.25
+D00060,trial_T20190908_144357_621068,7,go to sinkbasin 1,go to sinkbasin 1,False,"You are now at sinkbasin 1. On the sinkbasin 1, you see a dishsponge 1, a faucet, and a drain.",0.95,0.7985461950302124,False,False,0,0.25
+D00061,trial_T20190908_144357_621068,14,go to sinkbasin 1,go to sinkbasin 1,False,"Already at sinkbasin 1, no new state change observed.",0.95,0.5453237295150757,True,True,0,0.0
+D00062,trial_T20190908_144357_621068,22,examine sinkbasin 1,examine sinkbasin 1,False,sinkbasin 1 is empty and clean,0.95,0.6770584583282471,True,True,0,0.25
+D00063,trial_T20190908_144357_621068,29,take dishsponge 1 from shelf 1,go to sinkbasin 1,True,You pick up dishsponge 1 from shelf 1 and place it on countertop 1.,0.997,0.8410405516624451,True,True,0,0.0
+D00064,trial_T20190909_121908_219603,0,go to cabinet 1,go to cabinet 1,False,"You are now in cabinet 1. Inside, you see a clean ladle.",0.95,0.6687290668487549,False,False,0,0.0
+D00065,trial_T20190909_121908_219603,7,open drawer 2,look,True,Drawer 2 is now open.,0.98,0.7140911817550659,False,False,0,0.0
+D00066,trial_T20190909_121908_219603,14,go to cabinet 1,go to cabinet 1,False,You are now at cabinet 1. Cabinet 1 is closed.,0.95,0.7681258916854858,False,False,0,0.0
+D00067,trial_T20190909_121908_219603,22,open cabinet 6,open cabinet 6,False,Cabinet 6 is now open.,0.98,0.6844428181648254,False,False,0,0.0
+D00068,trial_T20190909_121908_219603,29,examine cabinet 10,open cabinet 10,True,Cabinet 10 is closed and contains a clean ladle.,0.95,0.8166093230247498,False,False,0,0.0
+D00069,trial_T20190908_100138_446072,0,go to cabinet 1,go to cabinet 1,False,"You are now in cabinet 1. Inside, you see a bunch of lettuce.",0.95,0.6769315600395203,False,False,0,0.5
+D00070,trial_T20190908_100138_446072,2,open fridge 1,look,True,Fridge 1 is now open.,0.997,0.6746299862861633,True,True,0,0.0
+D00071,trial_T20190908_100138_446072,4,go to countertop 1,go to countertop 1,False,You see a bunch of lettuce on countertop 1.,0.95,0.61248779296875,True,True,0,0.25
+D00072,trial_T20190908_100138_446072,7,go to cabinet 1,go to cabinet 3,True,Nothing observable changes; cabinet 1 is still unvisited and unchanged.,0.95,0.5851091146469116,True,True,0,0.25
+D00073,trial_T20190908_100138_446072,9,go to cabinet 1,go to cabinet 1,False,"Fridge 1 is open. In it, you see a bowl 1, a potato 1, and the cleaned lettuce 1.",0.95,0.45837441086769104,True,True,0,0.0
+D00074,trial_T20190906_202340_749336,0,go to sinkbasin 1,go to sinkbasin 1,False,You are now at sinkbasin 1.,0.997,0.7327109575271606,False,False,0,0.0
+D00075,trial_T20190906_202340_749336,7,close drawer 1,close drawer 1,False,drawer 1 is now closed,0.997,0.7887213230133057,False,False,0,0.25
+D00076,trial_T20190906_202340_749336,14,go to bathtubbasin 1,go to sinkbasin 1,True,You go to bathtubbasin 1.,0.1,0.7581562399864197,False,False,0,0.5
+D00077,trial_T20190906_202340_749336,22,go to drawer 1,go to drawer 1,False,You arrive at drawer 1. The drawer is closed. You see nothing inside except possibly the cloth previously taken.,0.97,0.8150575160980225,False,False,0,0.0
+D00078,trial_T20190906_202340_749336,29,go to sinkbasin 1,open drawer 1,True,look,0.99,0.20776624977588654,False,False,0,0.25
+D00079,trial_T20190909_012550_586494,0,go to fridge 1,go to fridge 1,False,"You are now in the fridge 1. You see a tomato, a carrot, and a bottle of milk.",0.95,0.5783945918083191,True,True,0,0.0
+D00080,trial_T20190909_012550_586494,2,take tomato 1 from fridge 1,take tomato 1 from fridge 1,False,Tomato 1 is now in hand.,0.997,0.6758493185043335,True,True,0,0.0
+D00081,trial_T20190909_012550_586494,3,go to sinkbasin 1,go to sinkbasin 1,False,You go to sinkbasin 1 and start washing the tomato 1.,0.97,0.5836837887763977,False,False,0,0.0
+D00082,trial_T20190909_012550_586494,4,go to fridge 1,clean tomato 1 with sinkbasin 1,True,You are at fridge 1. The fork 2 is still on sinkbasin 1.,0.95,0.5148420333862305,True,True,0,0.5
+D00083,trial_T20190909_012550_586494,6,examine tomato 1,go to fridge 1,True,"On the countertop 1, you see a bread 1, a butterknife 1, a dishsponge 1, a fork 1, a knife 1, a mug 3, a pan 1, a peppershaker 2, a saltshaker 2, a saltshaker 1, a soapbottle 1, a spoon 2, and a clean tomato 1.",0.97,0.5053802132606506,True,True,0,0.25
+D00084,trial_T20190909_112912_154874,0,go to cabinet 1,go to cabinet 1,False,You are now in cabinet 1.,0.997,0.7378029227256775,False,False,0,0.5
+D00085,trial_T20190909_112912_154874,7,inventory,open cabinet 2,True,You check your inventory. You see a cool bowl.,0.95,0.2648685574531555,False,False,0,0.0
+D00086,trial_T20190909_112912_154874,14,inventory,inventory,False,You see a cool bowl in the cabinet 4.,0.95,0.12549220025539398,False,False,0,0.0
+D00087,trial_T20190909_112912_154874,22,go to countertop 1,examine cabinet 6,True,"You are now at countertop 1. The countertop is empty or contains only existing items, and no new objects are visible.",0.95,0.5309348106384277,False,False,0,0.25
+D00088,trial_T20190909_112912_154874,29,inventory,inventory,False,You see the cool bowl in cabinet 5.,0.95,0.13540595769882202,False,False,0,0.5
+D00089,trial_T20190908_042713_075616,0,go to fridge 1,go to fridge 1,False,"You are now in the fridge 1. You see a lettuce, a tomato, and a milk bottle.",0.95,0.5791560411453247,False,False,0,0.0
+D00090,trial_T20190908_042713_075616,7,open cabinet 3,open cabinet 3,False,Cabinet 3 is now open.,0.95,0.7630887031555176,False,False,0,0.0
+D00091,trial_T20190908_042713_075616,14,go to fridge 1,go to fridge 1,False,You are at fridge 1. Cabinet 5 is still closed.,0.95,0.5133988857269287,False,False,0,0.0
+D00092,trial_T20190908_042713_075616,22,go to cabinet 1,go to cabinet 2,True,Nothing observable changes in the fridge or cabinets; the environment remains as previously observed.,0.95,0.40737730264663696,False,False,0,0.25
+D00093,trial_T20190908_042713_075616,29,go to fridge 1,go to fridge 1,False,You are already in fridge 1. No new state change is observed.,0.997,0.3971506953239441,False,False,0,0.25
+D00094,trial_T20190906_181023_216915,0,go to cabinet 1,go to cabinet 1,False,"You are now in cabinet 1. Inside, you see a pan, a knife, and a spoon.",0.95,0.6784802079200745,False,False,0,0.0
+D00095,trial_T20190906_181023_216915,7,open cabinet 2,open cabinet 2,False,Cabinet 2 is now open.,0.95,0.7500329613685608,False,False,0,0.0
+D00096,trial_T20190906_181023_216915,14,go to cabinet 1,go to countertop 1,True,You arrive at cabinet 1. Cabinet 1 is closed.,0.95,0.8106175661087036,False,False,0,0.0
+D00097,trial_T20190906_181023_216915,22,go to cabinet 1,go to cabinet 3,True,"You arrive at cabinet 1. The cabinet 1 is closed. In it, you see nothing.",0.95,0.7820286750793457,False,False,0,0.25
+D00098,trial_T20190906_181023_216915,29,go to cabinet 1,go to cabinet 1,False,"You arrive at cabinet 1. The cabinet 1 is open. In it, you see nothing.",0.95,0.8056784868240356,False,False,0,0.0
+D00099,trial_T20190909_004531_429065,0,go to cabinet 1,go to cabinet 1,False,"You are now in cabinet 1. Inside, you see a cool pot, a spoon, and a napkin.",0.95,0.6444491744041443,False,False,0,0.0
+D00100,trial_T20190909_004531_429065,7,open cabinet 3,open cabinet 3,False,Cabinet 3 is now open.,0.98,0.7237824201583862,False,False,0,0.0
+D00101,trial_T20190909_004531_429065,14,go to cabinet 1,go to cabinet 1,False,You are at cabinet 1. The cabinet is open.,0.95,0.7409929037094116,False,False,0,0.0
+D00102,trial_T20190909_004531_429065,22,go to cabinet 2,go to cabinet 2,False,"You arrive at cabinet 2. The cabinet 2 is open. In it, you see a spatula 1, a mixing bowl 1, and a cool pot 1.",0.95,0.8546751737594604,False,False,0,0.0
+D00103,trial_T20190909_004531_429065,29,go to fridge 1,go to cabinet 1,True,"You arrive at fridge 1. The fridge 1 is closed. Inside, you see a milk carton and a bottle of water.",0.95,0.814568042755127,False,False,0,0.0
+D00104,trial_T20190909_012524_159092,0,go to fridge 1,go to fridge 1,False,"You are now in the fridge 1. You see a tomato, a cheese, and a bottle of milk.",0.95,0.5802596211433411,False,False,0,0.0
+D00105,trial_T20190909_012524_159092,7,go to fridge 1,go to fridge 1,False,"You are at fridge 1. Inside, you see a few vegetables and a single tomato.",0.95,0.6825683116912842,False,False,0,0.0
+D00106,trial_T20190909_012524_159092,14,go to fridge 1,go to fridge 1,False,The drawer 1 is closed.,0.997,0.453030526638031,True,True,0,0.25
+D00107,trial_T20190909_012524_159092,22,go to cabinet 1,go to cabinet 1,False,go to cabinet 1,0.95,0.6666484475135803,False,False,0,0.0
+D00108,trial_T20190909_012524_159092,29,go to cabinet 1,go to cabinet 2,True,"You arrive at cabinet 1. The cabinet 1 is open. In it, you see nothing.",0.95,1.0000001192092896,True,False,-1,0.0
+D00109,trial_T20190908_122951_021026,0,go to fridge 1,go to fridge 1,False,"You are now in the fridge 1. You see a milk bottle, a banana, a loaf of bread, and a carton of eggs.",0.95,0.5776874423027039,False,False,0,0.0
+D00110,trial_T20190908_122951_021026,7,go to fridge 1,go to fridge 1,False,You are already at fridge 1; no new observation is made.,0.997,0.5558536648750305,False,False,0,0.25
+D00111,trial_T20190908_122951_021026,14,open cabinet 4,open cabinet 4,False,Cabinet 4 is now open.,0.95,0.6847490072250366,False,False,0,0.0
+D00112,trial_T20190908_122951_021026,22,go to fridge 1,go to fridge 1,False,"You arrive at fridge 1. The fridge 1 is closed. Inside, you see a milk container, a butter block, and a carton of eggs.",0.95,0.8052107095718384,False,False,0,0.0
+D00113,trial_T20190908_122951_021026,29,open cabinet 6,open cabinet 6,False,Cabinet 6 is now open.,0.95,0.775442898273468,False,False,0,0.0
+D00114,trial_T20190909_090729_088825,0,look,look,False,You see a hot mug on the sidetable 1.,0.95,0.2980975806713104,True,True,0,0.0
+D00115,trial_T20190909_090729_088825,2,go to sidetable 1,move mug 1 to coffeemachine 1,True,Place mug 1 on sidetable 1,0.97,0.595396101474762,True,False,-1,0.0
+D00116,trial_T20190909_090729_088825,4,go to countertop 1,examine mug 1,True,You are now at countertop 1.,0.997,0.5357635021209717,False,False,0,0.25
+D00117,trial_T20190909_090729_088825,6,go to cabinet 1,go to cabinet 1,False,"You go to cabinet 1. In cabinet 1, you see a spoon 1, a plate 1, and a hot mug 2.",0.95,0.6424669623374939,True,True,0,0.0
+D00118,trial_T20190909_090729_088825,8,go to coffeemachine 1,go to coffeemachine 1,False,"You arrive at coffeemachine 1. On the coffeemachine 1, you see a coffee machine 1, and mug 1 is hot.",0.95,0.7493547797203064,False,False,0,0.75
+D00119,trial_T20190907_201243_698086,0,go to fridge 1,go to fridge 1,False,"You are now in the fridge 1. You see a tomato, a cheese, and a bottle of milk.",0.95,0.5802596211433411,True,True,0,0.0
+D00120,trial_T20190907_201243_698086,4,examine tomato 3,open microwave 1,True,"Tomato 3 is red and firm, with no visible damage.",0.95,0.608588695526123,True,True,0,0.25
+D00121,trial_T20190907_201243_698086,7,go to fridge 1,go to fridge 1,False,go to fridge 1,0.1,0.52484130859375,False,False,0,0.0
+D00122,trial_T20190907_201243_698086,10,inventory,open microwave 1,True,You are at microwave 1. The microwave 1 is closed. Tomato 3 is inside the microwave 1.,0.95,0.15320441126823425,False,True,1,0.0
+D00123,trial_T20190907_201243_698086,14,go to microwave 1,examine tomato 3,True,You are at microwave 1. The microwave is off. You see a heated tomato 3 on the microwave 1 surface.,0.95,0.7042124271392822,True,True,0,0.25
+D00124,trial_T20190907_165826_194855,0,go to dresser 1,go to dresser 1,False,"You are now at dresser 1. Looking around, you see a lamp 1 and two alarm clocks.",0.95,0.704574465751648,False,False,0,0.25
+D00125,trial_T20190907_165826_194855,7,open drawer 2,open drawer 2,False,Drawer 2 is now open.,0.98,0.7362284660339355,True,True,0,0.5
+D00126,trial_T20190907_165826_194855,14,examine drawer 4,examine drawer 4,False,Nothing visible in drawer 4.,0.95,0.5264409780502319,False,False,0,0.75
+D00127,trial_T20190907_165826_194855,22,examine drawer 1,examine drawer 1,False,look inside drawer 1,0.95,0.8007104396820068,False,False,0,0.25
+D00128,trial_T20190907_165826_194855,29,go to dresser 1,go to dresser 1,False,You are at dresser 1.,0.997,0.6895046234130859,False,False,0,0.25
+D00129,trial_T20190907_201917_045715,0,inventory,go to dresser 1,True,"You see a credit card, a credit card, and a key in your inventory.",0.95,0.2520838975906372,False,True,1,0.5
+D00130,trial_T20190907_201917_045715,7,inventory,examine countertop 1,True,You see the creditcard 3 in your hand.,0.95,0.7965467572212219,True,False,-1,0.0
+D00131,trial_T20190907_201917_045715,14,examine creditcard 3,go to dresser 1,True,"You examine creditcard 3 and note its brand, expiration date, and a small scratch on the side.",0.95,0.6237162947654724,True,True,0,0.0
+D00132,trial_T20190907_201917_045715,22,take creditcard 1 from sidetable 1,take creditcard 1 from sidetable 1,False,"You are at sidetable 1. On the sidetable 1, you see an alarmclock 3, an alarmclock 2, a creditcard 3, a creditcard 2, a keychain 1, and a creditcard 1.",0.95,0.7336307764053345,True,True,0,0.0
+D00133,trial_T20190907_201917_045715,29,inventory,examine dresser 1,True,"inventory shows creditcard 1, creditcard 2, and creditcard 3 are now on the dresser 1; creditcard 4 is still in drawer 2.",0.95,0.11815473437309265,True,True,0,0.25
+D00134,trial_T20190907_012519_974044,0,go to cabinet 1,go to cabinet 2,True,"You are now in cabinet 1. Inside, you see a pan and a knife.",0.95,0.7375969886779785,False,False,0,0.0
+D00135,trial_T20190907_012519_974044,7,open cabinet 4,open cabinet 4,False,Cabinet 4 is now open.,0.95,0.7583515644073486,False,False,0,0.0
+D00136,trial_T20190907_012519_974044,14,go to cabinet 1,examine cabinet 2,True,Nothing new is observed in cabinet 1.,0.95,0.653986930847168,False,False,0,0.25
+D00137,trial_T20190907_012519_974044,22,go to cabinet 2,go to cabinet 2,False,"You arrive at cabinet 2. On the cabinet 2, you see nothing.",0.95,0.7465205192565918,False,False,0,0.0
+D00138,trial_T20190907_012519_974044,29,go to cabinet 1,go to cabinet 8,True,Nothing notable observed; cabinet 1 is empty or contains no relevant items.,0.85,0.7063470482826233,False,False,0,0.0
+D00139,trial_T20190908_183331_203888,0,go to drawer 1,go to drawer 1,False,You are now in drawer 1.,0.997,0.7081756591796875,False,False,0,0.25
+D00140,trial_T20190908_183331_203888,7,inventory,close drawer 2,True,You see two spatulas in your inventory.,0.95,0.2801397442817688,False,False,0,0.5
+D00141,trial_T20190908_183331_203888,14,open cabinet 4,examine cabinet 4,True,Cabinet 4 is now open.,0.98,0.7583515644073486,False,False,0,0.0
+D00142,trial_T20190908_183331_203888,22,inventory,inventory,False,You see two spatulas in your inventory.,0.95,0.2801397442817688,False,False,0,0.5
+D00143,trial_T20190908_183331_203888,29,go to cabinet 1,go to countertop 1,True,You are at cabinet 1.,0.95,0.7634197473526001,False,False,0,0.25
+D00144,trial_T20190909_044602_338962,0,go to drawer 1,go to drawer 2,True,"You are in the middle of a room. Looking quickly around you, you see a bathtubbasin 1, a countertop 1, a drawer 8, a drawer 7, a drawer 6, a drawer 5, a drawer 4, a drawer 3, a drawer 2, a drawer 1, a garbagecan 1, a handtowelholder 1, a sinkbasin 1, a toilet 1, a toiletpaperhanger 1, a towelholder 2, and a towelholder 1. You now see a tissuebox inside drawer 1.",0.95,0.5423443913459778,False,True,1,0.0
+D00145,trial_T20190909_044602_338962,6,examine countertop 1,examine countertop 1,False,You observe tissuebox 1 on countertop 1.,0.95,0.7340524196624756,True,True,0,0.0
+D00146,trial_T20190909_044602_338962,12,go to drawer 1,go to drawer 1,False,examine drawer 1,0.95,0.7783613204956055,False,False,0,0.25
+D00147,trial_T20190909_044602_338962,19,examine toilet 1,examine tissuebox 2,True,"You examine toilet 1 and see a candle 1 and a toiletpaper 1, with no tissuebox present.",0.95,0.8410180807113647,False,False,0,0.5
+D00148,trial_T20190909_044602_338962,25,go to drawer 1,go to drawer 1,False,"You arrive at drawer 1. On drawer 1, you see a candle 1, a tissuebox 2, and a toiletpaper 1.",0.95,0.6474486589431763,False,False,0,0.0

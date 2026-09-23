@@ -1,0 +1,159 @@
+{
+  "n": 500,
+  "no_foresight": {
+    "accuracy": 0.394,
+    "usage": 0.0,
+    "n": 500
+  },
+  "always_foresight": {
+    "accuracy": 0.378,
+    "usage": 1.0,
+    "n": 500
+  },
+  "oracle_utility": {
+    "accuracy": 0.408,
+    "usage": 0.014,
+    "n": 500
+  },
+  "confidence_sweep": {
+    "self_report": [
+      {
+        "accuracy": 0.378,
+        "usage": 0.988,
+        "n": 500,
+        "tau": 0.3
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.988,
+        "n": 500,
+        "tau": 0.4
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.988,
+        "n": 500,
+        "tau": 0.5
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.988,
+        "n": 500,
+        "tau": 0.6
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.984,
+        "n": 500,
+        "tau": 0.7
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.984,
+        "n": 500,
+        "tau": 0.8
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.964,
+        "n": 500,
+        "tau": 0.9
+      },
+      {
+        "accuracy": 0.386,
+        "usage": 0.356,
+        "n": 500,
+        "tau": 0.95
+      }
+    ],
+    "logprob": [
+      {
+        "accuracy": 0.39,
+        "usage": 0.1,
+        "n": 500,
+        "tau": 0.9997418317148682,
+        "target_coverage": 0.1
+      },
+      {
+        "accuracy": 0.386,
+        "usage": 0.2,
+        "n": 500,
+        "tau": 0.998602152615225,
+        "target_coverage": 0.2
+      },
+      {
+        "accuracy": 0.384,
+        "usage": 0.3,
+        "n": 500,
+        "tau": 0.9953396627038148,
+        "target_coverage": 0.3
+      },
+      {
+        "accuracy": 0.382,
+        "usage": 0.4,
+        "n": 500,
+        "tau": 0.9906791474211193,
+        "target_coverage": 0.4
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.5,
+        "n": 500,
+        "tau": 0.9848836548311537,
+        "target_coverage": 0.5
+      },
+      {
+        "accuracy": 0.38,
+        "usage": 0.6,
+        "n": 500,
+        "tau": 0.9773128504758707,
+        "target_coverage": 0.6
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 0.7,
+        "n": 500,
+        "tau": 0.9652898794074017,
+        "target_coverage": 0.7
+      },
+      {
+        "accuracy": 0.376,
+        "usage": 0.8,
+        "n": 500,
+        "tau": 0.9474506511568711,
+        "target_coverage": 0.8
+      },
+      {
+        "accuracy": 0.376,
+        "usage": 0.9,
+        "n": 500,
+        "tau": 0.911099111394985,
+        "target_coverage": 0.9
+      },
+      {
+        "accuracy": 0.378,
+        "usage": 1.0,
+        "n": 500,
+        "tau": -1.0,
+        "target_coverage": 1.0
+      }
+    ]
+  },
+  "best_confidence_gate": {
+    "self_report": {
+      "accuracy": 0.386,
+      "usage": 0.356,
+      "n": 500,
+      "tau": 0.95
+    },
+    "logprob": {
+      "accuracy": 0.39,
+      "usage": 0.1,
+      "n": 500,
+      "tau": 0.9997418317148682,
+      "target_coverage": 0.1
+    }
+  },
+  "oracle_minus_best_confidence": 0.01799999999999996,
+  "oracle_minus_no_foresight": 0.013999999999999957
+}

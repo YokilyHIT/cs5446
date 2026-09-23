@@ -1,0 +1,27 @@
+{
+  "decision_points": 150,
+  "changed_points": 60,
+  "calibration_points": 50,
+  "evaluation_points": 100,
+  "mismatch_rate": 0.13636363636363635,
+  "rho_self": 0.09819558323450614,
+  "rho_self_ci": [
+    -0.17841049343089502,
+    0.3695722050235674
+  ],
+  "rho_sem": 0.06769159307135476,
+  "rho_sem_ci": [
+    -0.2096162023009969,
+    0.31982429040413446
+  ],
+  "oracle_gain": 0.06,
+  "oracle_gain_ci": [
+    0.02,
+    0.11
+  ],
+  "helpful_rate": 0.11363636363636363,
+  "harmful_rate": 0.13636363636363635,
+  "any_success_rate_eval": 0.34,
+  "verdict": "GO",
+  "interpretation": "2/3 go/no-go criteria hold (mismatch_rate=0.136, oracle_gain=0.060, rho_self=0.098). Supported by preliminary evidence -- meets the strong-support bar for pursuing direction B further."
+}

@@ -1,0 +1,126 @@
+{
+  "temps": [
+    0.0,
+    0.3,
+    0.7
+  ],
+  "seeds": [
+    101,
+    102,
+    103
+  ],
+  "n_states": 200,
+  "summary": {
+    "0.0": {
+      "per_seed": [
+        {
+          "seed": 101,
+          "acr_foresight": 0.125,
+          "acr_noise": 0.005,
+          "air": 0.01,
+          "ahr": 0.03,
+          "n": 200
+        },
+        {
+          "seed": 102,
+          "acr_foresight": 0.125,
+          "acr_noise": 0.01,
+          "air": 0.01,
+          "ahr": 0.03,
+          "n": 200
+        },
+        {
+          "seed": 103,
+          "acr_foresight": 0.125,
+          "acr_noise": 0.005,
+          "air": 0.01,
+          "ahr": 0.03,
+          "n": 200
+        }
+      ],
+      "acr_foresight_mean": 0.125,
+      "acr_foresight_std": 0.0,
+      "acr_noise_mean": 0.006666666666666667,
+      "acr_noise_std": 0.0023570226039551583,
+      "net_effect": 0.11833333333333333,
+      "air_mean": 0.01,
+      "air_std": 0.0,
+      "ahr_mean": 0.03,
+      "ahr_std": 0.0
+    },
+    "0.3": {
+      "per_seed": [
+        {
+          "seed": 101,
+          "acr_foresight": 0.12,
+          "acr_noise": 0.015,
+          "air": 0.01,
+          "ahr": 0.03,
+          "n": 200
+        },
+        {
+          "seed": 102,
+          "acr_foresight": 0.12,
+          "acr_noise": 0.01,
+          "air": 0.015,
+          "ahr": 0.03,
+          "n": 200
+        },
+        {
+          "seed": 103,
+          "acr_foresight": 0.115,
+          "acr_noise": 0.0,
+          "air": 0.01,
+          "ahr": 0.03,
+          "n": 200
+        }
+      ],
+      "acr_foresight_mean": 0.11833333333333333,
+      "acr_foresight_std": 0.002357022603955154,
+      "acr_noise_mean": 0.008333333333333333,
+      "acr_noise_std": 0.0062360956446232355,
+      "net_effect": 0.11,
+      "air_mean": 0.011666666666666667,
+      "air_std": 0.002357022603955158,
+      "ahr_mean": 0.03,
+      "ahr_std": 0.0
+    },
+    "0.7": {
+      "per_seed": [
+        {
+          "seed": 101,
+          "acr_foresight": 0.11,
+          "acr_noise": 0.015,
+          "air": 0.01,
+          "ahr": 0.03,
+          "n": 200
+        },
+        {
+          "seed": 102,
+          "acr_foresight": 0.12,
+          "acr_noise": 0.0,
+          "air": 0.01,
+          "ahr": 0.03,
+          "n": 200
+        },
+        {
+          "seed": 103,
+          "acr_foresight": 0.12,
+          "acr_noise": 0.005,
+          "air": 0.015,
+          "ahr": 0.03,
+          "n": 200
+        }
+      ],
+      "acr_foresight_mean": 0.11666666666666665,
+      "acr_foresight_std": 0.004714045207910314,
+      "acr_noise_mean": 0.006666666666666667,
+      "acr_noise_std": 0.0062360956446232355,
+      "net_effect": 0.10999999999999999,
+      "air_mean": 0.011666666666666667,
+      "air_std": 0.002357022603955158,
+      "ahr_mean": 0.03,
+      "ahr_std": 0.0
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# Pre-experiment glue-code dependencies (NOT the vLLM/torch/torch_npu stack --
+# those are pinned to your CANN version and installed by scripts/setup_env_npu.sh
+# separately, since a wrong pytorch/torch_npu pair silently no-ops onto CPU).
+#
+# ALFWorld and AdaMEM ship their own requirements.txt / setup.py and are
+# installed by scripts/setup_env_npu.sh via `pip install -e .` in their own
+# cloned directories -- do not duplicate their pins here.
+
+openai==1.67.0          # talks to the vLLM OpenAI-compatible server over HTTP only
+pyyaml==6.0.2
+numpy==1.26.4
+scipy==1.15.3
+pandas==2.2.3
+matplotlib==3.10.0
+sentence-transformers==3.3.1
+pytest==8.3.5
+tqdm==4.67.1

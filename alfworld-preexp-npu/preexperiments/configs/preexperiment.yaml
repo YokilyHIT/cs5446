@@ -1,0 +1,130 @@
+# Fixed configuration for the two pre-experiments (Selective Failure Learning / A,
+# Prediction Confidence vs Planning Utility / B).
+#
+# This file is the single source of truth for model/sampling/seed parameters.
+# Every script under preexperiments/ must read its defaults from here instead of
+# hard-coding literals, so that every result JSON/CSV can cite one config version.
+
+model:
+  name: "Qwen/Qwen3-4B-Instruct-2507"
+  # vLLM OpenAI-compatible server, started separately on the NPU host
+  # (see scripts/start_vllm_npu.sh). This machine only ever talks HTTP to it.
+  api_base: "http://127.0.0.1:8001/v1"
+  api_key: "EMPTY"          # vLLM does not check this, but the OpenAI SDK requires a value
+  request_timeout_s: 120
+  max_retries: 5
+
+sampling:
+  # 规范 §2 规定 0.2；AdaMEM 自己的 runner 用 0.7
+  # (examples/prompt_agent/gpt4o_alfworld.py: TEMPERATURE 默认 0.7)。
+  # 本轮按 AdaMEM 复现取 0.7 —— 这是一处对规范的显式偏离，已记录，
+  # 而非"偷偷沿用不确定的默认值"（规范 §2 对此有明确要求）。
+  # 副作用：0.2 + 约束解码会让 B11 的 4 次重采样几乎必然一致，
+  # ambiguity 特征因此全为 0；0.7 才可能有方差。
+  # temp 0.2 那一轮的结果已归档在 results_temp02_spec/。
+  temperature: 0.7
+  top_p: 0.95
+  max_tokens_per_action: 256
+  max_episode_steps: 30
+  # Which action-selection prompt the ReAct agent uses. Whichever is set here
+  # applies identically to EVERY condition in both experiments (no-lesson vs
+  # with-lesson, base vs foresight), so it can never bias a comparison -- it
+  # only sets how capable the shared base planner is.
+  #   "spec"          - the fixed prompt from spec section 5.1, decoded under a
+  #                     guided_choice constraint over the admissible actions.
+  #   "adamem_think"  - AdaMEM's own no-memory ALFWorld prompt (<think> then
+  #                     <action>), the remedy spec section 39 names for a
+  #                     too-low success rate. Costs more tokens per step and
+  #                     cannot use guided_choice (the completion is not a bare
+  #                     action string), so watch the forced-action rate via
+  #                     scripts/check_forced_action_rate.py.
+  prompt_style: "adamem_think"
+  # Token budget for "adamem_think" only: the reasoning and the action share
+  # one completion, and at max_tokens_per_action=256 the model gets cut off
+  # mid-<think> and never emits an <action> tag.
+  adamem_max_tokens: 1024
+  # 与 AdaMEM 对齐的两项（其 env_manager.build_text_obs / config_tw.yaml）：
+  #   history_length 50  —— 我们原本只给 8 轮，30 步之后 agent 看不到自己试过什么
+  #   排除 help          —— AdaMEM 明确过滤掉它；实测有 episode 卡在 help 上耗尽预算
+  # 二者都不是规范 §2 规定的量（§2 只固定模型/温度/seed/步数上限）。
+  history_length: 50
+
+seeds: [13, 37, 73]
+
+embedding:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  # Small model; CPU is sufficient and keeps the NPU free for the LLM server.
+  # Set to "npu" to run on Ascend via torch_npu if the host has spare capacity.
+  device: "cpu"
+
+splits:
+  experience: "train"
+  evaluation: "eval_in_distribution"
+  # eval_out_of_distribution intentionally unused in phase 1 (see spec section 3)
+
+paths:
+  adamem_root: "../AdaMEM"        # relative to this repo root, set by setup script
+  results_dir: "results"
+  figures_dir: "figures"
+  reports_dir: "reports"
+
+experiment_a:
+  max_train_episodes: 50
+  min_failures: 20
+  lesson_temperature: 0.2
+  related_tasks_k: 3
+  max_failures_evaluated: 20
+  eval_subset_size: 30
+  topk_fraction: 0.4
+
+experiment_b:
+  eval_episodes: 30
+  decision_points_per_episode: 5
+  target_decision_points: 150
+  calibration_points: 50
+  evaluation_points: 100
+  confidence_gate_target_usage: 0.5
+  action_ambiguity_samples: 4
+  # Steps each counterfactual branch gets, counted FROM the decision point --
+  # not the remainder of the global episode cap. Decision points are spread
+  # across the whole episode, so a point at step 29 would otherwise leave both
+  # branches one step each: both fail, Delta_t = 0, and that 0 reflects the
+  # budget rather than the foresight. Both branches always get the same number,
+  # so the paired comparison stays valid.
+  branch_rollout_budget: 30
+
+stats:
+  bootstrap_resamples: 1000
+  bootstrap_seed: 2026
+
+# ---------------------------------------------------------------------------
+# 方向二预实验（Planning Utility vs Prediction Confidence）
+# 独立成段，避免改动已完成的实验 A/B 的配置。
+# 解码参数对齐 WorldEvolver 原文：temperature 0, top_p 0.5, seed 42, 最多 30 步。
+# 方案 §40 同样要求 temperature=0 与固定 seed —— 二者一致。
+# ---------------------------------------------------------------------------
+direction_b:
+  temperature: 0.0
+  top_p: 0.5
+  seed: 42
+  # "direct" (default -- every existing result was produced this way):
+  #   guided_choice-constrained decoding, documented deviation from
+  #   WorldEvolver (see direction_b/pipeline.py module docstring).
+  # "react": literal WorldEvolver "Thought:/Action:" free decoding with
+  #   strict (non-fuzzy) grounding. New; not the default, so nothing that
+  #   omits this key changes behaviour. Scripts opt in with
+  #   --reasoning_mode react (run_episode_level.py) or by overriding this
+  #   key in a copy of this config.
+  reasoning_mode: "direct"
+  max_tokens_action: 64
+  # react-only: Thought + Action share one completion, so it needs more room
+  # than the bare-action "direct" call above.
+  max_tokens_action_react: 256
+  max_tokens_prediction: 256
+  # 方案 §35.2：固定单步预测，不做 adaptive horizon
+  wm_horizon: 1
+  # 方案 §22 用 tau_C=0.7 举例；自报 confidence 按绝对阈值扫，
+  # logprob confidence 因为分布压在 1 附近（实测 p10=0.907），
+  # 必须按分位数扫覆盖率 —— 这也是 WorldEvolver Figure 11 的做法。
+  tau_c_sweep: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+  coverage_sweep: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
