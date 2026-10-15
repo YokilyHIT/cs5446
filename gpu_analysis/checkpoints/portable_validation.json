@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "kind": "portable_cpu_analysis_release_validation",
+  "date": "2026-10-15",
+  "scope": "isolated team repository checkout; no original archive needed for analysis",
+  "python": {
+    "python_version": "3.10.21",
+    "python_implementation": "CPython",
+    "numeric_representation": "Python float; no score rounding/tolerance grouping",
+    "summation": "math.fsum for weighted aggregates"
+  },
+  "cli_command": "python -B tools/analyze_d0_snapshot.py --dataset gpu_analysis/data/d0_snapshot.json --out gpu_analysis/generated/prepublish_metrics.json",
+  "cli_result": "passed",
+  "tests": {
+    "command": "python -B -m pytest research_progress/2026-10-10-d0-analysis/tests -q -p no:cacheprovider",
+    "passed": 60,
+    "failed": 0,
+    "scope": "included pure-function regressions"
+  },
+  "dataset_json_seals_verified": 4,
+  "original_source_hashes_verified": 11,
+  "real_data_crosscheck": {
+    "games": 24,
+    "states": 71,
+    "complete_DNP_states": 68,
+    "source_failed_states": 3,
+    "Y_successes": {
+      "D": 9,
+      "N": 8,
+      "P": 8
+    },
+    "U_counts": {
+      "admission": {
+        "0": 67,
+        "-1": 1
+      },
+      "info": {
+        "0": 66,
+        "1": 1,
+        "-1": 1
+      },
+      "revision": {
+        "0": 67,
+        "-1": 1
+      }
+    },
+    "action_changes": {
+      "admission": {
+        "changed": 31,
+        "denominator": 68
+      },
+      "revision": {
+        "changed": 20,
+        "denominator": 67
+      }
+    },
+    "EM_count": 28.0,
+    "mean_F1": 0.7082293022459437,
+    "all_weight_mass": 1.0,
+    "complete_DNP_weight_mass": 0.9513888888888888,
+    "cross_job": {
+      "false": {
+        "states": 70,
+        "games": 24,
+        "original_weight_mass": 0.986111111111111
+      },
+      "true": {
+        "states": 1,
+        "games": 1,
+        "original_weight_mass": 0.013888888888888888
+      },
+      "unknown": {
+        "states": 0,
+        "games": 0,
+        "original_weight_mass": 0.0
+      },
+      "not_applicable": {
+        "states": 0,
+        "games": 0,
+        "original_weight_mass": 0.0
+      }
+    },
+    "per_point_comparison_to_independent_counts": "all 71 rows match Y/U/EM/F1/weight/mean_logprob/exp_score exactly",
+    "full_D0_report_complete": false
+  },
+  "data_files": [
+    {
+      "path": "gpu_analysis/data/d0_rollout_summaries.json",
+      "size": 668049,
+      "sha256": "db10811e9c4ea784d9853bdc187f7efa162a71345dbf876bce842391c73355c4"
+    },
+    {
+      "path": "gpu_analysis/data/d0_snapshot.json",
+      "size": 1237000,
+      "sha256": "83a434c2eaac1bb8b6ad90b6d2b5c83716cfd24ea96411b7e43321f59bf0c82d"
+    },
+    {
+      "path": "gpu_analysis/data/final_accounting_summary.json",
+      "size": 16592,
+      "sha256": "56e0813feaeffa9bbb8bc298196b252ed62b515beaf04463aff16704ba4d98d0"
+    },
+    {
+      "path": "gpu_analysis/data/source_bindings.json",
+      "size": 49957,
+      "sha256": "56d639dcb30997421a7aeefdfca0283a32cce178deb37c95cfb7d7244489ab92"
+    }
+  ],
+  "analysis_outputs": [
+    {
+      "path": "gpu_analysis/checkpoints/d0_metrics.json",
+      "size": 3022860,
+      "sha256": "8fcda78e5890fb87eabe3729ede6dc96b5393b9b15f9f4793cf0fcd1707ae750"
+    },
+    {
+      "path": "gpu_analysis/checkpoints/d0_metrics.md",
+      "size": 4093,
+      "sha256": "18d9d7c2d433b3a360b92e57b3d3394a084fe1d05293f1f6816da4740827c926"
+    }
+  ],
+  "new_model_calls": 0,
+  "new_environment_instances": 0,
+  "new_gpu_jobs": 0,
+  "not_a_full_provenance_or_gpu_runtime_validation": true
+}

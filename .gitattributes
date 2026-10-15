@@ -1,0 +1,13 @@
+# Preserve byte-bound GPU analysis sources and derived snapshots on checkout.
+research_progress/2026-10-10-d0-analysis/** -text
+alfworld-preexp-npu/preexperiments/direction_b/metrics.py -text
+gpu_analysis/data/** -text
+gpu_analysis/checkpoints/** -text
+tools/analysis_sources.json -text
+
+# New portable launchers and team notes use LF.
+tools/analyze_d0_snapshot.py text eol=lf
+tools/export_d0_snapshot.py text eol=lf
+tools/analysis_input_contract.md text eol=lf
+gpu_analysis/docs/*.md text eol=lf
+README.md text eol=lf

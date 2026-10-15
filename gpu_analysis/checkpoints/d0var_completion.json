@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "kind": "derived_d0var_completion_checkpoint",
+  "source_recorded_at": "2026-10-14T22:17:08.745773+00:00",
+  "collection_status": "complete",
+  "scope": "Completed fixed D0-var development collection, not model training or confirmatory D1/E results.",
+  "coverage": {
+    "unique_games": 24,
+    "retained_prior_games": 4,
+    "batch_games": 20,
+    "unique_states": 71,
+    "D_checks": {
+      "passed": 68,
+      "not_applicable": 3
+    },
+    "D_comparison_coverage": {
+      "new_mu_request_pairs": 770,
+      "matched_new_mu_completions": 770,
+      "states_with_model_reproducibility_coverage": 67
+    },
+    "cross_job_state_count": 1,
+    "cross_job_state_ids": [
+      "40945f3e9214f2d475b3c80f62f107c7c8c9498b088581ed004454ba4abbd726:19"
+    ],
+    "not_applicable_states": [
+      {
+        "game_id": "pick_two_obj_and_place-Mug-None-Cabinet-318/trial_T20190910_055356_172564",
+        "state_id": "ef2caeefa6945cc5c8b1379771aa94303ea8b4d6105fb429daf1775c4a6a12fa:9",
+        "reason": "no_executable_source_draft"
+      },
+      {
+        "game_id": "pick_two_obj_and_place-Pencil-None-CoffeeTable-229/trial_T20190910_231706_006365",
+        "state_id": "e9f431271ce0c84584a2f289359ba0b8a26da49726ec93ee6fb59de0d832ca57:3",
+        "reason": "no_executable_source_draft"
+      },
+      {
+        "game_id": "pick_two_obj_and_place-Pencil-None-SideTable-329/trial_T20190909_001315_056410",
+        "state_id": "3693bf7b452a2a4c818f677b6243c600726a425d6cdc5a6ed3ab79e8408f469d:1",
+        "reason": "no_executable_source_draft"
+      }
+    ],
+    "passed_environment_only": [
+      {
+        "game_id": "pick_heat_then_place_in_recep-Apple-None-CounterTop-5/trial_T20190907_113555_848211",
+        "state_id": "dbfcf1fd774e5c41e46383d033ef0b9c019f96f1352449b16ddda1c40c41b87c:29",
+        "coverage": {
+          "prefix_transitions": 29,
+          "transition_pairs": 1,
+          "new_mu_request_pairs": 0,
+          "matched_new_mu_completions": 0,
+          "model_reproducibility_covered": false,
+          "scope": "environment_only",
+          "cached_draft_is_new_model_test": false
+        }
+      }
+    ],
+    "branch_task_count": 213,
+    "branch_task_status": {
+      "complete": 170,
+      "policy_failed": 34,
+      "not_applicable_source_draft_failure": 9
+    },
+    "physical_group_count": 117,
+    "physical_group_status": {
+      "complete": 102,
+      "policy_failed": 15
+    }
+  },
+  "production_closeout": {
+    "ledger_rows_before": 35,
+    "ledger_rows_after": 36,
+    "old_prefix_unchanged": true,
+    "exactly_one_completion_appended": true,
+    "copy_and_production_ledgers_byte_identical": true,
+    "new_gpu_jobs_for_closeout": 0,
+    "new_model_calls_for_closeout": 0
+  },
+  "ledger_sha256": "97e99d61b6bdff53deb06ca4479bec6790ebba76cff4db6ac9e7db6b951e7e67",
+  "completion_row_sha256": "cd6516d58da0ebc0b8fbe5277f0a8cb11b1ea63bdca15828c720deb580b3852f",
+  "execution_package": {
+    "source_label": "d0_var-package.json",
+    "sha256": "f8718e1ebebffa9f01afe394fe28ef106169c8b3a8fb9076eae272296df36096",
+    "size": 96866
+  },
+  "source_bindings": [
+    {
+      "source_label": "FINAL_CLOSEOUT_RECEIPT.json",
+      "sha256": "5072ca1bdfcc3c0b1011a4366fd946cfd2606625cae265e116376499668d52a3",
+      "size": 4211
+    },
+    {
+      "source_label": "FINAL_CLOSEOUT_VALIDATION.json",
+      "sha256": "94bc2892281a5ef85468a4907a0dd46cf9162deed8b9cc9798d16f153ffc1411",
+      "size": 6534
+    },
+    {
+      "source_label": "FINAL_GAME_CLASSIFICATION.json",
+      "sha256": "1aec8c50df49bd1a71ac0f5c79484b505e32b1c79a4d5028ceac38740723f64e",
+      "size": 17308
+    },
+    {
+      "source_label": "FINAL_ACCOUNTING_SUMMARY.json",
+      "sha256": "4ede4703933d83680390baadea44a46009927cc7ac2925d1bc269705592f93b0",
+      "size": 57317
+    },
+    {
+      "source_label": "FINAL_EVIDENCE_INDEX.json",
+      "sha256": "e5ddc1b619ed0828797d476d14c86a3c99bb77446d4cf37276976786b4f1a567",
+      "size": 30641
+    }
+  ],
+  "not_included": [
+    "Full Slurm/SSH/campaign raw logs",
+    "Model weights and environment assets",
+    "A fresh revalidation of all original deployment evidence"
+  ],
+  "pending": [
+    "N/P independent continuation audit",
+    "Full evidence-bound D0 cost/behavior report",
+    "D1 scope, eligibility, and any confirmatory design",
+    "E eligibility, sample size, paired episode evaluation"
+  ]
+}

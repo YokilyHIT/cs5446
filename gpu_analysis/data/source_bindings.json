@@ -1,0 +1,1210 @@
+{
+  "schema_version": 1,
+  "kind": "derived_snapshot_source_bindings",
+  "original_artifacts_included": false,
+  "logical_path_base": "original source project root; archives are not included in this repository package",
+  "accounting_source": {
+    "logical_path": "cs5446_modified/research_progress/2026-10-14-d0var-completion/FINAL_ACCOUNTING_SUMMARY.json",
+    "size": 57317,
+    "sha256": "4ede4703933d83680390baadea44a46009927cc7ac2925d1bc269705592f93b0"
+  },
+  "final_evidence_index_source": {
+    "logical_path": "cs5446_modified/research_progress/2026-10-14-d0var-completion/FINAL_EVIDENCE_INDEX.json",
+    "size": 30641,
+    "sha256": "e5ddc1b619ed0828797d476d14c86a3c99bb77446d4cf37276976786b4f1a567"
+  },
+  "source_selection_bundle": {
+    "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/bundle.json",
+    "size": 44299,
+    "sha256": "531a283fb3327d1f45b744ddecceac145840f629fe5b66e1bfcfe26d809a0156"
+  },
+  "files": [
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-14-d0var-completion/FINAL_ACCOUNTING_SUMMARY.json",
+      "size": 57317,
+      "sha256": "4ede4703933d83680390baadea44a46009927cc7ac2925d1bc269705592f93b0",
+      "roles": [
+        "accepted_accounting"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-14-d0var-completion/FINAL_EVIDENCE_INDEX.json",
+      "size": 30641,
+      "sha256": "e5ddc1b619ed0828797d476d14c86a3c99bb77446d4cf37276976786b4f1a567",
+      "roles": [
+        "accepted_evidence_index"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0-sparse-review-20261015/independent_counts.json",
+      "size": 171873,
+      "sha256": "2694d6fb0cc393dcaa612f7754357466b92a198e2c35dd39d383ef85e70fbaf6",
+      "roles": [
+        "independent_count_comparison"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/bundle.json",
+      "size": 44299,
+      "sha256": "531a283fb3327d1f45b744ddecceac145840f629fe5b66e1bfcfe26d809a0156",
+      "roles": [
+        "original_source_selection_bundle",
+        "manifest_bound_source_selection"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0001.json",
+      "size": 17214665,
+      "sha256": "09ccb9251f29a122179ad0d4d742380b86d560257caa04ecb9ff01e7140b4c28",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0000/runner/manifest.json",
+      "size": 33872730,
+      "sha256": "c0e3c32118046cf8cc9b16980a21fa82cf340f7189fd4982cab82702ea59bd28",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0000/runner/finalization.json",
+      "size": 673,
+      "sha256": "7ae7a127e53d213d98fbda1ae6a75aadbf95b9fb62a8c30cfdc119ca159c20a2",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0000/runner/first_actions.jsonl",
+      "size": 147340,
+      "sha256": "99233abab8dc31c04b9fb1f62d5995ed1d2a03076e1df696dba6aa619bc22369",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0000/runner/prediction_references.jsonl",
+      "size": 130534,
+      "sha256": "cfa6c32955ea0864e673ca4782bf40e424546e7b1723adbd0e6fa3ebb8db05d7",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0000/runner/rollouts.jsonl",
+      "size": 640058,
+      "sha256": "27f12a9fdee1c739bef69e86b21b6f5c4f0af5eafcd622951a00548b279af136",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0002.json",
+      "size": 11808087,
+      "sha256": "2e0d5b2c519e3045c5655c1f058e401105ced5c6a11763371d22821719a1259b",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0001/runner/manifest.json",
+      "size": 33958505,
+      "sha256": "7f8ab31fe173294787c0d80d9f70617a743add8d0fff0313dc041551469d2997",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0001/runner/finalization.json",
+      "size": 673,
+      "sha256": "2b7ac4e52dd6a9b61c81744d0c7963fe208f8d295ce72b151e28436af1eaaaaf",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0001/runner/first_actions.jsonl",
+      "size": 178108,
+      "sha256": "b65e5f37238f82744c3811dcc82c3df39c393f3ed2a471c206c03e7eed133336",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0001/runner/prediction_references.jsonl",
+      "size": 161432,
+      "sha256": "55e53a78e99c05c526db3134c2130fe275a4a083f79b813457c11d361a9ebcc4",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0001/runner/rollouts.jsonl",
+      "size": 530868,
+      "sha256": "2babf2d9cd954546b6200a102425ad2a40dfe596ccca10184ac977dc0246ec36",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0003.json",
+      "size": 10058151,
+      "sha256": "3d4c30da872a3130c8d4b3d6af828c0b59c0e4497bf07ffdad648244b68627b3",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0002/runner/manifest.json",
+      "size": 34059906,
+      "sha256": "96352b0b2c0a93df3c19ffe13eda3986ae99ff2695aabe02395dac745a859921",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0002/runner/finalization.json",
+      "size": 673,
+      "sha256": "c897b898a543a475820f9086c81a396ed1883676759550b0c9ce4e4b6fadf4db",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0002/runner/first_actions.jsonl",
+      "size": 147045,
+      "sha256": "10c7793d3676b667bf5fa95afd2fb882cea58528dd3bbb6d2b5be46bc70c5181",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0002/runner/prediction_references.jsonl",
+      "size": 131805,
+      "sha256": "c6b27db9c61a40a4393d0a6e5f6fc2da83826dac2b582de3087ddfd16f0debc6",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0002/runner/rollouts.jsonl",
+      "size": 578775,
+      "sha256": "484198b2893faecadbd5a5fcf7504d2d4184e43d200797fedc02ecc03f284506",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0004.json",
+      "size": 2808656,
+      "sha256": "67734ae45fb7391977d83f0042f0c33d4dfc53b0b9f410239ee14e8802d40542",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0003/runner/manifest.json",
+      "size": 34123231,
+      "sha256": "1aed53598035432d9f5bfba6cb60a394db92a0a67ad5c0bb1b7a8867c18e7ae7",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0003/runner/finalization.json",
+      "size": 674,
+      "sha256": "2603e38c22756befca7165c84b6cc844aeded1ab3cceb796e995f4e3d6c4b978",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0003/runner/first_actions.jsonl",
+      "size": 115319,
+      "sha256": "aa6cba3cf45483756d1bc6fc501f40a166a7653b58ff1fe8c8b47e850e5ac03f",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0003/runner/prediction_references.jsonl",
+      "size": 102623,
+      "sha256": "171174d8e98a8c7d6fb2403633c7e1abd3968e82a17911fa2be1f2f819f9742e",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/d0var-935310-20261012T140450Z/project/run-results/d0_var-935310/games/game-0003/runner/rollouts.jsonl",
+      "size": 52978,
+      "sha256": "22de85e054d004968c6f84242745c90f6971df5759acc0ef5de0c3f08d7cb75a",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0005.json",
+      "size": 13753485,
+      "sha256": "ecaf8024a1f4238b5a05573ceba68e3755e2ec63da527cd40380bd9570b76ce4",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0000/runner/manifest.json",
+      "size": 54966,
+      "sha256": "7829c51ac350300640f88ad09e8a2ddace1faa2d604ff20a7deb7f0ddd489aa6",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0000/runner/finalization.json",
+      "size": 687,
+      "sha256": "386e4909c6559d3d7f92b6cc4d0362ae826110f773e457085a6b6f1654124d7b",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0000/runner/first_actions.jsonl",
+      "size": 238862,
+      "sha256": "8a7362ac2fef02bcd88eded5d20a3f4e330978e41312b786ddec06019cbe3a52",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0000/runner/prediction_references.jsonl",
+      "size": 147133,
+      "sha256": "15023c013bfd4dc0df4b3e3883971c4740ea0198257e4ae9061fb57f34283bb8",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0000/runner/rollouts.jsonl",
+      "size": 648060,
+      "sha256": "3abaf20ef5be1631882601578c43880223f1aaa4995401b96b54e84633ef1351",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0006.json",
+      "size": 11361854,
+      "sha256": "cbdad010e66068795db13f480480f5c792629c04d3300a3361b4b421a4d9916e",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0001/runner/manifest.json",
+      "size": 18400,
+      "sha256": "65dc78e7a02edd2e4364fdb6b2424103cdf52a8105a7154eaa2a0b6a83e54e9f",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0001/runner/finalization.json",
+      "size": 677,
+      "sha256": "aa5dcdcbc84d2487ddcc02de34b55e437aa430b88bb3ec742f2ea240070779f1",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0001/runner/first_actions.jsonl",
+      "size": 221301,
+      "sha256": "21e9da785b2e6699db0e816cc4749d338fedb7b07a91234e212c3ee2a82c23ec",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0001/runner/prediction_references.jsonl",
+      "size": 204985,
+      "sha256": "9516f06ab29f3227e11cf9a716c55f7d4308c2910f8d55729b7b111c45ee8205",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j943506-20261014T085221Z/raw/project/run-results/d0_var-batch-943506/games/game-0001/runner/rollouts.jsonl",
+      "size": 355138,
+      "sha256": "3385e96a434c29cfbca525201b13fa9f518a5648068e74e9e96481df2964c8f1",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0007.json",
+      "size": 9639014,
+      "sha256": "2c3ffafd12fe5a0bcff5f796d3fddca9dc88f1d5440765e9e79efada0c7c2c58",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0000/runner/manifest.json",
+      "size": 20044,
+      "sha256": "06a0c3dff06c85e598dacf0b6a83df1b795b722c2f0a8734349d28bcba22a189",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0000/runner/finalization.json",
+      "size": 677,
+      "sha256": "8ac4a97c15f4ba47b6e48dedf7fe4f824911c54f096a34b51d690538eae9b09a",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0000/runner/first_actions.jsonl",
+      "size": 224454,
+      "sha256": "05fc7c6b4f6aed2a45bda2b390b252747a3e302bd45fa86befcad8999f0324f2",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0000/runner/prediction_references.jsonl",
+      "size": 207834,
+      "sha256": "9bb918457706ab78c187427ee76bc750b4e7030fce699b03da3525d00855ae1d",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0000/runner/rollouts.jsonl",
+      "size": 502720,
+      "sha256": "d5b5aa05ff456dad3a90533d08e34a22921544e4f8c9c36854a42335ef0ec929",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0008.json",
+      "size": 11217428,
+      "sha256": "37b1d15ba862ec48feaede58f1912db24c5e3d7f8401e31998bf04c8a54cf13f",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0001/runner/manifest.json",
+      "size": 21724,
+      "sha256": "2e2b0a5724902a39c2f0e84813ed8c1dcd1ec9eec64578949a3a349c82fc0d14",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0001/runner/finalization.json",
+      "size": 676,
+      "sha256": "9d13c2b1c877a8c12e8e6d7eccc4ae8397e9d976477e3e42c6328b033448f33a",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0001/runner/first_actions.jsonl",
+      "size": 149452,
+      "sha256": "f7ffa25386beb1e75fc7782051e0d3113937bdc8e34114ac615aa1c6ec09be85",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0001/runner/prediction_references.jsonl",
+      "size": 132149,
+      "sha256": "b2f6c989505587be0d7c2f32e3709a8808e7ec2087c721a424cf199a23ef9074",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945050-20261014T134149Z/raw/project/run-results/d0_var-batch-945050/games/game-0001/runner/rollouts.jsonl",
+      "size": 686311,
+      "sha256": "30cab0995a024ed42684f4461ab98fc271e6af73cc3f94cd7aeb39d4ea6ddbc8",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0009.json",
+      "size": 1341286,
+      "sha256": "d052d3959f66898103a8131488dfb73bd72166e70fad5bd0aa83f5095af451bd",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0000/runner/manifest.json",
+      "size": 18230,
+      "sha256": "b804c63ceedce7cab96dddb582346407c9adf6ba78941fee6635a863e51eff12",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0000/runner/finalization.json",
+      "size": 677,
+      "sha256": "7aa8d653d6ad990ee49c294d8f3938b2d7ead81f05e5ef74137093f81be8e6e8",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0000/runner/first_actions.jsonl",
+      "size": 177741,
+      "sha256": "1fdea23d5f8ef294367cdc80e66ea59358e6216d20b962ff26d86f5a5b0b7ac8",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0000/runner/prediction_references.jsonl",
+      "size": 166406,
+      "sha256": "48d919c825ecc06c2a45334b67466d53e2fd3a6263b0b2f1c6b1baac37ad529f",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0000/runner/rollouts.jsonl",
+      "size": 60066,
+      "sha256": "a4f1708b344883dc8aac2dff40a4799a8740131fdc71cd9d787dca18103d8942",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0010.json",
+      "size": 10700299,
+      "sha256": "c163f581045413a6c84fa3146999f444b526e0ceace4ef518d307d909ab26b45",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0001/runner/manifest.json",
+      "size": 19083,
+      "sha256": "9118852348541a622527efecb7e4b5135ee87d1880c97620001106c6aadd603a",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0001/runner/finalization.json",
+      "size": 677,
+      "sha256": "815262d503ce0d3e7fe8d324f7214a4e88612c3f51a42c482c60131dbe7669af",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0001/runner/first_actions.jsonl",
+      "size": 166609,
+      "sha256": "708ab6b633caeef4b852fff883529d3a4e7f74ad299ac387440f6ce4e54b53c4",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0001/runner/prediction_references.jsonl",
+      "size": 152135,
+      "sha256": "aa3974d86236c7e2c6c03b6fad514ee2bf89ff01bc7923df7aeaa8a9c0dcd6a4",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j945734-20261014T144200Z/raw/project/run-results/d0_var-batch-945734/games/game-0001/runner/rollouts.jsonl",
+      "size": 415304,
+      "sha256": "727b6f3e00a522d3b9e13820f1f64022373fd1eb207190101c76bc0bd19a8030",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0011.json",
+      "size": 13177937,
+      "sha256": "bca741c71d94fa827efdd04127a823c9e19acac7aa58c24368d7cfee47c92376",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0000/runner/manifest.json",
+      "size": 19947,
+      "sha256": "2251d7a61df578f183e2401756d8a254d2f942e573432488dc359b3a406d06dd",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0000/runner/finalization.json",
+      "size": 678,
+      "sha256": "2c62280f9fcf4f767f51da9ba1e7ab713f84c033ef3f797cd93fdb993f72a122",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0000/runner/first_actions.jsonl",
+      "size": 161657,
+      "sha256": "d2d8f15719aa85cfcefe53b2a4385d881d5e3fe400324371a45e48bee9b624bb",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0000/runner/prediction_references.jsonl",
+      "size": 143265,
+      "sha256": "577721a483391b11cc91bc79a77bf5cec5246b4fd633e89ff199cbd55893a8b8",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0000/runner/rollouts.jsonl",
+      "size": 735039,
+      "sha256": "899069d052e45fb3032ffefa67ac7e218a9cc58f7d5d41ea7fe966fcd10d425b",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0012.json",
+      "size": 2986381,
+      "sha256": "27f2fcf1c45a5065a8aaf5a93b4f66c035ea9d49596270ec5d08d7695c975689",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0001/runner/manifest.json",
+      "size": 17303,
+      "sha256": "145f70dc3aa8065d5599e97bd893ba4f5039c7829f19cea4052d2490efbd8f1f",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0001/runner/finalization.json",
+      "size": 678,
+      "sha256": "882bfe7bb213e3ddd0e6662276b27a61da22e8d256c2549a515321bedb6d1551",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0001/runner/first_actions.jsonl",
+      "size": 151088,
+      "sha256": "e6b3cd1917dadfa36041876079ccbb8386ec479aa86cd371cef1e4a7647ed734",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0001/runner/prediction_references.jsonl",
+      "size": 139949,
+      "sha256": "ed27a82cc18a01698e7b45b915aca24884b262e57b4ff98e6633110bc057722e",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946042-20261014T151952Z/raw/project/run-results/d0_var-batch-946042/games/game-0001/runner/rollouts.jsonl",
+      "size": 105024,
+      "sha256": "fa71411dfbee7fee2e031027efe8a9438292374f0656db261e84f6892432cc18",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0013.json",
+      "size": 6035041,
+      "sha256": "24828458cc802814088d40548dbba2ac5701632b1ef1df109e31235dfa84ea1b",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0000/runner/manifest.json",
+      "size": 18990,
+      "sha256": "116a41927b6c40e15f6bd4c4bac60a60ba1720f16e61af879f85695a5410bff0",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0000/runner/finalization.json",
+      "size": 677,
+      "sha256": "1916766dcf4dcca7c4d1ada677e2fa5b425634253faa34705ae1ffb472daccac",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0000/runner/first_actions.jsonl",
+      "size": 164089,
+      "sha256": "8b15c59f4a49080c67974f62239301ff07090323e40d9313eee28772cd5a521e",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0000/runner/prediction_references.jsonl",
+      "size": 151243,
+      "sha256": "d293966777273c4b74af09dd6f0d53157006fe42cdfc1fb412693faf3d07d16d",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0000/runner/rollouts.jsonl",
+      "size": 282195,
+      "sha256": "b3ee00fda9d3790b2419cb925cb2f563403837d7fcf4ea06251f28f0b708b48c",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0014.json",
+      "size": 9552993,
+      "sha256": "406dbe5e04aa274b7fcaba3e35eeec1130bacd25f8d7e1a14fcf74a1127c81f7",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0001/runner/manifest.json",
+      "size": 21925,
+      "sha256": "eb9b02515a759d8583659810949104d828acf9569b09cb76b5f9ad8d5466b84a",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0001/runner/finalization.json",
+      "size": 677,
+      "sha256": "f31ec7a5ff36cbc48272f7f4ca0a5467e2f8d14fc04db9c2933a6c440da6d10e",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0001/runner/first_actions.jsonl",
+      "size": 214957,
+      "sha256": "feb523b5633e87fa515da111646f689c4cb5e23e84f833e0aadddf7629e8bb52",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0001/runner/prediction_references.jsonl",
+      "size": 197716,
+      "sha256": "b4804edea7dbc958813e5ada5ea953b820c1ec7c3a3770d32d929a45487a7ef1",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946209-20261014T160055Z/raw/project/run-results/d0_var-batch-946209/games/game-0001/runner/rollouts.jsonl",
+      "size": 581743,
+      "sha256": "5acd680aa58884fe725c537108119c0932faa4d10a53f216bdf4169f7d53c418",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0015.json",
+      "size": 15883054,
+      "sha256": "77cf47314c1812ba614aa644c77ad0991a0bae8d80d6092d33b1df82cada3283",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0000/runner/manifest.json",
+      "size": 17312,
+      "sha256": "e8a25efdbfdaaf91c415d29a19b5839401d8f1a4b6cafecaeee6410d30dca60a",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0000/runner/finalization.json",
+      "size": 678,
+      "sha256": "6507bbd1bdc4f38e542f577c7d506b0ccf720f0785f2c36664659db1306e1718",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0000/runner/first_actions.jsonl",
+      "size": 183074,
+      "sha256": "a7172f4c59e0b18d5aea7b372d7870276b30bef1be425fc58b39060f2c6df7e8",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0000/runner/prediction_references.jsonl",
+      "size": 168731,
+      "sha256": "9e2a3af98ac476f5b886ff077e476109e863bdafc7f3afc90e2b00b4e20d9c94",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0000/runner/rollouts.jsonl",
+      "size": 379908,
+      "sha256": "6323eed12c75e2aee5a91fed6f911529a0202340d4a4e08458d8406841c08f64",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0016.json",
+      "size": 13094905,
+      "sha256": "11ae7284e7ff8a924618af06edf93e1f1b920aa8ac8bdd9ab700174df8ec78b7",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0001/runner/manifest.json",
+      "size": 18296,
+      "sha256": "3555440e6eabb31415bfece594825143731539c8793ce900b2267967fd93211a",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0001/runner/finalization.json",
+      "size": 678,
+      "sha256": "9724b26bbcef16399319d919ac5fd3a71d55bf4a5e9fd49c006fbf289f6ff28f",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0001/runner/first_actions.jsonl",
+      "size": 135831,
+      "sha256": "76ab9ef3852dbf13eef1ebda48e5cdc1c2f8931ec569bf27da1ee3559d0ba6db",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0001/runner/prediction_references.jsonl",
+      "size": 118395,
+      "sha256": "e20536e7d527f76abaff4e5a1ffd5ff4c6949d16302196d11b5000779ec29a91",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946482-20261014T164051Z/raw/project/run-results/d0_var-batch-946482/games/game-0001/runner/rollouts.jsonl",
+      "size": 572406,
+      "sha256": "53268f6af4789016f780f09c886dc8f9da136a241dd05135604b285012eae8aa",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0017.json",
+      "size": 15221610,
+      "sha256": "3cd7b13fe40d3d98d883f9af40185385157f2eb19009726c4af5e13fc2e78ae0",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0000/runner/manifest.json",
+      "size": 18992,
+      "sha256": "57df9b4b7bd1c10177606b94e09ba70db7df1f66da0f2f5f2eb7d9256ea8cace",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0000/runner/finalization.json",
+      "size": 677,
+      "sha256": "99acabeb585382f4d7fb7e0ac6495508541b66d60fa9f9b4b6dd8b4b4c5d7291",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0000/runner/first_actions.jsonl",
+      "size": 183241,
+      "sha256": "82035ec3c5e988e8e4b2f28be6a517b587c77dc4a63720c771355b905104ca76",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0000/runner/prediction_references.jsonl",
+      "size": 166016,
+      "sha256": "31eea5a9474980e62b9530d89223374b4885c65707df8fdceb13ad921a1eead3",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0000/runner/rollouts.jsonl",
+      "size": 663728,
+      "sha256": "0878a332b0a223ff8218ab163c3d5a2e184a8ade24bc250c4d96e59e867d810e",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0018.json",
+      "size": 15826880,
+      "sha256": "ba94b606b4764ec5abafd39dd433bee2c44aac14062ab27c71a7e8a0575d0a64",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0001/runner/manifest.json",
+      "size": 18921,
+      "sha256": "0d4f8ee6ff869a20a64fd122626d61d00bc74084737ed5f00099e3c009c68046",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0001/runner/finalization.json",
+      "size": 677,
+      "sha256": "af90e66d98490a74ce330b2908042b7e3e597a2fc5ef10caf42dd201459715b7",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0001/runner/first_actions.jsonl",
+      "size": 167851,
+      "sha256": "0211afee71a038670349e39b87599912862f0dad0f02f37a72079ecd7474791c",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0001/runner/prediction_references.jsonl",
+      "size": 148669,
+      "sha256": "6df3e0beacc8d37c61952e5ba4b04a657bc12f836c0764c6130823aeeb18f049",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946661-20261014T171054Z/raw/project/run-results/d0_var-batch-946661/games/game-0001/runner/rollouts.jsonl",
+      "size": 520630,
+      "sha256": "b09097dd3d538fcbf629308e578d252f8f954fc054decb6ac22fda717126b3f5",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0019.json",
+      "size": 904619,
+      "sha256": "49447c00e82f02b283b25c9766acdf98194001e0188f360b2be7457d835c442f",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0000/runner/manifest.json",
+      "size": 14992,
+      "sha256": "b1257bc84a86b8af455f29620e0b5d224b6788ab61aa8f87a5e8852ddfebacdf",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0000/runner/finalization.json",
+      "size": 674,
+      "sha256": "a333f53595c5ddb3080c4eaca6cbe0c1e4114271eff556401606dccc1caf16db",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0000/runner/first_actions.jsonl",
+      "size": 90960,
+      "sha256": "c41b3438e13adcdb2b058c00a377d305d11f0e54d430e9456a0b11cf3adf3c1c",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0000/runner/prediction_references.jsonl",
+      "size": 80134,
+      "sha256": "0977979cc9922fefd4c045a650979bfb3cd20d59fefa98de9bc80ab7054eb403",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0000/runner/rollouts.jsonl",
+      "size": 20011,
+      "sha256": "abdee1fb6c175ab735f264629bf38befb5d665e252db90eae26838ab603f178f",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0020.json",
+      "size": 12494862,
+      "sha256": "5390b9d26cb2bca022694cf27aea799498db2fdedf1e1e5719e61e2c80758121",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0001/runner/manifest.json",
+      "size": 20625,
+      "sha256": "8665a0f117cfb0c80d7a3ab680aab9a5472c55cb17aaff22b846e5dd3c27a28f",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0001/runner/finalization.json",
+      "size": 681,
+      "sha256": "a94673711316a9ce68b76eadc9ed8fa60c0497a18c594eebfd47da96b850f0a0",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0001/runner/first_actions.jsonl",
+      "size": 155084,
+      "sha256": "03fd597c9b2f006a88a13491848758c21db2668fa4b73dad8b8be34c8f6e202a",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0001/runner/prediction_references.jsonl",
+      "size": 140158,
+      "sha256": "22db1b3b73162bb6920d4a5b54c6e0d04216cd36bd4f25d4c0e741c3a69ed7b5",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j946767-20261014T200957Z/raw/project/run-results/d0_var-batch-946767/games/game-0001/runner/rollouts.jsonl",
+      "size": 576045,
+      "sha256": "b92138adf3bbd3168c86fb33ef61ffb5ebff2ea97fb4bf4a0e271ab880466fc2",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0021.json",
+      "size": 10003786,
+      "sha256": "9f0ac51354c212692d0fb86d59d2b934aa8b308ef037e65fe20923f3dbccb6d1",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0000/runner/manifest.json",
+      "size": 19764,
+      "sha256": "5ab88269d5c48b7dd530e57dc7115327a74716c41354d6345741a4e20b2373ff",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0000/runner/finalization.json",
+      "size": 680,
+      "sha256": "42299c3875472d514c12c7e178b2d789962f1ad31aaa6b1e871d7acc9d14ec43",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0000/runner/first_actions.jsonl",
+      "size": 208034,
+      "sha256": "d92e55eecda5027e5df897b824a0d337566fd366fd01f965e83a58000396c8c7",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0000/runner/prediction_references.jsonl",
+      "size": 191783,
+      "sha256": "521db3966770a2661276449c75eb309606be1140fbdcefbb70c087e2bca356a6",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0000/runner/rollouts.jsonl",
+      "size": 814545,
+      "sha256": "7c7cda102a610a953694d14427b47eee8b93f1d8c58ebb2d253de68579c90531",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0022.json",
+      "size": 15468014,
+      "sha256": "bab204dfcbb5241732dfcd10e259f5279d10574c22504e0f63ddc68e5f0e8a62",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0001/runner/manifest.json",
+      "size": 19896,
+      "sha256": "063756b9f4ec94675066d31519c20d37e229cefd3a69cf2831a86ad240bbab9f",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0001/runner/finalization.json",
+      "size": 678,
+      "sha256": "e22db8c16918b7b9f0e58af14f0de1a97b171762651db8cfe48c4f3e4c91feef",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0001/runner/first_actions.jsonl",
+      "size": 310135,
+      "sha256": "0e7f416cbe5849caaab66b2c9e378fbd21904e95ebac351cd4dc282ebffc5c51",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0001/runner/prediction_references.jsonl",
+      "size": 294206,
+      "sha256": "8273850be3f49b45e035c2de121888fe636fdfed67efb9d315d7847f518c57c8",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947322-20261014T211454Z/raw/project/run-results/d0_var-batch-947322/games/game-0001/runner/rollouts.jsonl",
+      "size": 750944,
+      "sha256": "c2e03e2404362617957f90a75382cde33e926bdc34c66c0d4fd2cc7d302fa345",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0023.json",
+      "size": 12068038,
+      "sha256": "8f837789b5a596458e14054085c1a185ca9cc67e6e010d1a821111ecaa6a4bb0",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0000/runner/manifest.json",
+      "size": 18122,
+      "sha256": "f7149ecaf7cf7f9c60f2315d808ab503df26c733b804871342a6e38d09e50cdb",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0000/runner/finalization.json",
+      "size": 677,
+      "sha256": "d9b051ffa6d671bc6cbeae84ee7d7fadee7de854999286cb25bd21c01db4e350",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0000/runner/first_actions.jsonl",
+      "size": 145485,
+      "sha256": "2d8b5c37c5167b88932b416d93520f4b1217156149f28750bbe503c77d5d7379",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0000/runner/prediction_references.jsonl",
+      "size": 130490,
+      "sha256": "49448f6666c07ded94336c27992f132652b5cb44594d2a61b2a49e8b38efe7df",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0000/runner/rollouts.jsonl",
+      "size": 478736,
+      "sha256": "45dfe6f1154f2875a7fa08b657a35fb386eda1cb99d41b3e793cc6fa3d19255f",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": "cs5446_modified/research_progress/2026-10-12-source-closeout-v12/artifacts-attempt1/bundle/games/0024.json",
+      "size": 669719,
+      "sha256": "aff28dde6d82e858e85d5640b476a080fc1d5955d364332f9078b35e20ad7d50",
+      "roles": [
+        "original_selected_state_shard"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0001/runner/manifest.json",
+      "size": 10614,
+      "sha256": "27ad28f069063f05d8129e86d89d49bbde3ce6c8321ce14f665b53ca500932d1",
+      "roles": [
+        "accepted_manifest"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0001/runner/finalization.json",
+      "size": 674,
+      "sha256": "1d2c923111f568d2f8cc407fccb0af769e5e2d6ac1b009b18d1407fe7d3a213d",
+      "roles": [
+        "accepted_finalization"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0001/runner/first_actions.jsonl",
+      "size": 60671,
+      "sha256": "c2305a78ca0714c960955d282487207320f736e0d979957fc84ada0721f91525",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0001/runner/prediction_references.jsonl",
+      "size": 52633,
+      "sha256": "2a204de50e1bb9e2f423afd7e04b584531776b244a108b56b9ec36724f8e6b2b",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    },
+    {
+      "logical_path": ".review-cache/j947489-20261014T221453Z/raw/project/run-results/d0_var-batch-947489/games/game-0001/runner/rollouts.jsonl",
+      "size": 6639,
+      "sha256": "2517fb8f2b5c775dde7083c6d575c460859005067d6b8f6d3502106ab63937b6",
+      "roles": [
+        "independently_bound_runner_records"
+      ]
+    }
+  ],
+  "verification_scope": "Export checked accepted manifests/finalizations against FINAL_EVIDENCE_INDEX, runner files against independent count bindings, source shards against original bundle, and every point against independent review. No new production finalization or full audit.",
+  "sha256": "e1ed298eb56c1a921126a095aa71edca2394dc183461caca606737aac041e0bf"
+}

@@ -1,0 +1,490 @@
+{
+  "schema_version": 1,
+  "kind": "derived_accepted_accounting_excerpt",
+  "source": {
+    "logical_path": "cs5446_modified/research_progress/2026-10-14-d0var-completion/FINAL_ACCOUNTING_SUMMARY.json",
+    "size": 57317,
+    "sha256": "4ede4703933d83680390baadea44a46009927cc7ac2925d1bc269705592f93b0"
+  },
+  "original_kind": "d0_var_readonly_accounting_and_acceptance_summary",
+  "original_created_at": "2026-10-14T22:18:17.397993+00:00",
+  "scope": "Local evidence only; no effect analysis; Y never used to choose accepted games. Observed counters may be incomplete for stopped attempts; charged is conservative accounting, not successful calls or actual policy failures.",
+  "cost_totals": {
+    "d0_var_all_13_attempts": {
+      "observed": {
+        "allocation_seconds": 13883,
+        "logical_model_calls": 1613,
+        "http_attempts_charged": 1615,
+        "policy_content_failure_calls": 16
+      },
+      "charged": {
+        "allocation_seconds": 42782,
+        "logical_model_calls": 8946,
+        "http_attempts_charged": 16556,
+        "policy_content_failure_calls": 95
+      }
+    },
+    "d0_source_two_attempts": {
+      "observed": {
+        "allocation_seconds": 5700,
+        "logical_model_calls": 586,
+        "http_attempts_charged": 586,
+        "policy_content_failure_calls": 5
+      },
+      "charged": {
+        "allocation_seconds": 16234,
+        "logical_model_calls": 1306,
+        "http_attempts_charged": 2036,
+        "policy_content_failure_calls": 20
+      }
+    },
+    "entire_campaign_15_attempts": {
+      "observed": {
+        "allocation_seconds": 19583,
+        "logical_model_calls": 2199,
+        "http_attempts_charged": 2201,
+        "policy_content_failure_calls": 21
+      },
+      "charged": {
+        "allocation_seconds": 59016,
+        "logical_model_calls": 10252,
+        "http_attempts_charged": 18592,
+        "policy_content_failure_calls": 115
+      }
+    },
+    "ten_accepted_batches": {
+      "observed": {
+        "allocation_seconds": 10382,
+        "logical_model_calls": 1336,
+        "http_attempts_charged": 1336,
+        "policy_content_failure_calls": 13
+      },
+      "charged": {
+        "allocation_seconds": 10382,
+        "logical_model_calls": 1336,
+        "http_attempts_charged": 1336,
+        "policy_content_failure_calls": 13
+      }
+    }
+  },
+  "accepted_batch_split": {
+    "backend_logical_calls": 100,
+    "backend_completion_attempts": 100,
+    "collection_logical_calls": 1236,
+    "collection_http_charged": 1236
+  },
+  "original_935310": {
+    "observed": {
+      "allocation_seconds": 3115,
+      "http_attempts_charged": 279,
+      "logical_model_calls": 277,
+      "policy_content_failure_calls": 3
+    },
+    "charged": {
+      "allocation_seconds": 18000,
+      "http_attempts_charged": 12980,
+      "logical_model_calls": 6490,
+      "policy_content_failure_calls": 30
+    },
+    "charged_minus_observed": {
+      "allocation_seconds": 14885,
+      "logical_model_calls": 6213,
+      "http_attempts_charged": 12701,
+      "policy_content_failure_calls": 27
+    },
+    "policy_count_review": {
+      "observed": 3,
+      "counted": 4,
+      "unknown_outcome_calls": 1
+    },
+    "warning": "277 logical and 279 HTTP are recorded incomplete counters, not proof that all successful requests are known; original charge reservation remains retained."
+  },
+  "policy_stop_count": {
+    "known_observed_failures": 16,
+    "unknown_charged_as_failure": 1,
+    "effective_count": 17,
+    "limit": 30
+  },
+  "coverage": {
+    "unique_games": 24,
+    "retained_prior_games": 4,
+    "batch_games": 20,
+    "unique_states": 71,
+    "D_checks": {
+      "passed": 68,
+      "not_applicable": 3
+    },
+    "D_comparison_coverage": {
+      "new_mu_request_pairs": 770,
+      "matched_new_mu_completions": 770,
+      "states_with_model_reproducibility_coverage": 67
+    },
+    "cross_job_state_count": 1,
+    "cross_job_state_ids": [
+      "40945f3e9214f2d475b3c80f62f107c7c8c9498b088581ed004454ba4abbd726:19"
+    ],
+    "not_applicable_states": [
+      {
+        "game_id": "pick_two_obj_and_place-Mug-None-Cabinet-318/trial_T20190910_055356_172564",
+        "state_id": "ef2caeefa6945cc5c8b1379771aa94303ea8b4d6105fb429daf1775c4a6a12fa:9",
+        "reason": "no_executable_source_draft"
+      },
+      {
+        "game_id": "pick_two_obj_and_place-Pencil-None-CoffeeTable-229/trial_T20190910_231706_006365",
+        "state_id": "e9f431271ce0c84584a2f289359ba0b8a26da49726ec93ee6fb59de0d832ca57:3",
+        "reason": "no_executable_source_draft"
+      },
+      {
+        "game_id": "pick_two_obj_and_place-Pencil-None-SideTable-329/trial_T20190909_001315_056410",
+        "state_id": "3693bf7b452a2a4c818f677b6243c600726a425d6cdc5a6ed3ab79e8408f469d:1",
+        "reason": "no_executable_source_draft"
+      }
+    ],
+    "passed_environment_only": [
+      {
+        "game_id": "pick_heat_then_place_in_recep-Apple-None-CounterTop-5/trial_T20190907_113555_848211",
+        "state_id": "dbfcf1fd774e5c41e46383d033ef0b9c019f96f1352449b16ddda1c40c41b87c:29",
+        "coverage": {
+          "prefix_transitions": 29,
+          "transition_pairs": 1,
+          "new_mu_request_pairs": 0,
+          "matched_new_mu_completions": 0,
+          "model_reproducibility_covered": false,
+          "scope": "environment_only",
+          "cached_draft_is_new_model_test": false
+        }
+      }
+    ],
+    "branch_task_count": 213,
+    "branch_task_status": {
+      "complete": 170,
+      "policy_failed": 34,
+      "not_applicable_source_draft_failure": 9
+    },
+    "physical_group_count": 117,
+    "physical_group_status": {
+      "complete": 102,
+      "policy_failed": 15
+    }
+  },
+  "per_attempt": [
+    {
+      "job_id": "934277",
+      "stage": "d0_source",
+      "batch_id": null,
+      "status": "stopped",
+      "counts_complete": false,
+      "observed": {
+        "allocation_seconds": 266,
+        "http_attempts_charged": 10,
+        "logical_model_calls": 10,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 10800,
+        "http_attempts_charged": 1460,
+        "logical_model_calls": 730,
+        "policy_content_failure_calls": 15
+      },
+      "reservation_sha256": "cd34ccbe68c23da68cb7a848ff29d696f2455f28428cb8d35b7f5fdc1eea5aa8",
+      "finish_sha256": "62ac41c40506cc1caa0017c51d8edfde5e6002f066c8e5269716ad7e42a44abd"
+    },
+    {
+      "job_id": "934493",
+      "stage": "d0_source",
+      "batch_id": null,
+      "status": "stopped",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 5434,
+        "http_attempts_charged": 576,
+        "logical_model_calls": 576,
+        "policy_content_failure_calls": 5
+      },
+      "charged": {
+        "allocation_seconds": 5434,
+        "http_attempts_charged": 576,
+        "logical_model_calls": 576,
+        "policy_content_failure_calls": 5
+      },
+      "reservation_sha256": "78cb7a6f81e610c90636a83619f11e061fa7d318a38a09abd96f99ac5faa5dc6",
+      "finish_sha256": "e32e5e33579f9f0097c07d9bce0f1de2f1b210455b18e728a106dbacdc7d5e89"
+    },
+    {
+      "job_id": "935310",
+      "stage": "d0_var",
+      "batch_id": null,
+      "status": "stopped",
+      "counts_complete": false,
+      "observed": {
+        "allocation_seconds": 3115,
+        "http_attempts_charged": 279,
+        "logical_model_calls": 277,
+        "policy_content_failure_calls": 3
+      },
+      "charged": {
+        "allocation_seconds": 18000,
+        "http_attempts_charged": 12980,
+        "logical_model_calls": 6490,
+        "policy_content_failure_calls": 30
+      },
+      "reservation_sha256": "233e290b4be2d356893662ab7a8c1404427c15680b2a1714f99448a0bdca650c",
+      "finish_sha256": "abca3ddd68de2c3519a0d240d75cb88594c0f7b19fd415c01de31012c8578d91"
+    },
+    {
+      "job_id": "943125",
+      "stage": "d0_var",
+      "batch_id": "d0var-b00",
+      "status": "stopped",
+      "counts_complete": false,
+      "observed": {
+        "allocation_seconds": 202,
+        "http_attempts_charged": 0,
+        "logical_model_calls": 0,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 7200,
+        "http_attempts_charged": 1120,
+        "logical_model_calls": 560,
+        "policy_content_failure_calls": 26
+      },
+      "reservation_sha256": "94a39c266e844db83c12c8176be7df6ac63dedbbca9c1ff76de081c08d1d905a",
+      "finish_sha256": "a8807cb44760091bb952a016f5a69f49a79c50ea24d2db68e349901f3d5b8e9c"
+    },
+    {
+      "job_id": "943506",
+      "stage": "d0_var",
+      "batch_id": "d0var-b00",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 1068,
+        "http_attempts_charged": 150,
+        "logical_model_calls": 150,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 1068,
+        "http_attempts_charged": 150,
+        "logical_model_calls": 150,
+        "policy_content_failure_calls": 0
+      },
+      "reservation_sha256": "4ef31c8374cb84896097a9684c14a066bd10a7cef878b602603fe4b7d30b7d56",
+      "finish_sha256": "47f92651aeebd1f9c7a526e1973ff240ca7580615fb2cd915a4a26cd8a769bb5"
+    },
+    {
+      "job_id": "944500",
+      "stage": "d0_var",
+      "batch_id": "d0var-b01",
+      "status": "stopped",
+      "counts_complete": false,
+      "observed": {
+        "allocation_seconds": 184,
+        "http_attempts_charged": 0,
+        "logical_model_calls": 0,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 7200,
+        "http_attempts_charged": 1120,
+        "logical_model_calls": 560,
+        "policy_content_failure_calls": 26
+      },
+      "reservation_sha256": "cb2d6725869391ce3b99322f6f5c5173b47692ce77bb8e175420badce702e539",
+      "finish_sha256": "a3500da2c5c35cff911304dbf36ca95a29f2639e7e4873903b719dec7fe4e5e9"
+    },
+    {
+      "job_id": "945050",
+      "stage": "d0_var",
+      "batch_id": "d0var-b01",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 1088,
+        "http_attempts_charged": 184,
+        "logical_model_calls": 184,
+        "policy_content_failure_calls": 1
+      },
+      "charged": {
+        "allocation_seconds": 1088,
+        "http_attempts_charged": 184,
+        "logical_model_calls": 184,
+        "policy_content_failure_calls": 1
+      },
+      "reservation_sha256": "9c5ea8a7963337de07c577614a24e274f5cd7a4e6d034178e873bade4c05a763",
+      "finish_sha256": "7bff5dc58c84f0fa659fcce6945a5005888a8efd760b0bfa6132a599dc04f52e"
+    },
+    {
+      "job_id": "945734",
+      "stage": "d0_var",
+      "batch_id": "d0var-b02",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 891,
+        "http_attempts_charged": 92,
+        "logical_model_calls": 92,
+        "policy_content_failure_calls": 4
+      },
+      "charged": {
+        "allocation_seconds": 891,
+        "http_attempts_charged": 92,
+        "logical_model_calls": 92,
+        "policy_content_failure_calls": 4
+      },
+      "reservation_sha256": "335320e4f12bdea8c332824774e13cdd61c277f769107d1332f09e3fa9c4db3a",
+      "finish_sha256": "7d7dd3d777952d94d5817ed2b7fc2fb0998e41bc745adde7d9f47be45e0ac933"
+    },
+    {
+      "job_id": "946042",
+      "stage": "d0_var",
+      "batch_id": "d0var-b03",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 975,
+        "http_attempts_charged": 100,
+        "logical_model_calls": 100,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 975,
+        "http_attempts_charged": 100,
+        "logical_model_calls": 100,
+        "policy_content_failure_calls": 0
+      },
+      "reservation_sha256": "8ee7311dd7d01fe5b8c8e8240483ae6a00c6679672d91c3856e3547a74c8ce20",
+      "finish_sha256": "127db73ad337ee3515cc62265be3ceb1d2588201a1266aa2cf813be4f8186714"
+    },
+    {
+      "job_id": "946209",
+      "stage": "d0_var",
+      "batch_id": "d0var-b04",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 1197,
+        "http_attempts_charged": 165,
+        "logical_model_calls": 165,
+        "policy_content_failure_calls": 4
+      },
+      "charged": {
+        "allocation_seconds": 1197,
+        "http_attempts_charged": 165,
+        "logical_model_calls": 165,
+        "policy_content_failure_calls": 4
+      },
+      "reservation_sha256": "bb8947145e90dc99da0cbdd69eff4b9a9f516558a455ef4957a9fb6e5df440b7",
+      "finish_sha256": "4e7ee01d3f8600cc1315ed67cab600d1103e93ed8fd4522989bfe5b0352c01ab"
+    },
+    {
+      "job_id": "946482",
+      "stage": "d0_var",
+      "batch_id": "d0var-b05",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 1020,
+        "http_attempts_charged": 120,
+        "logical_model_calls": 120,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 1020,
+        "http_attempts_charged": 120,
+        "logical_model_calls": 120,
+        "policy_content_failure_calls": 0
+      },
+      "reservation_sha256": "bb72576dfdd400e6b4f9d48550680fb0f5ff3ed53d1c5b7c1c1bd56df4113d61",
+      "finish_sha256": "e72c4b6f728586e7f39a851fb105c19d4a4ac3f2d2a3a2d794a6fb169a27f015"
+    },
+    {
+      "job_id": "946661",
+      "stage": "d0_var",
+      "batch_id": "d0var-b06",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 986,
+        "http_attempts_charged": 84,
+        "logical_model_calls": 84,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 986,
+        "http_attempts_charged": 84,
+        "logical_model_calls": 84,
+        "policy_content_failure_calls": 0
+      },
+      "reservation_sha256": "512624fc084eb9a37af6dacf678f2f8037a85e49b25f7330a3575737ecb53b40",
+      "finish_sha256": "2273200f7b20e052be449e30a67d28725e56a494fe1883706bad15a8aca2d6d0"
+    },
+    {
+      "job_id": "946767",
+      "stage": "d0_var",
+      "batch_id": "d0var-b07",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 988,
+        "http_attempts_charged": 143,
+        "logical_model_calls": 143,
+        "policy_content_failure_calls": 3
+      },
+      "charged": {
+        "allocation_seconds": 988,
+        "http_attempts_charged": 143,
+        "logical_model_calls": 143,
+        "policy_content_failure_calls": 3
+      },
+      "reservation_sha256": "9c1a28a697015f1ca881a83e8b5f6745b2c824aedbdd19cc6942f5fe6db180a0",
+      "finish_sha256": "397d8bf2e313091bf252207acb28d331a1aac7a420044d496dfecea2c2dcf40e"
+    },
+    {
+      "job_id": "947322",
+      "stage": "d0_var",
+      "batch_id": "d0var-b08",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 1348,
+        "http_attempts_charged": 229,
+        "logical_model_calls": 229,
+        "policy_content_failure_calls": 0
+      },
+      "charged": {
+        "allocation_seconds": 1348,
+        "http_attempts_charged": 229,
+        "logical_model_calls": 229,
+        "policy_content_failure_calls": 0
+      },
+      "reservation_sha256": "f06e6c84183dbdd56031edd5d298388966ab79f2b9e07496d7665c751fcacb06",
+      "finish_sha256": "e348392b7efae9743d82db988f54380face5ce603e9f1def842b12d8b72d4e59"
+    },
+    {
+      "job_id": "947489",
+      "stage": "d0_var",
+      "batch_id": "d0var-b09",
+      "status": "complete",
+      "counts_complete": true,
+      "observed": {
+        "allocation_seconds": 821,
+        "http_attempts_charged": 69,
+        "logical_model_calls": 69,
+        "policy_content_failure_calls": 1
+      },
+      "charged": {
+        "allocation_seconds": 821,
+        "http_attempts_charged": 69,
+        "logical_model_calls": 69,
+        "policy_content_failure_calls": 1
+      },
+      "reservation_sha256": "3b2efcc0970caf7e60f0573517807d1cb0f67166ce84b4bcda6d24d47243b077",
+      "finish_sha256": "633547bd6aae04fb0bc402cf77a1a0efc2ac72f0efbc24a7f7f9378496a2d941"
+    }
+  ],
+  "completion_row_sha256": "cd6516d58da0ebc0b8fbe5277f0a8cb11b1ea63bdca15828c720deb580b3852f",
+  "limitations": "Faithful accounting excerpt; observed stopped-attempt counters can be incomplete; charged are conservative reservations, not successful calls or actual failure counts. Does not reconstruct production cost_evidence or run cost diagnostics.",
+  "sha256": "405a061d9f096984a4dcb1792a32c32f4c53339da523a00e5fc12fffbf4e66ab"
+}

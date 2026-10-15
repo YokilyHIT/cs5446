@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "kind": "d0_descriptive_analysis_protocol",
+  "date": "2026-10-10",
+  "status": "offline_implementation_not_execution_authorization",
+  "runtime_authorized": false,
+  "population": {
+    "pool": "original_D0_var_preselected_points",
+    "games": 24,
+    "max_points_per_game": 3,
+    "include_source_draft_policy_failure_points": true,
+    "replacement_or_backfill": false,
+    "source": "hash-bound hydrated D0 source selection and new r1 runner artifacts",
+    "exclude": ["P1/P2 engineering selection", "N/P probe selected subset", "D1 results", "E results"]
+  },
+  "weights": {
+    "base": "1/(J*original_k_j)",
+    "conditioning": "normalize original base weights globally within each explicitly reported eligible intersection",
+    "renormalize_within_game_after_filtering": false,
+    "missing_target_values": "main target mean or G null; separate named available-case descriptor retains original weights",
+    "unknown_qualification": "report unknown mass and do not claim a completed target estimate",
+    "zero_decision_game": "retain game denominator and report no-observed-decision; not a fabricated zero state"
+  },
+  "accuracy": {
+    "implementation": "alfworld-preexp-npu/preexperiments/direction_b/metrics.py",
+    "source_sha256": "817d43d6d708abe5eff102020e6b19434e8c34ce4384e7d0881b856ac85c8c8b",
+    "normalization": ["lowercase", "delete ASCII string.punctuation", "remove standalone a/an/the", "collapse whitespace"],
+    "token_F1": "whitespace-token multiset overlap; keep repeated-token counts",
+    "reference": "actual first observation after executing the cached draft in D, joined by bound state and physical group",
+    "missing_policy": "require usable nonblank raw prediction and qualified nonblank real reference before normalization; no replacement text or zero score",
+    "prediction_unscoreable": "text accuracy may remain available; excluded from confidence intersections",
+    "shared_physical_groups": "one accuracy observation per original state",
+    "interpretation": "text-match proxies, not semantic truth or probability calibration"
+  },
+  "scoring": {
+    "field": "wm_mean_logprob",
+    "span": "prediction_tokens_v2",
+    "order": "descending exact stored numeric value",
+    "exp_score": "retain original wm_confidence_logprob for display and auditing; do not re-exponentiate to repair it",
+    "round_or_tolerance_merge_scores": false,
+    "numeric_environment": "CPython 3.10.21 for this offline acceptance; actual version recorded with every report",
+    "summation": "math.fsum",
+    "quantile_boundary": "Fraction arithmetic on supplied binary float weights, then serialize fractional memberships as floats",
+    "bins": 4,
+    "bin_weight_mass": 0.25,
+    "tie_membership": "all events with the identical score receive the same fractional membership at each boundary",
+    "top_half": "same tie rule with two equal-weight bins, no outcome-based tie break",
+    "correlation": ["weighted Pearson on mean logprob", "weighted Pearson of ordinary average ranks with exact ties"],
+    "constant_or_insufficient_pairs": "null with explicit reason"
+  },
+  "strata": {
+    "menu": ["inside", "outside", "unknown"],
+    "budget_bounds_inclusive": [[1, 10], [11, 20], [21, 30]],
+    "preserve_real_feedback_done_success_menu": true,
+    "off_menu_does_not_imply_Nothing_happens": true
+  },
+  "observed_effects": {
+    "admission": "Y_P-Y_D",
+    "info": "Y_P-Y_N",
+    "revision": "Y_N-Y_D",
+    "reported": ["D/N/P observed means", "three observed differences", "positive/negative observed difference rates", "first-action change rates"],
+    "raw_Y_vs_qualification": "retain raw Y separately even when inference or measurement qualification is pending",
+    "policy_content_failure": "audited branch Y=0; retained source-draft failure has no local D/N/P event or utility",
+    "decomposition": "check only on one common complete D/N/P set with identical weights"
+  },
+  "descriptive_rankings": {
+    "names": ["confidence", "menu_outside_first", "prediction_length_longer"],
+    "prediction_length": "number of tokens in the original aligned prediction_tokens_v2 span; longer first",
+    "missing_auxiliary_score": "unavailable on the common pool; do not drop points to create a different auxiliary pool",
+    "G": "sum normalized_w*(g-0.5)*observed_U, single-observation plug-in descriptor only",
+    "constant_references": "D/N/P means on the same complete pool; analytic Random G=0",
+    "menu_global_contributions": "use the global ranking and normalization; strata sum back to global G",
+    "within_menu_reranking": "separate conditional descriptor; never add it as if global contributions",
+    "half_absolute_discordance": "descriptive 0.5*mean(abs(Y_P-Y_D)), not true C or a valid upper confidence bound"
+  },
+  "case_selection": {
+    "pool": "all original D0-var planned points including source draft failures",
+    "namespace": "cs5446-direction-b-cases-v1",
+    "hash_input": "namespace + newline + compact UTF-8 JSON [canonical_game_id,state_id], ensure_ascii=False; no seed",
+    "sort": "SHA256 hex ascending, then identity JSON string ascending",
+    "categories": ["observed_admission_positive", "observed_admission_negative", "EM1_and_same_PD_action_or_observed_admission_zero", "policy_failure_or_insufficient_evidence"],
+    "rule": "first not-yet-selected state in each category; first three require corresponding complete qualified outcomes",
+    "maximum": 4,
+    "absent_category": "report absent; no additional collection or invented case"
+  },
+  "game_sensitivity": {
+    "method": "per-game weighted values and observed dispersion; leave one whole game out and recondition original weights",
+    "correlation": "recompute means and ordinary average tie ranks after each game omission",
+    "rankings": "recompute the common observed pool, global weights, exact ties and top-half probabilities after each game omission; report sensitivity only",
+    "constant_mean_or_less_than_two_contributing_games": "range unavailable with explicit reason; per-game values retained",
+    "confidence_interval": null,
+    "p_value": null,
+    "ICC": null,
+    "limits": ["not a confidence interval", "not a latent utility or within-event noise estimate", "does not solve common job dependence or Q5 coverage"]
+  },
+  "behavior": {
+    "unit": "actual physical rollout; shared branches do not duplicate trajectories",
+    "mu_repeat": "executed continuation action exactly equals immediately preceding executed action in that rollout",
+    "Nothing_happens": "exact raw next_obs equals Nothing happens. on executed continuation transitions",
+    "partial_paths": "retain and label validity; no population or causal explanation inferred",
+    "D_replay": "all planned checks, actual transitions/new calls, first causal divergence and numeric findings",
+    "N_P_replay": "separate-job receipts not supplied by this input; never infer passed",
+    "cached_boundary": "adjacent mu repetition may compare first mu action to cached first action; longest streak includes cached first action",
+    "interrupted_journal": "bind current_rollout raw evidence separately from completed groups; never promote an unfinished journal to a qualified outcome"
+  },
+  "costs": {
+    "unit": "unique original ledger file plus call ID, separate source and local scopes; one physical rollout per group",
+    "separate": ["source collection", "N/WM/P first actions", "mu continuation", "logical calls", "recorded HTTP attempts", "charged reservations", "unknown usage", "tokens", "request timing", "recovery", "runner wall"],
+    "unknown": "retain known lower totals, mark unknown remainder, never silently fill zero",
+    "not_total_job_cost": ["queue", "service startup", "backend acceptance", "N/P audit", "archival", "allocation/GPU wall"]
+  },
+  "formal_G_C_analyzer": "pending Q5 simulation and inference decisions",
+  "D1_size_selection": "not automated by this descriptive report",
+  "new_model_calls": 0,
+  "new_environment_instances": 0,
+  "new_cluster_jobs": 0
+}

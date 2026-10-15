@@ -1,0 +1,84 @@
+{
+  "kind": "portable_analysis_original_source_copies",
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/sidecar/analysis_metrics.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/sidecar/analysis_metrics.py",
+      "size": 26455,
+      "sha256": "3460187760117d9191f2a392053c6dbc18611a904dbcfef35df20a7970dc3678",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/sidecar/analysis_cases.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/sidecar/analysis_cases.py",
+      "size": 4702,
+      "sha256": "4a196f8ae5d8e9cb3484685ac89c65619627a104497a56ef8c12feb319459082",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/sidecar/analysis_diagnostics.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/sidecar/analysis_diagnostics.py",
+      "size": 6645,
+      "sha256": "9f17bd42e2ac9b209a12c9634c4b623e84cab22ffe1e547a3dbca852a31a901e",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/sidecar/analysis_sensitivity.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/sidecar/analysis_sensitivity.py",
+      "size": 6503,
+      "sha256": "7a36ad6d630aaf0640212814cde354cac29981331a1b898f458d54730f2e8820",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/sidecar/analysis_costs.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/sidecar/analysis_costs.py",
+      "size": 19068,
+      "sha256": "83460372a22c6fbcdf273bcf5c8cf761f9ff86e082f90c9c093f3eb8d2e281f1",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/sidecar/analysis_tool.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/sidecar/analysis_tool.py",
+      "size": 12658,
+      "sha256": "6f781ba360eacc319e6798f77870ed2ad63eacb148d71d7190e375e0c8ea7c38",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/ANALYSIS_SPEC.json",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/ANALYSIS_SPEC.json",
+      "size": 8042,
+      "sha256": "ecfe7fc10374102fccb4f2c36a99f84d26b5716325ca11df1ab4439aa05c1210",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "alfworld-preexp-npu/preexperiments/direction_b/metrics.py",
+      "source_workspace_path": "cs5446_modified/alfworld-preexp-npu/preexperiments/direction_b/metrics.py",
+      "size": 6063,
+      "sha256": "817d43d6d708abe5eff102020e6b19434e8c34ce4384e7d0881b856ac85c8c8b",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/tests/test_analysis_metrics.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/tests/test_analysis_metrics.py",
+      "size": 19634,
+      "sha256": "175fb351996b0e745e10c699c92db93725bc886d0e53efa0f6bd0f559046212e",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/tests/test_analysis_cases.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/tests/test_analysis_cases.py",
+      "size": 7450,
+      "sha256": "3b89d3248f64933e8b39822c6b1d196514cac91f4f31ab3488acfd26ec2fef76",
+      "copy": "identical_bytes"
+    },
+    {
+      "path": "research_progress/2026-10-10-d0-analysis/tests/test_analysis_sensitivity.py",
+      "source_workspace_path": "cs5446_modified/research_progress/2026-10-10-d0-analysis/tests/test_analysis_sensitivity.py",
+      "size": 3930,
+      "sha256": "70e9559ddde1537213d0b2b73e58a4b3e1384a56d90b91ab573ac8eb87df78fa",
+      "copy": "identical_bytes"
+    }
+  ],
+  "note": "Original frozen sources are copied byte-for-byte. Existing target metrics.py may be reused only when its hash matches. No execution or input-rebuilding modules are included."
+}
