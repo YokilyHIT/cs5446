@@ -1,6 +1,6 @@
 # CS5446 GPU 研究数据与分析交接
 
-更新：2026-10-15。本 `gpu-analysis-20261015` 分支在团队仓库 `master` 基础上增加 GPU 侧的 D0 开发数据、便携 CPU 分析代码和研究说明，供团队同步与复算。
+更新：2026-10-15。本 `gpu` 分支在团队仓库 `master` 基础上增加 GPU 侧的 D0 开发数据、便携 CPU 分析代码和研究说明，供团队同步与复算。
 
 **D0-var 固定 24 游戏采集已完成：71 个预选状态，68 个有完整 D/N/P 结果，3 个源 draft 失败，117 个物理续跑组。** 当前交付包含描述性分析；N/P 独立抽查、完整 D0 报告以及 D1/E 后续研究仍有待完成。这里的 checkpoint 是数据与执行完成记录，没有训练出的新模型权重。
 
@@ -19,7 +19,7 @@
 先获取这个分支：
 
 ```sh
-git clone --branch gpu-analysis-20261015 --single-branch https://github.com/Alan7Wang/cs5446.git cs5446-gpu-analysis
+git clone --branch gpu --single-branch https://github.com/YokilyHIT/cs5446.git cs5446-gpu-analysis
 cd cs5446-gpu-analysis
 ```
 
