@@ -111,9 +111,9 @@ NPU 的历史使用整理、开发期运行适配可以和 GPU 的 D0 报告并�
 
 ## 可核对依据
 
-- [当前 D0 收尾 checkpoint](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/checkpoints/d0var_completion.json)
-- [D0 结果、数据入口及最小后续工作](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/docs/D0_STATUS_AND_NEXT_STEPS.md)
-- [D/N/P 与整局三臂协议](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/docs/RESEARCH_PROTOCOL.md)
-- [仓库研究计划正文摘录](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/docs/RESEARCH_PLAN.md)
+- [当前 D0 收尾 checkpoint](https://github.com/Alan7Wang/cs5446/blob/gpu-analysis-20261015/gpu_analysis/checkpoints/d0var_completion.json)
+- [D0 结果、数据入口及最小后续工作](https://github.com/Alan7Wang/cs5446/blob/gpu-analysis-20261015/gpu_analysis/docs/D0_STATUS_AND_NEXT_STEPS.md)
+- [D/N/P 与整局三臂协议](https://github.com/Alan7Wang/cs5446/blob/gpu-analysis-20261015/gpu_analysis/docs/RESEARCH_PROTOCOL.md)
+- [仓库研究计划正文摘录](https://github.com/Alan7Wang/cs5446/blob/gpu-analysis-20261015/gpu_analysis/docs/RESEARCH_PLAN.md)
 
 此处将已完成事实与拟议分工分开：D0 收尾成立；A 范围调整、NPU 主跑 E 和最终 E 方案需两位负责人共同确认。
