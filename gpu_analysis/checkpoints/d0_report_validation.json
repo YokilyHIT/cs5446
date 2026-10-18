@@ -1,0 +1,92 @@
+{
+  "kind": "d0_complete_descriptive_report_validation",
+  "date": "2026-10-15",
+  "base_commit": "b30059b249236ba8ab2fd41498fd12223a29135a",
+  "tests": {
+    "command": "python -B -m pytest research_progress/2026-10-10-d0-analysis/tests tests -q -p no:cacheprovider",
+    "exit_code": 0,
+    "passed": 78,
+    "scope": "60 unchanged frozen pure tests plus 18 targeted real-data checks"
+  },
+  "isolated_cpu_run": {
+    "command": "python -B -S tools/build_d0_report.py --out gpu_analysis/generated/d0_report.json",
+    "exit_code": 0,
+    "source_files": "Only report implementation_files and six input_files copied",
+    "site_packages_disabled": true,
+    "PYTHONPATH_removed": true,
+    "original_archive_not_copied": true,
+    "outputs_byte_identical": true
+  },
+  "main_metrics_equal_published_checkpoint": true,
+  "original_data_files": [
+    {
+      "path": "gpu_analysis/data/d0_snapshot.json",
+      "unchanged_from_base_commit": true,
+      "sha256": "83a434c2eaac1bb8b6ad90b6d2b5c83716cfd24ea96411b7e43321f59bf0c82d"
+    },
+    {
+      "path": "gpu_analysis/data/d0_rollout_summaries.json",
+      "unchanged_from_base_commit": true,
+      "sha256": "db10811e9c4ea784d9853bdc187f7efa162a71345dbf876bce842391c73355c4"
+    },
+    {
+      "path": "gpu_analysis/data/final_accounting_summary.json",
+      "unchanged_from_base_commit": true,
+      "sha256": "56e0813feaeffa9bbb8bc298196b252ed62b515beaf04463aff16704ba4d98d0"
+    },
+    {
+      "path": "gpu_analysis/data/source_bindings.json",
+      "unchanged_from_base_commit": true,
+      "sha256": "56d639dcb30997421a7aeefdfca0283a32cce178deb37c95cfb7d7244489ab92"
+    }
+  ],
+  "checks": {
+    "games": 24,
+    "planned_states": 71,
+    "observed_DNP_states": 68,
+    "source_failures": 3,
+    "physical_groups": 117,
+    "identity_status_counts": {
+      "false": 67,
+      "true": 1,
+      "unknown": 0,
+      "not_applicable": 3
+    },
+    "unweighted_N_action_changes": {
+      "changed": 20,
+      "comparable": 67
+    },
+    "actual_request_starts": 2200,
+    "terminal_records": 2199,
+    "NP_selected_groups": 6,
+    "NP_selected_games": 6,
+    "NP_selected_new_mu_calls": 83
+  },
+  "outputs": [
+    {
+      "path": "gpu_analysis/checkpoints/d0_report.json",
+      "size": 4322373,
+      "sha256": "57d9c7cdea5fcb3097f939a0738f9ad29da8c333eb6e5b7db11a751c31e2940c",
+      "isolated_byte_identical": true
+    },
+    {
+      "path": "gpu_analysis/checkpoints/d0_report.md",
+      "size": 35646,
+      "sha256": "74fdc5f41b5cdbc006e922c7713a0b2bc8f7de4e78ba64f0fbc598509aabb548",
+      "isolated_byte_identical": true
+    },
+    {
+      "path": "gpu_analysis/checkpoints/d0_report_np_candidates.json",
+      "size": 439465,
+      "sha256": "e2aaa4e4b100b5fdd983e10bed434543ba07af8548fd51fb45e60316590e45e3",
+      "isolated_byte_identical": true
+    }
+  ],
+  "limitations": [
+    "Offline CPU evidence and reporting only; no live N/P audit, D1/E analysis, model call, environment instance or cluster job.",
+    "Incomplete-attempt actual total cost remains unknown."
+  ],
+  "new_model_calls": 0,
+  "new_environment_instances": 0,
+  "new_cluster_jobs": 0
+}

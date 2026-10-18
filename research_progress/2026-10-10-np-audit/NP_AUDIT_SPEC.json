@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "np_audit_offline_protocol",
+  "date": "2026-10-10",
+  "status": "machine_rules_implemented_offline_not_execution_ready",
+  "runtime_authorized": false,
+  "source": "RESEARCH_PRELIMINARY_FREEZE_V0_2.md with original section 5 two-pass rule",
+  "selection": {
+    "namespace": "cs5446-direction-b-np-audit-v1",
+    "seed": 42,
+    "target_groups": 6,
+    "min_games": 4,
+    "max_groups_per_game": 2,
+    "min_new_mu_calls": 10,
+    "hash_input": "UTF-8 compact JSON [namespace,seed,canonical_game_id,state_id,group_id,sorted_branches,exact_first_action]; ensure_ascii=False, sort_keys=True",
+    "order": "SHA256 hex ascending, then exact hash-input string ascending",
+    "passes": ["first eligible group per game in hash order up to six", "second group per game in the same hash order until six"],
+    "final_order": "pass-1 selections followed by pass-2 selections; do not globally reorder afterward",
+    "eligible": "validated complete or policy-failed, measurement-valid physical N/P rollout; exact first action differs from source D draft; at least ten audited new continuation logical calls",
+    "counting": "actual shared N=P counts once; off-menu separately executed groups stay separate but same-as-D action is never an eligible intervention",
+    "terminal_policy_failure_call_counts": true,
+    "excluded_from_mu_count": ["source draft", "N/WM/P first-action generation", "HTTP retry attempts"],
+    "selection_does_not_use": ["Y", "utility", "confidence", "prediction accuracy"],
+    "incomplete_collection": "no subset selection; blocked_collection_incomplete",
+    "shortage": "retain the fixed per-game and total caps; coverage_insufficient; no threshold reduction or short-tail replacement"
+  },
+  "frozen_event": {
+    "kind": "np_frozen_event",
+    "content": ["full selected state including prefix", "original first_actions with prediction and score evidence", "original physical_group", "canonical hashes of source rollout, full continuation ledger and source deployment"],
+    "sha256": "canonical JSON object excluding its own sha256 field",
+    "replay_markers": ["frozen_event_sha256", "first_action_generation=cached_frozen_event"],
+    "repetitions_per_selected_group": 1,
+    "regenerate_N_WM_P": false
+  },
+  "deployment": {
+    "distinct": ["job_id", "service_instance_id"],
+    "common_fingerprint_sha256_fields": ["model_sha256", "backend_sha256", "config_sha256", "assets_sha256", "source_sha256"],
+    "config_sha256_scope": "canonical target inference configuration; execution package must expose and validate its exact content",
+    "runner_effective_config_sha256": "separate full runner config digest; source must bind manifest.effective_config_sha256; endpoint differences need not match across jobs",
+    "hardware_class": {"model": "NVIDIA A100-PCIE-40GB", "mig_mode": "Disabled", "smi_memory_mib": 40960, "sm_count": 108},
+    "physical_uuid": "recorded independently on both sides; different whole cards allowed within the admitted class",
+    "admission": ["status=passed", "hardware_gate_status=accepted", "service_device_binding_verified=true", "evidence_sha256"],
+    "metadata_is_live_hardware_or_distribution_proof": false
+  },
+  "comparison": {
+    "method": "first causal hard divergence over the existing chronological evidence; keep earlier numeric diagnostics",
+    "hard_fields": ["selected identity/prefix/history/budget", "cached first action and actual physical group", "submitted request plus actual messages and parameters", "raw completion text and finish", "action, observation, ordered menu, done, success", "termination and observed Y"],
+    "numeric_policy": "exact_numeric_diagnostic_stop",
+    "numeric_precision": "exact canonical JSON equality; no rounding and no nonzero tolerance",
+    "numeric_fields": ["token_logprobs", "prompt_tokens", "completion_tokens", "request_usage_totals"],
+    "numeric_only": "only after the full available path is hard-field identical; insufficient_evidence with raw-ledger and terminal hashes",
+    "numeric_before_later_hard_divergence": "retain numeric findings and classify the first hard divergence; do not hide a later text/request/environment mismatch",
+    "extra_or_missing_calls": "insufficient_evidence, never implicit agreement",
+    "raw_outcomes": "preserved independently from measurement validity and stop disposition"
+  },
+  "stops": {
+    "recovery_or_configuration_mismatch": "one bounded existing-evidence review; fix in new version and revalidate or end stage unresolved",
+    "backend_output_divergence": "one bounded deployment/sampling review; no hardware-only automatic stochastic acceptance",
+    "environment_transition_mismatch": "one bounded environment/assets/recovery review; fix or end stage unresolved",
+    "numeric_evidence_only": "exact evidence retained; bounded numeric review; no implicit tolerance or automatic continuation",
+    "coverage_insufficient": "report fixed-pool coverage; unresolved until explicitly bounded later disposition, never automatic pass",
+    "automatic_retry_or_replacement_groups": 0,
+    "later_scheduling_after_first_non_passed_comparison": false
+  },
+  "reporting": {
+    "all_planned_slots_required": true,
+    "missing_receipt": "not_run",
+    "receipt_order": "chronological prefix of frozen selection order; reject a receipt after a prior stop",
+    "passing_label": "passed_selected_path_check",
+    "population_reliability_or_deterministic_label_claim": false,
+    "new_runtime_authorization_from_report": false
+  },
+  "still_required_in_execution_package": ["Q8 actual quotas and resource limits", "service and hardware admission with raw evidence", "source and replay artifact handoff and per-group stop wiring", "explicit GPU-stage authorization"],
+  "new_model_calls": 0,
+  "new_ALFWorld_instances": 0,
+  "new_cluster_jobs": 0
+}

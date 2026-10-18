@@ -1,0 +1,3025 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "n_planned_games": 134,
+  "n_selected_rows": 402,
+  "split": "eval_out_of_distribution",
+  "history_eligibility": "unverified; user confirmed not yet checked with owners on 2026-10-18",
+  "interpretation_scope": "fixed134 candidate unseen games; no untouched-confirmatory claim until history is resolved; no silent game replacement",
+  "statistical_availability_is_not_eligibility": "A returned confirmatory_status=available only means outcomes permit arithmetic; it does not establish untouched-game eligibility.",
+  "inputs": {
+    "attempts_sha256": "fa5818ed9c986d792560f680651a605a6a6dd6a6633fb663e15c6b93dbfbdead",
+    "shards_manifest_sha256": "ce667a77eb0b190a599d9c34dd78ed85008096c09dbc87ad07a392e07b226398",
+    "frozen_config_sha256": "7fa9d0fc6deedc126c7cb9460e0003eeb4b77edb092b279d8e150787b8623ad7",
+    "source_census_sha256": "81dfc32c29d917c62e562b9c2d3a5a7cb655e4047112a7f302f0a328821d78d3"
+  },
+  "selection_rule": "First evidence-complete attempt in attempt order, independent of outcomes and C7 coverage. No replacement games.",
+  "shards": [
+    {
+      "shard_index": 0,
+      "n_games": 14,
+      "selected_run_id": "aim3-e-s0-a1-968227",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 1,
+      "n_games": 14,
+      "selected_run_id": "aim3-e-s1-a1-968520",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 2,
+      "n_games": 14,
+      "selected_run_id": "aim3-e-s2-a1-968521",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 3,
+      "n_games": 14,
+      "selected_run_id": "aim3-e-s3-a1-968522",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 4,
+      "n_games": 13,
+      "selected_run_id": "aim3-e-s4-a1-968523",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 5,
+      "n_games": 13,
+      "selected_run_id": "aim3-e-s5-a1-968524",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 6,
+      "n_games": 13,
+      "selected_run_id": "aim3-e-s6-a1-968525",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 7,
+      "n_games": 13,
+      "selected_run_id": "aim3-e-s7-a1-968526",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 8,
+      "n_games": 13,
+      "selected_run_id": "aim3-e-s8-a1-968527",
+      "selected_attempt": 1,
+      "status": "complete"
+    },
+    {
+      "shard_index": 9,
+      "n_games": 13,
+      "selected_run_id": "aim3-e-s9-a1-968528",
+      "selected_attempt": 1,
+      "status": "complete"
+    }
+  ],
+  "comparisons": {
+    "always_minus_no_info": {
+      "treatment": "always",
+      "control": "no_info",
+      "n_planned_pairs": 134,
+      "confirmatory_level": 0.975,
+      "n_pairs_with_missing_outcome": 0,
+      "observed_rescued": 13,
+      "observed_harmed": 11,
+      "difference_bounds": {
+        "low": 0.014925373134328358,
+        "high": 0.014925373134328358,
+        "imputation": "missing Y_study set adversarially to 0/1"
+      },
+      "status": "ok",
+      "difference": 0.014925373134328358,
+      "intervals": {
+        "0.95": {
+          "method": "clopper_pearson_rescue_harm_bonferroni",
+          "level": 0.95,
+          "marginal_level": 0.975,
+          "low": -0.10337652427748209,
+          "high": 0.1322224569125175,
+          "direction": "not_resolved"
+        },
+        "0.975": {
+          "method": "clopper_pearson_rescue_harm_bonferroni",
+          "level": 0.975,
+          "marginal_level": 0.9875,
+          "low": -0.11604909737770391,
+          "high": 0.14470916445098153,
+          "direction": "not_resolved"
+        }
+      },
+      "confirmatory_status": "available",
+      "mcnemar_exact_two_sided_p": 0.8388197422027588,
+      "inference_limit": "iid game-pair model; non-significance is not equivalence"
+    },
+    "always_minus_none": {
+      "treatment": "always",
+      "control": "none",
+      "n_planned_pairs": 134,
+      "confirmatory_level": null,
+      "n_pairs_with_missing_outcome": 0,
+      "observed_rescued": 11,
+      "observed_harmed": 8,
+      "difference_bounds": {
+        "low": 0.022388059701492536,
+        "high": 0.022388059701492536,
+        "imputation": "missing Y_study set adversarially to 0/1"
+      },
+      "status": "ok",
+      "difference": 0.022388059701492536,
+      "intervals": {
+        "0.95": {
+          "method": "clopper_pearson_rescue_harm_bonferroni",
+          "level": 0.95,
+          "marginal_level": 0.975,
+          "low": -0.08520636838790362,
+          "high": 0.12837500269768704,
+          "direction": "not_resolved"
+        }
+      },
+      "confirmatory_status": "not_planned_estimation_only",
+      "mcnemar_exact_two_sided_p": 0.6476058959960938,
+      "inference_limit": "iid game-pair model; non-significance is not equivalence"
+    },
+    "no_info_minus_none": {
+      "treatment": "no_info",
+      "control": "none",
+      "n_planned_pairs": 134,
+      "confirmatory_level": null,
+      "n_pairs_with_missing_outcome": 0,
+      "observed_rescued": 8,
+      "observed_harmed": 7,
+      "difference_bounds": {
+        "low": 0.007462686567164179,
+        "high": 0.007462686567164179,
+        "imputation": "missing Y_study set adversarially to 0/1"
+      },
+      "status": "ok",
+      "difference": 0.007462686567164179,
+      "intervals": {
+        "0.95": {
+          "method": "clopper_pearson_rescue_harm_bonferroni",
+          "level": 0.95,
+          "marginal_level": 0.975,
+          "low": -0.08995315534529622,
+          "high": 0.10430038794807624,
+          "direction": "not_resolved"
+        }
+      },
+      "confirmatory_status": "not_planned_estimation_only",
+      "mcnemar_exact_two_sided_p": 1.0,
+      "inference_limit": "iid game-pair model; non-significance is not equivalence"
+    }
+  },
+  "sensitivity_both_no_policy_failure": {
+    "always_minus_no_info": {
+      "n_surviving_pairs": 95,
+      "n_excluded_from_planned": 39,
+      "interpretation": "Descriptive post-treatment selection; pair-specific subset. Does not replace the main analysis or identify a failure-free causal effect.",
+      "comparison": {
+        "treatment": "always",
+        "control": "no_info",
+        "n_planned_pairs": 95,
+        "confirmatory_level": null,
+        "n_pairs_with_missing_outcome": 0,
+        "observed_rescued": 11,
+        "observed_harmed": 9,
+        "difference_bounds": {
+          "low": 0.021052631578947368,
+          "high": 0.021052631578947368,
+          "imputation": "missing Y_study set adversarially to 0/1"
+        },
+        "status": "ok",
+        "difference": 0.021052631578947368,
+        "intervals": {
+          "0.95": {
+            "method": "clopper_pearson_rescue_harm_bonferroni",
+            "level": 0.95,
+            "marginal_level": 0.975,
+            "low": -0.13065559977459262,
+            "high": 0.17079550511964114,
+            "direction": "not_resolved"
+          }
+        },
+        "confirmatory_status": "not_planned_estimation_only",
+        "mcnemar_exact_two_sided_p": 0.8238029479980469,
+        "inference_limit": "iid game-pair model; non-significance is not equivalence"
+      }
+    },
+    "always_minus_none": {
+      "n_surviving_pairs": 107,
+      "n_excluded_from_planned": 27,
+      "interpretation": "Descriptive post-treatment selection; pair-specific subset. Does not replace the main analysis or identify a failure-free causal effect.",
+      "comparison": {
+        "treatment": "always",
+        "control": "none",
+        "n_planned_pairs": 107,
+        "confirmatory_level": null,
+        "n_pairs_with_missing_outcome": 0,
+        "observed_rescued": 11,
+        "observed_harmed": 6,
+        "difference_bounds": {
+          "low": 0.04672897196261682,
+          "high": 0.04672897196261682,
+          "imputation": "missing Y_study set adversarially to 0/1"
+        },
+        "status": "ok",
+        "difference": 0.04672897196261682,
+        "intervals": {
+          "0.95": {
+            "method": "clopper_pearson_rescue_harm_bonferroni",
+            "level": 0.95,
+            "marginal_level": 0.975,
+            "low": -0.08054863039822541,
+            "high": 0.16984951210989477,
+            "direction": "not_resolved"
+          }
+        },
+        "confirmatory_status": "not_planned_estimation_only",
+        "mcnemar_exact_two_sided_p": 0.332305908203125,
+        "inference_limit": "iid game-pair model; non-significance is not equivalence"
+      }
+    },
+    "no_info_minus_none": {
+      "n_surviving_pairs": 103,
+      "n_excluded_from_planned": 31,
+      "interpretation": "Descriptive post-treatment selection; pair-specific subset. Does not replace the main analysis or identify a failure-free causal effect.",
+      "comparison": {
+        "treatment": "no_info",
+        "control": "none",
+        "n_planned_pairs": 103,
+        "confirmatory_level": null,
+        "n_pairs_with_missing_outcome": 0,
+        "observed_rescued": 6,
+        "observed_harmed": 6,
+        "difference_bounds": {
+          "low": 0.0,
+          "high": 0.0,
+          "imputation": "missing Y_study set adversarially to 0/1"
+        },
+        "status": "ok",
+        "difference": 0.0,
+        "intervals": {
+          "0.95": {
+            "method": "clopper_pearson_rescue_harm_bonferroni",
+            "level": 0.95,
+            "marginal_level": 0.975,
+            "low": -0.11404320805238008,
+            "high": 0.11404320805238008,
+            "direction": "not_resolved"
+          }
+        },
+        "confirmatory_status": "not_planned_estimation_only",
+        "mcnemar_exact_two_sided_p": 1.0,
+        "inference_limit": "iid game-pair model; non-significance is not equivalence"
+      }
+    }
+  },
+  "arm_outcomes": {
+    "always": {
+      "planned": 134,
+      "attempted": 134,
+      "completed": 115,
+      "policy_failed": 19,
+      "technical_missing": 0,
+      "not_run": 0,
+      "study_successes": 25,
+      "study_success_rate": 0.1865671641791045,
+      "study_success_rate_ci95": {
+        "method": "wilson",
+        "level": 0.95,
+        "low": 0.1296847033220887,
+        "high": 0.26091954072274376
+      },
+      "study_success_rate_bounds": {
+        "low": 0.1865671641791045,
+        "high": 0.1865671641791045
+      },
+      "policy_failure_rate_among_observed": 0.1417910447761194,
+      "policy_failure_reasons": {
+        "draft:missing_action": 7,
+        "draft:multiple_actions": 2,
+        "replan:missing_action": 9,
+        "replan:truncated_or_unverified_finish": 1
+      },
+      "environment_success_among_completed": 0.21739130434782608,
+      "outcome_definition": "Y_study: task success=1; budget exhausted or planner content failure=0; technical failure or not run=null"
+    },
+    "no_info": {
+      "planned": 134,
+      "attempted": 134,
+      "completed": 112,
+      "policy_failed": 22,
+      "technical_missing": 0,
+      "not_run": 0,
+      "study_successes": 23,
+      "study_success_rate": 0.17164179104477612,
+      "study_success_rate_ci95": {
+        "method": "wilson",
+        "level": 0.95,
+        "low": 0.11718348574039014,
+        "high": 0.24440191278276766
+      },
+      "study_success_rate_bounds": {
+        "low": 0.17164179104477612,
+        "high": 0.17164179104477612
+      },
+      "policy_failure_rate_among_observed": 0.16417910447761194,
+      "policy_failure_reasons": {
+        "draft:missing_action": 11,
+        "draft:multiple_actions": 1,
+        "draft:truncated_or_unverified_finish": 2,
+        "no_info:missing_action": 7,
+        "no_info:truncated_or_unverified_finish": 1
+      },
+      "environment_success_among_completed": 0.20535714285714285,
+      "outcome_definition": "Y_study: task success=1; budget exhausted or planner content failure=0; technical failure or not run=null"
+    },
+    "none": {
+      "planned": 134,
+      "attempted": 134,
+      "completed": 123,
+      "policy_failed": 11,
+      "technical_missing": 0,
+      "not_run": 0,
+      "study_successes": 22,
+      "study_success_rate": 0.16417910447761194,
+      "study_success_rate_ci95": {
+        "method": "wilson",
+        "level": 0.95,
+        "low": 0.11099321312845334,
+        "high": 0.23608276263386713
+      },
+      "study_success_rate_bounds": {
+        "low": 0.16417910447761194,
+        "high": 0.16417910447761194
+      },
+      "policy_failure_rate_among_observed": 0.08208955223880597,
+      "policy_failure_reasons": {
+        "draft:missing_action": 11
+      },
+      "environment_success_among_completed": 0.17886178861788618,
+      "outcome_definition": "Y_study: task success=1; budget exhausted or planner content failure=0; technical failure or not run=null"
+    }
+  },
+  "policy_failure_diagnostics": {
+    "always": {
+      "observed_episodes": 134,
+      "policy_failed_episodes": 19,
+      "failure_rate_per_observed_episode": 0.1417910447761194,
+      "by_decision_role": {
+        "draft": {
+          "planner_calls": 3374,
+          "policy_failures": 9,
+          "failure_rate_per_call": 0.0026674570243034974
+        },
+        "no_info": {
+          "planner_calls": 0,
+          "policy_failures": 0,
+          "failure_rate_per_call": null
+        },
+        "replan": {
+          "planner_calls": 3365,
+          "policy_failures": 10,
+          "failure_rate_per_call": 0.0029717682020802376
+        },
+        "no_info_fallback": {
+          "planner_calls": 0,
+          "policy_failures": 0,
+          "failure_rate_per_call": null
+        }
+      },
+      "mechanisms": [
+        {
+          "run_id": "aim3-e-s0-a1-968227",
+          "task_index": 4,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-Watch-None-Safe-219/trial_T20190907_074556_124850/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "multiple_actions",
+          "raw_finish_reason": "stop",
+          "completion_tokens": 182,
+          "length_at_384": false,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s0-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s0-a1-968227.calls\\task-000004.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s0-a1-968227",
+          "task_index": 5,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Egg-None-Microwave-10/trial_T20190909_120632_691361/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s0-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s0-a1-968227.calls\\task-000005.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s1-a1-968520",
+          "task_index": 13,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-SoapBar-None-GarbageCan-424/trial_T20190909_064221_368939/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s1-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s1-a1-968520.calls\\task-000013.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s3-a1-968522",
+          "task_index": 7,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Bread-None-CounterTop-10/trial_T20190908_091747_866951/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s3-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s3-a1-968522.calls\\task-000007.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s3-a1-968522",
+          "task_index": 10,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Egg-None-GarbageCan-10/trial_T20190908_113432_673307/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "truncated_or_unverified_finish",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s3-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s3-a1-968522.calls\\task-000010.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s3-a1-968522",
+          "task_index": 12,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-PepperShaker-None-Drawer-10/trial_T20190912_221016_460197/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s3-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s3-a1-968522.calls\\task-000012.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 2,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-PepperShaker-None-Drawer-10/trial_T20190906_184021_215264/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000002.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 5,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Knife-None-CounterTop-10/trial_T20190909_110531_148235/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000005.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 7,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Bread-None-CounterTop-10/trial_T20190908_091811_414150/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000007.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s5-a1-968524",
+          "task_index": 8,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Pan-None-CounterTop-10/trial_T20190908_114545_244903/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s5-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s5-a1-968524.calls\\task-000008.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s5-a1-968524",
+          "task_index": 12,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-Pillow-None-Sofa-219/trial_T20190907_163240_345855/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "multiple_actions",
+          "raw_finish_reason": "stop",
+          "completion_tokens": 87,
+          "length_at_384": false,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s5-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s5-a1-968524.calls\\task-000012.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s6-a1-968525",
+          "task_index": 7,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Lettuce-None-CounterTop-10/trial_T20190909_123133_763972/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s6-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s6-a1-968525.calls\\task-000007.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s6-a1-968525",
+          "task_index": 9,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-Fridge-10/trial_T20190906_182435_622538/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s6-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s6-a1-968525.calls\\task-000009.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s7-a1-968526",
+          "task_index": 4,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Cloth-None-CounterTop-424/trial_T20190908_100632_546757/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s7-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s7-a1-968526.calls\\task-000004.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 9,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145143_820541/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000009.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 11,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-CD-None-Safe-308/trial_T20190907_051013_060265/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000011.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s9-a1-968528",
+          "task_index": 2,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191501_563086/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s9-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s9-a1-968528.calls\\task-000002.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s9-a1-968528",
+          "task_index": 9,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Apple-None-GarbageCan-10/trial_T20190908_145356_918528/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s9-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s9-a1-968528.calls\\task-000009.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s9-a1-968528",
+          "task_index": 10,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_171806_406231/game.tw-pddl",
+          "decision_role": "replan",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s9-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s9-a1-968528.calls\\task-000010.jsonl"
+        }
+      ]
+    },
+    "no_info": {
+      "observed_episodes": 134,
+      "policy_failed_episodes": 22,
+      "failure_rate_per_observed_episode": 0.16417910447761194,
+      "by_decision_role": {
+        "draft": {
+          "planner_calls": 3378,
+          "policy_failures": 14,
+          "failure_rate_per_call": 0.0041444641799881585
+        },
+        "no_info": {
+          "planner_calls": 3364,
+          "policy_failures": 8,
+          "failure_rate_per_call": 0.0023781212841854932
+        },
+        "replan": {
+          "planner_calls": 0,
+          "policy_failures": 0,
+          "failure_rate_per_call": null
+        },
+        "no_info_fallback": {
+          "planner_calls": 0,
+          "policy_failures": 0,
+          "failure_rate_per_call": null
+        }
+      },
+      "mechanisms": [
+        {
+          "run_id": "aim3-e-s0-a1-968227",
+          "task_index": 19,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Egg-None-Microwave-10/trial_T20190909_120632_691361/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "truncated_or_unverified_finish",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s0-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s0-a1-968227.calls\\task-000019.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s0-a1-968227",
+          "task_index": 24,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Cup-None-Cabinet-10/trial_T20190907_083346_800823/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s0-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s0-a1-968227.calls\\task-000024.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s0-a1-968227",
+          "task_index": 26,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-KeyChain-None-Safe-219/trial_T20190909_011803_423115/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s0-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s0-a1-968227.calls\\task-000026.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s2-a1-968521",
+          "task_index": 21,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Spatula-None-Drawer-10/trial_T20190907_080825_222432/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s2-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s2-a1-968521.calls\\task-000021.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s2-a1-968521",
+          "task_index": 24,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Cup-None-Cabinet-10/trial_T20190907_083507_594820/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s2-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s2-a1-968521.calls\\task-000024.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s3-a1-968522",
+          "task_index": 19,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Knife-None-CounterTop-10/trial_T20190909_110445_675754/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s3-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s3-a1-968522.calls\\task-000019.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 13,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/look_at_obj_in_light-Book-None-DeskLamp-308/trial_T20190908_020048_814402/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000013.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 14,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/look_at_obj_in_light-Mug-None-DeskLamp-308/trial_T20190908_201444_037645/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000014.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 18,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Knife-None-CounterTop-10/trial_T20190909_110531_148235/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "truncated_or_unverified_finish",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000018.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 23,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Egg-None-GarbageCan-10/trial_T20190908_113523_123938/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000023.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s4-a1-968523",
+          "task_index": 25,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-PepperShaker-None-Drawer-10/trial_T20190912_221141_608117/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s4-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s4-a1-968523.calls\\task-000025.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s5-a1-968524",
+          "task_index": 15,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-PepperShaker-None-Drawer-10/trial_T20190918_154326_823501/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s5-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s5-a1-968524.calls\\task-000015.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s5-a1-968524",
+          "task_index": 20,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Bread-None-CounterTop-10/trial_T20190908_091835_825830/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s5-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s5-a1-968524.calls\\task-000020.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s7-a1-968526",
+          "task_index": 15,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191429_743650/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s7-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s7-a1-968526.calls\\task-000015.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s7-a1-968526",
+          "task_index": 16,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-Vase-None-Safe-219/trial_T20190908_205221_748352/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s7-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s7-a1-968526.calls\\task-000016.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s7-a1-968526",
+          "task_index": 21,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Pan-None-CounterTop-10/trial_T20190908_114656_768805/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s7-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s7-a1-968526.calls\\task-000021.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 14,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-Mug-None-Desk-308/trial_T20190908_125200_737896/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "truncated_or_unverified_finish",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000014.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 15,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191445_723170/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000015.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 18,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Pan-None-CounterTop-10/trial_T20190908_032434_013084/game.tw-pddl",
+          "decision_role": "no_info",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000018.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 20,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Lettuce-None-CounterTop-10/trial_T20190909_174840_771703/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000020.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s9-a1-968528",
+          "task_index": 24,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-CD-None-Safe-308/trial_T20190907_051056_585414/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s9-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s9-a1-968528.calls\\task-000024.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s9-a1-968528",
+          "task_index": 25,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_two_obj_and_place-SoapBar-None-Cabinet-424/trial_T20190909_081746_857594/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "multiple_actions",
+          "raw_finish_reason": "stop",
+          "completion_tokens": 69,
+          "length_at_384": false,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s9-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s9-a1-968528.calls\\task-000025.jsonl"
+        }
+      ]
+    },
+    "none": {
+      "observed_episodes": 134,
+      "policy_failed_episodes": 11,
+      "failure_rate_per_observed_episode": 0.08208955223880597,
+      "by_decision_role": {
+        "draft": {
+          "planner_calls": 3540,
+          "policy_failures": 11,
+          "failure_rate_per_call": 0.0031073446327683617
+        },
+        "no_info": {
+          "planner_calls": 0,
+          "policy_failures": 0,
+          "failure_rate_per_call": null
+        },
+        "replan": {
+          "planner_calls": 0,
+          "policy_failures": 0,
+          "failure_rate_per_call": null
+        },
+        "no_info_fallback": {
+          "planner_calls": 0,
+          "policy_failures": 0,
+          "failure_rate_per_call": null
+        }
+      },
+      "mechanisms": [
+        {
+          "run_id": "aim3-e-s1-a1-968520",
+          "task_index": 39,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_171933_349922/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s1-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s1-a1-968520.calls\\task-000039.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s3-a1-968522",
+          "task_index": 35,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Bread-None-CounterTop-10/trial_T20190908_091747_866951/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s3-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s3-a1-968522.calls\\task-000035.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s5-a1-968524",
+          "task_index": 31,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_221208_560499/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s5-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s5-a1-968524.calls\\task-000031.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s5-a1-968524",
+          "task_index": 33,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Bread-None-CounterTop-10/trial_T20190908_091835_825830/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s5-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s5-a1-968524.calls\\task-000033.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s6-a1-968525",
+          "task_index": 33,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Lettuce-None-CounterTop-10/trial_T20190909_123133_763972/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s6-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s6-a1-968525.calls\\task-000033.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s6-a1-968525",
+          "task_index": 36,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-Cabinet-10/trial_T20190909_021100_341887/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s6-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s6-a1-968525.calls\\task-000036.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s7-a1-968526",
+          "task_index": 32,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_clean_then_place_in_recep-SoapBar-None-CounterTop-424/trial_T20190907_074045_109439/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s7-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s7-a1-968526.calls\\task-000032.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 28,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_and_place_simple-SaltShaker-None-Cabinet-10/trial_T20190906_191445_723170/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000028.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s8-a1-968527",
+          "task_index": 34,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Potato-None-Microwave-10/trial_T20190907_033157_424297/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s8-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s8-a1-968527.calls\\task-000034.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s9-a1-968528",
+          "task_index": 34,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_cool_then_place_in_recep-Potato-None-Microwave-10/trial_T20190907_033228_194678/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s9-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s9-a1-968528.calls\\task-000034.jsonl"
+        },
+        {
+          "run_id": "aim3-e-s9-a1-968528",
+          "task_index": 36,
+          "gamefile": "<ALFWORLD_DATA>/json_2.1.1/valid_unseen/pick_heat_then_place_in_recep-Mug-None-CoffeeMachine-10/trial_T20190907_171806_406231/game.tw-pddl",
+          "decision_role": "draft",
+          "reason": "missing_action",
+          "raw_finish_reason": "length",
+          "completion_tokens": 384,
+          "length_at_384": true,
+          "audit_path": "<LOCAL_REPO>\\research_progress\\2026-10-18-aim3-e-run\\attempts\\aim3-e-v1.1-s9-a1\\alfworld-preexp-npu\\data\\episode_level_aim3-e-s9-a1-968528.calls\\task-000036.jsonl"
+        }
+      ]
+    }
+  },
+  "selected_cost_by_arm": {
+    "always": {
+      "recorded_rows": 134,
+      "known_components": {
+        "logical_calls": 10104,
+        "http_attempts_recorded": 10104,
+        "calls_with_unknown_attempt_count": 0,
+        "attempts_without_complete_usage": 0,
+        "known_prompt_tokens": 6968121,
+        "known_completion_tokens": 681110,
+        "sum_known_request_elapsed_s": 14010.459605907658,
+        "calls_without_latency": 0
+      },
+      "rows_missing_cost_fields": {
+        "logical_calls": 0,
+        "http_attempts_recorded": 0,
+        "calls_with_unknown_attempt_count": 0,
+        "attempts_without_complete_usage": 0,
+        "known_prompt_tokens": 0,
+        "known_completion_tokens": 0,
+        "sum_known_request_elapsed_s": 0,
+        "calls_without_latency": 0
+      },
+      "token_cost_complete": true,
+      "rows_with_incomplete_token_cost": 0,
+      "total_prompt_tokens": 6968121,
+      "total_completion_tokens": 681110,
+      "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+    },
+    "no_info": {
+      "recorded_rows": 134,
+      "known_components": {
+        "logical_calls": 6742,
+        "http_attempts_recorded": 6742,
+        "calls_with_unknown_attempt_count": 0,
+        "attempts_without_complete_usage": 0,
+        "known_prompt_tokens": 4963623,
+        "known_completion_tokens": 538174,
+        "sum_known_request_elapsed_s": 11001.751231092829,
+        "calls_without_latency": 0
+      },
+      "rows_missing_cost_fields": {
+        "logical_calls": 0,
+        "http_attempts_recorded": 0,
+        "calls_with_unknown_attempt_count": 0,
+        "attempts_without_complete_usage": 0,
+        "known_prompt_tokens": 0,
+        "known_completion_tokens": 0,
+        "sum_known_request_elapsed_s": 0,
+        "calls_without_latency": 0
+      },
+      "token_cost_complete": true,
+      "rows_with_incomplete_token_cost": 0,
+      "total_prompt_tokens": 4963623,
+      "total_completion_tokens": 538174,
+      "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+    },
+    "none": {
+      "recorded_rows": 134,
+      "known_components": {
+        "logical_calls": 3540,
+        "http_attempts_recorded": 3540,
+        "calls_with_unknown_attempt_count": 0,
+        "attempts_without_complete_usage": 0,
+        "known_prompt_tokens": 2611028,
+        "known_completion_tokens": 274030,
+        "sum_known_request_elapsed_s": 5636.369634801711,
+        "calls_without_latency": 0
+      },
+      "rows_missing_cost_fields": {
+        "logical_calls": 0,
+        "http_attempts_recorded": 0,
+        "calls_with_unknown_attempt_count": 0,
+        "attempts_without_complete_usage": 0,
+        "known_prompt_tokens": 0,
+        "known_completion_tokens": 0,
+        "sum_known_request_elapsed_s": 0,
+        "calls_without_latency": 0
+      },
+      "token_cost_complete": true,
+      "rows_with_incomplete_token_cost": 0,
+      "total_prompt_tokens": 2611028,
+      "total_completion_tokens": 274030,
+      "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+    }
+  },
+  "analysis_missing_definition": "arm_outcomes.not_run counts games omitted because no complete shard attempt was selected; it does not assert those games were never executed. Raw attempt outcomes are retained below.",
+  "all_attempts_recorded_cost": {
+    "recorded_rows": 402,
+    "known_components": {
+      "logical_calls": 20386,
+      "http_attempts_recorded": 20386,
+      "calls_with_unknown_attempt_count": 0,
+      "attempts_without_complete_usage": 0,
+      "known_prompt_tokens": 14542772,
+      "known_completion_tokens": 1493314,
+      "sum_known_request_elapsed_s": 30648.580471802197,
+      "calls_without_latency": 0
+    },
+    "rows_missing_cost_fields": {
+      "logical_calls": 0,
+      "http_attempts_recorded": 0,
+      "calls_with_unknown_attempt_count": 0,
+      "attempts_without_complete_usage": 0,
+      "known_prompt_tokens": 0,
+      "known_completion_tokens": 0,
+      "sum_known_request_elapsed_s": 0,
+      "calls_without_latency": 0
+    },
+    "token_cost_complete": true,
+    "rows_with_incomplete_token_cost": 0,
+    "total_prompt_tokens": 14542772,
+    "total_completion_tokens": 1493314,
+    "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero.",
+    "bound_unknown": false
+  },
+  "all_attempts_resource_total_known": false,
+  "all_attempts_runner_wall": {
+    "known_seconds": 35130,
+    "attempts_without_runner_wall": 0,
+    "scope": "Sum of recorded runner walls across supplied attempts; excludes setup, teardown and queue. Missing phase times are unknown, not zero."
+  },
+  "unselected_or_incomplete_attempts_present": false,
+  "cost_limit": "All supplied attempts retained, including incomplete/unselected attempts; uncertified or missing records make this a recorded lower bound, not total resource use.",
+  "confirmatory_rule": "Only the primary 97.5% conservative paired interval decides direction; McNemar p is supplementary. Nonsignificance is not equivalence.",
+  "attempts": [
+    {
+      "inventory": {
+        "shard_index": 0,
+        "attempt": 1,
+        "run_id": "aim3-e-s0-a1-968227",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s0-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s0-a1/logs/aim3-e-s0-a1-968227/phases.tsv"
+      },
+      "manifest_sha256": "26a4ce163ee7fcdecd37bd776c75203fbd5e53eb0fa43ee6f9eba28a70ab2ccd",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 42,
+        "attempted": 42,
+        "complete": 37,
+        "policy_failed": 5,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 1,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 40,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3053,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 35,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s0-a1-968227",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 42,
+                "attempted": 42,
+                "complete": 37,
+                "policy_failed": 5,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 14,
+          "sha256": "fd41dfd186ca7470eedcbfa45f6c8a8056ad6950f9e2fdd0c32b8577618ba035"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 350,
+            "no_info": 337,
+            "none": 347
+          },
+          "policy_failed_episodes": {
+            "always": 2,
+            "no_info": 3,
+            "none": 0
+          },
+          "no_info_revisions": 337,
+          "always_world_model_calls": 350,
+          "always_prediction_revisions": 350,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 14,
+            "logical_calls": 1052,
+            "http_attempts_recorded": 1052,
+            "request_seconds": 1255.7,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 14,
+            "logical_calls": 678,
+            "http_attempts_recorded": 678,
+            "request_seconds": 935.5,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 14,
+            "logical_calls": 347,
+            "http_attempts_recorded": 347,
+            "request_seconds": 489.4,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 7.1,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3053,
+          "startup_seconds": 41,
+          "runner_wall_seconds_per_episode": 72.7,
+          "runner_wall_estimate_hours_full_run": 8.1,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 42,
+        "known_components": {
+          "logical_calls": 2077,
+          "http_attempts_recorded": 2077,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1467311,
+          "known_completion_tokens": 149878,
+          "sum_known_request_elapsed_s": 2680.5554647565004,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1467311,
+        "total_completion_tokens": 149878,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 1,
+        "attempt": 1,
+        "run_id": "aim3-e-s1-a1-968520",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s1-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s1-a1/logs/aim3-e-s1-a1-968520/phases.tsv"
+      },
+      "manifest_sha256": "125c48f4e1c8c6ce096b58aa807b6dc8f39d9d739bd23a223d26ebd571ab9c59",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 42,
+        "attempted": 42,
+        "complete": 40,
+        "policy_failed": 2,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 75,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3494,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 47,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s1-a1-968520",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 42,
+                "attempted": 42,
+                "complete": 40,
+                "policy_failed": 2,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 14,
+          "sha256": "ea92c1530174da26c8eb7cb267a5d45021290d2005ee2f416848f2e08a1b34a9"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 342,
+            "no_info": 333,
+            "none": 348
+          },
+          "policy_failed_episodes": {
+            "always": 1,
+            "no_info": 0,
+            "none": 1
+          },
+          "no_info_revisions": 333,
+          "always_world_model_calls": 343,
+          "always_prediction_revisions": 342,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 14,
+            "logical_calls": 1029,
+            "http_attempts_recorded": 1029,
+            "request_seconds": 1444.7,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 14,
+            "logical_calls": 666,
+            "http_attempts_recorded": 666,
+            "request_seconds": 1059.7,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 14,
+            "logical_calls": 349,
+            "http_attempts_recorded": 349,
+            "request_seconds": 530.2,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 8.1,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3494,
+          "startup_seconds": 75,
+          "runner_wall_seconds_per_episode": 83.2,
+          "runner_wall_estimate_hours_full_run": 9.3,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 42,
+        "known_components": {
+          "logical_calls": 2044,
+          "http_attempts_recorded": 2044,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1485827,
+          "known_completion_tokens": 144248,
+          "sum_known_request_elapsed_s": 3034.617396040936,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1485827,
+        "total_completion_tokens": 144248,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 2,
+        "attempt": 1,
+        "run_id": "aim3-e-s2-a1-968521",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s2-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s2-a1/logs/aim3-e-s2-a1-968521/phases.tsv"
+      },
+      "manifest_sha256": "3783fb8dc2b83eadc0b2ea06d6b5a9d513656242302db6fa9c51ef3ef07df66a",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 42,
+        "attempted": 42,
+        "complete": 40,
+        "policy_failed": 2,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 69,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3888,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 53,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s2-a1-968521",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 42,
+                "attempted": 42,
+                "complete": 40,
+                "policy_failed": 2,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 14,
+          "sha256": "4a4b05f811937c870697d450d1a0c19df86ce92428be4ccbb40cb52b865c0a6f"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 350,
+            "no_info": 337,
+            "none": 404
+          },
+          "policy_failed_episodes": {
+            "always": 0,
+            "no_info": 2,
+            "none": 0
+          },
+          "no_info_revisions": 337,
+          "always_world_model_calls": 350,
+          "always_prediction_revisions": 350,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 14,
+            "logical_calls": 1050,
+            "http_attempts_recorded": 1050,
+            "request_seconds": 1559.6,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 14,
+            "logical_calls": 676,
+            "http_attempts_recorded": 676,
+            "request_seconds": 1193.1,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 14,
+            "logical_calls": 404,
+            "http_attempts_recorded": 404,
+            "request_seconds": 658.2,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 9.1,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3888,
+          "startup_seconds": 69,
+          "runner_wall_seconds_per_episode": 92.6,
+          "runner_wall_estimate_hours_full_run": 10.3,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 42,
+        "known_components": {
+          "logical_calls": 2130,
+          "http_attempts_recorded": 2130,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1611389,
+          "known_completion_tokens": 163638,
+          "sum_known_request_elapsed_s": 3410.922257988481,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1611389,
+        "total_completion_tokens": 163638,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 3,
+        "attempt": 1,
+        "run_id": "aim3-e-s3-a1-968522",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s3-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s3-a1/logs/aim3-e-s3-a1-968522/phases.tsv"
+      },
+      "manifest_sha256": "2be604f927369da1793383325f41c20a83d59ae5ee9290e2c960aa09a44517df",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 42,
+        "attempted": 42,
+        "complete": 37,
+        "policy_failed": 5,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 64,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3756,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 51,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s3-a1-968522",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 42,
+                "attempted": 42,
+                "complete": 37,
+                "policy_failed": 5,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 14,
+          "sha256": "2411baaea38ee7aa3ae59a49a1d7b43a78da9187eec2ebab3399efdcbb81c977"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 328,
+            "no_info": 347,
+            "none": 368
+          },
+          "policy_failed_episodes": {
+            "always": 3,
+            "no_info": 1,
+            "none": 1
+          },
+          "no_info_revisions": 347,
+          "always_world_model_calls": 330,
+          "always_prediction_revisions": 328,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 14,
+            "logical_calls": 991,
+            "http_attempts_recorded": 991,
+            "request_seconds": 1434.2,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 14,
+            "logical_calls": 696,
+            "http_attempts_recorded": 696,
+            "request_seconds": 1219.2,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 14,
+            "logical_calls": 369,
+            "http_attempts_recorded": 369,
+            "request_seconds": 641.4,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 8.8,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3756,
+          "startup_seconds": 64,
+          "runner_wall_seconds_per_episode": 89.4,
+          "runner_wall_estimate_hours_full_run": 10.0,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 42,
+        "known_components": {
+          "logical_calls": 2056,
+          "http_attempts_recorded": 2056,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1432180,
+          "known_completion_tokens": 156891,
+          "sum_known_request_elapsed_s": 3294.82295611217,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1432180,
+        "total_completion_tokens": 156891,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 4,
+        "attempt": 1,
+        "run_id": "aim3-e-s4-a1-968523",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s4-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s4-a1/logs/aim3-e-s4-a1-968523/phases.tsv"
+      },
+      "manifest_sha256": "07037c09596bbe8472d05de3d6dc4b76747164e034923bfca31f21a609157908",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 39,
+        "attempted": 39,
+        "complete": 31,
+        "policy_failed": 8,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 1,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 48,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3570,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 48,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s4-a1-968523",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 39,
+                "attempted": 39,
+                "complete": 31,
+                "policy_failed": 8,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 13,
+          "sha256": "f3d801f78017452542b8ea54a7f40a6a083406d81a454e988274aab162c7637a"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 338,
+            "no_info": 298,
+            "none": 390
+          },
+          "policy_failed_episodes": {
+            "always": 3,
+            "no_info": 5,
+            "none": 0
+          },
+          "no_info_revisions": 298,
+          "always_world_model_calls": 339,
+          "always_prediction_revisions": 338,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 13,
+            "logical_calls": 1019,
+            "http_attempts_recorded": 1019,
+            "request_seconds": 1439.4,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 13,
+            "logical_calls": 604,
+            "http_attempts_recorded": 604,
+            "request_seconds": 1086.5,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 13,
+            "logical_calls": 390,
+            "http_attempts_recorded": 390,
+            "request_seconds": 616.2,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 9.0,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3570,
+          "startup_seconds": 49,
+          "runner_wall_seconds_per_episode": 91.5,
+          "runner_wall_estimate_hours_full_run": 10.2,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 39,
+        "known_components": {
+          "logical_calls": 2013,
+          "http_attempts_recorded": 2013,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1459628,
+          "known_completion_tokens": 149794,
+          "sum_known_request_elapsed_s": 3142.0993950694683,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1459628,
+        "total_completion_tokens": 149794,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 5,
+        "attempt": 1,
+        "run_id": "aim3-e-s5-a1-968524",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s5-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s5-a1/logs/aim3-e-s5-a1-968524/phases.tsv"
+      },
+      "manifest_sha256": "22f112ad293d713cc4efc37ec7180f8728d21ba33296f4d0308783da78ec8ae6",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 39,
+        "attempted": 39,
+        "complete": 33,
+        "policy_failed": 6,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 68,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3064,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 38,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s5-a1-968524",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 39,
+                "attempted": 39,
+                "complete": 33,
+                "policy_failed": 6,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 13,
+          "sha256": "ccc19f2b1250c55487cb6e695c04768adbe5e0070017c61f2a57ac764e969c49"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 328,
+            "no_info": 347,
+            "none": 343
+          },
+          "policy_failed_episodes": {
+            "always": 2,
+            "no_info": 2,
+            "none": 2
+          },
+          "no_info_revisions": 347,
+          "always_world_model_calls": 329,
+          "always_prediction_revisions": 328,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 13,
+            "logical_calls": 988,
+            "http_attempts_recorded": 988,
+            "request_seconds": 1225.5,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 13,
+            "logical_calls": 697,
+            "http_attempts_recorded": 697,
+            "request_seconds": 984.2,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 13,
+            "logical_calls": 345,
+            "http_attempts_recorded": 345,
+            "request_seconds": 477.4,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 7.7,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3064,
+          "startup_seconds": 68,
+          "runner_wall_seconds_per_episode": 78.6,
+          "runner_wall_estimate_hours_full_run": 8.8,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 39,
+        "known_components": {
+          "logical_calls": 2030,
+          "http_attempts_recorded": 2030,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1507728,
+          "known_completion_tokens": 152743,
+          "sum_known_request_elapsed_s": 2687.143632228748,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1507728,
+        "total_completion_tokens": 152743,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 6,
+        "attempt": 1,
+        "run_id": "aim3-e-s6-a1-968525",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s6-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s6-a1/logs/aim3-e-s6-a1-968525/phases.tsv"
+      },
+      "manifest_sha256": "fdbd448135432a04af585a828277d0aef6ddf11c94d7c2c4848a860075662404",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 39,
+        "attempted": 39,
+        "complete": 35,
+        "policy_failed": 4,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 70,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3501,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 43,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s6-a1-968525",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 39,
+                "attempted": 39,
+                "complete": 35,
+                "policy_failed": 4,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 13,
+          "sha256": "7e498371ae6377a950e8f7ce5a268a1ae5ab2f1550f52b73b3eb940735e713ed"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 298,
+            "no_info": 390,
+            "none": 324
+          },
+          "policy_failed_episodes": {
+            "always": 2,
+            "no_info": 0,
+            "none": 2
+          },
+          "no_info_revisions": 390,
+          "always_world_model_calls": 299,
+          "always_prediction_revisions": 298,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 13,
+            "logical_calls": 898,
+            "http_attempts_recorded": 898,
+            "request_seconds": 1187.0,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 13,
+            "logical_calls": 780,
+            "http_attempts_recorded": 780,
+            "request_seconds": 1251.8,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 13,
+            "logical_calls": 326,
+            "http_attempts_recorded": 326,
+            "request_seconds": 536.1,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 8.5,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3501,
+          "startup_seconds": 70,
+          "runner_wall_seconds_per_episode": 89.8,
+          "runner_wall_estimate_hours_full_run": 10.0,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 39,
+        "known_components": {
+          "logical_calls": 2004,
+          "http_attempts_recorded": 2004,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1345487,
+          "known_completion_tokens": 136785,
+          "sum_known_request_elapsed_s": 2974.850444217591,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1345487,
+        "total_completion_tokens": 136785,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 7,
+        "attempt": 1,
+        "run_id": "aim3-e-s7-a1-968526",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s7-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s7-a1/logs/aim3-e-s7-a1-968526/phases.tsv"
+      },
+      "manifest_sha256": "23fc0d628a8672a975d62ec963f4748633766174f3dbf4193eaa6d07e34d7483",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 39,
+        "attempted": 39,
+        "complete": 34,
+        "policy_failed": 5,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 70,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3871,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 49,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s7-a1-968526",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 39,
+                "attempted": 39,
+                "complete": 34,
+                "policy_failed": 5,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 13,
+          "sha256": "4f772ea1aa0c0771c884d060072a80c136399173b2750ab7737bf438fd0bdeba"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 363,
+            "no_info": 310,
+            "none": 360
+          },
+          "policy_failed_episodes": {
+            "always": 1,
+            "no_info": 3,
+            "none": 1
+          },
+          "no_info_revisions": 310,
+          "always_world_model_calls": 364,
+          "always_prediction_revisions": 363,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 13,
+            "logical_calls": 1092,
+            "http_attempts_recorded": 1092,
+            "request_seconds": 1589.6,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 13,
+            "logical_calls": 624,
+            "http_attempts_recorded": 624,
+            "request_seconds": 1089.9,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 13,
+            "logical_calls": 361,
+            "http_attempts_recorded": 361,
+            "request_seconds": 643.4,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 9.5,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3871,
+          "startup_seconds": 70,
+          "runner_wall_seconds_per_episode": 99.3,
+          "runner_wall_estimate_hours_full_run": 11.1,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 39,
+        "known_components": {
+          "logical_calls": 2077,
+          "http_attempts_recorded": 2077,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1482547,
+          "known_completion_tokens": 148660,
+          "sum_known_request_elapsed_s": 3322.914881210687,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1482547,
+        "total_completion_tokens": 148660,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 8,
+        "attempt": 1,
+        "run_id": "aim3-e-s8-a1-968527",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s8-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s8-a1/logs/aim3-e-s8-a1-968527/phases.tsv"
+      },
+      "manifest_sha256": "99b0f0b058b8a5ee55ae39279ee35d286a6a0674231a484ecdffb05015823e67",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 39,
+        "attempted": 39,
+        "complete": 31,
+        "policy_failed": 8,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 62,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3664,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 51,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s8-a1-968527",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 39,
+                "attempted": 39,
+                "complete": 31,
+                "policy_failed": 8,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 13,
+          "sha256": "daee855afba9e3b8b559db1f8a0c8b1361b1b7e1a4396340faff4b5a2bc58938"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 345,
+            "no_info": 345,
+            "none": 335
+          },
+          "policy_failed_episodes": {
+            "always": 2,
+            "no_info": 4,
+            "none": 2
+          },
+          "no_info_revisions": 345,
+          "always_world_model_calls": 345,
+          "always_prediction_revisions": 345,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 13,
+            "logical_calls": 1037,
+            "http_attempts_recorded": 1037,
+            "request_seconds": 1521.5,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 13,
+            "logical_calls": 695,
+            "http_attempts_recorded": 695,
+            "request_seconds": 1140.2,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 13,
+            "logical_calls": 337,
+            "http_attempts_recorded": 337,
+            "request_seconds": 564.1,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 9.2,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3664,
+          "startup_seconds": 62,
+          "runner_wall_seconds_per_episode": 93.9,
+          "runner_wall_estimate_hours_full_run": 10.5,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 39,
+        "known_components": {
+          "logical_calls": 2069,
+          "http_attempts_recorded": 2069,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1485667,
+          "known_completion_tokens": 154732,
+          "sum_known_request_elapsed_s": 3225.685929657164,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1485667,
+        "total_completion_tokens": 154732,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    },
+    {
+      "inventory": {
+        "shard_index": 9,
+        "attempt": 1,
+        "run_id": "aim3-e-s9-a1-968528",
+        "output_root": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s9-a1/alfworld-preexp-npu",
+        "phases": "<LOCAL_REPO>/research_progress/2026-10-18-aim3-e-run/attempts/aim3-e-v1.1-s9-a1/logs/aim3-e-s9-a1-968528/phases.tsv"
+      },
+      "manifest_sha256": "857e56006723269c383e9670c1e12db96bd9bf72459a1f2a9e289b31d47c7d75",
+      "manifest_status": "complete",
+      "outcome_counts": {
+        "planned": 39,
+        "attempted": 39,
+        "complete": 32,
+        "policy_failed": 7,
+        "technical_missing": 0,
+        "not_run": 0,
+        "pending": 0
+      },
+      "frozen_config_problems": [],
+      "row_read_error": null,
+      "evidence_complete": true,
+      "coverage_complete": true,
+      "phases": {
+        "verify_code": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "port": {
+          "seconds": 0,
+          "exit_code": 0
+        },
+        "ready": {
+          "seconds": 68,
+          "exit_code": 0
+        },
+        "runner": {
+          "seconds": 3269,
+          "exit_code": 0
+        },
+        "check": {
+          "seconds": 43,
+          "exit_code": 0
+        }
+      },
+      "phases_read_error": null,
+      "checker": {
+        "run_id": "aim3-e-s9-a1-968528",
+        "checks": {
+          "C1_outputs_exist": {
+            "pass": true,
+            "detail": "all four outputs present"
+          },
+          "C2_run_identity_and_completion": {
+            "pass": true,
+            "detail": {
+              "differs_from_plan": {},
+              "outcome_counts": {
+                "planned": 39,
+                "attempted": 39,
+                "complete": 32,
+                "policy_failed": 7,
+                "technical_missing": 0,
+                "not_run": 0,
+                "pending": 0
+              }
+            }
+          },
+          "C3_rows_match_manifest": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C4_ledger_recertified": {
+            "pass": true,
+            "detail": "every row re-certifies against its audit file"
+          },
+          "C5_audit_matches_rows": {
+            "pass": true,
+            "detail": {
+              "recomputed_fields_differ": [],
+              "audit_files": "one per planned task"
+            }
+          },
+          "C6_summary_matches_rows": {
+            "pass": true,
+            "detail": "ok"
+          },
+          "C7_path_coverage": {
+            "pass": true,
+            "detail": "draft, no-info revision and prediction revision all executed"
+          }
+        },
+        "selection": {
+          "split": "eval_out_of_distribution",
+          "games": 13,
+          "sha256": "b17940381827e87a1035ef04acf1c9bf949c095156877818435658cfa07dd67e"
+        },
+        "coverage": {
+          "executed_steps": {
+            "always": 313,
+            "no_info": 312,
+            "none": 310
+          },
+          "policy_failed_episodes": {
+            "always": 3,
+            "no_info": 2,
+            "none": 2
+          },
+          "no_info_revisions": 312,
+          "always_world_model_calls": 316,
+          "always_prediction_revisions": 313,
+          "always_fallback_revisions": 0,
+          "fallback_note": "no wm_unavailable step occurred; the fallback branch is covered offline by preexperiments/tests/test_react_env_action_planner.py, preexperiments/tests/test_uniform_fallback_episode_integration.py"
+        },
+        "cost": {
+          "always": {
+            "episodes": 13,
+            "logical_calls": 948,
+            "http_attempts_recorded": 948,
+            "request_seconds": 1353.3,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "no_info": {
+            "episodes": 13,
+            "logical_calls": 626,
+            "http_attempts_recorded": 626,
+            "request_seconds": 1041.7,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          },
+          "none": {
+            "episodes": 13,
+            "logical_calls": 312,
+            "http_attempts_recorded": 312,
+            "request_seconds": 480.0,
+            "calls_without_latency": 0,
+            "rows_with_incomplete_token_cost": 0,
+            "calls_with_unknown_attempt_count": 0,
+            "attempts_without_complete_usage": 0
+          }
+        },
+        "time": {
+          "request_time_estimate_hours_full_run": 8.2,
+          "request_time_scope": "model request durations incl. retries only; excludes environment steps, I/O, startup and teardown; a lower bound if calls_without_latency > 0",
+          "runner_wall_seconds": 3269,
+          "startup_seconds": 68,
+          "runner_wall_seconds_per_episode": 83.8,
+          "runner_wall_estimate_hours_full_run": 9.4,
+          "wall_scope": "from the selected games; observed episode lengths are not a full-horizon upper bound"
+        }
+      },
+      "recorded_cost": {
+        "recorded_rows": 39,
+        "known_components": {
+          "logical_calls": 1886,
+          "http_attempts_recorded": 1886,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 1265008,
+          "known_completion_tokens": 135945,
+          "sum_known_request_elapsed_s": 2874.968114520452,
+          "calls_without_latency": 0
+        },
+        "rows_missing_cost_fields": {
+          "logical_calls": 0,
+          "http_attempts_recorded": 0,
+          "calls_with_unknown_attempt_count": 0,
+          "attempts_without_complete_usage": 0,
+          "known_prompt_tokens": 0,
+          "known_completion_tokens": 0,
+          "sum_known_request_elapsed_s": 0,
+          "calls_without_latency": 0
+        },
+        "token_cost_complete": true,
+        "rows_with_incomplete_token_cost": 0,
+        "total_prompt_tokens": 1265008,
+        "total_completion_tokens": 135945,
+        "scope": "Recorded model requests, including retries; excludes environment/startup. Unknown usage is not zero."
+      },
+      "recorded_cost_certified": true
+    }
+  ]
+}

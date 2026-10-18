@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "version": "aim3-e-v1.1",
+  "frozen_at": "2026-10-18T04:33:37.871080+08:00",
+  "status": "methods_and_candidate_games_frozen_history_unverified",
+  "history_status": "User confirmed on 2026-10-18: not yet checked with owners; record as unverified. Enumeration/reset does not establish nonuse.",
+  "execution_status_at_freeze": "not_submitted_no_E_outcomes_accessed",
+  "source_reference": "completed valid_seen smoke aim3-smoke-967880; cluster archived source and pinned74-file manifest",
+  "n_games": 134,
+  "shard_sizes": [
+    14,
+    14,
+    14,
+    14,
+    13,
+    13,
+    13,
+    13,
+    13,
+    13
+  ],
+  "supersedes": {
+    "version": "aim3-e-v1",
+    "freeze_sha256": "cc072df5aec0a78bcc2ed30ee8b79776d6fcbd1ab151f8f6ef5afedf43ee61c9"
+  },
+  "changes": [
+    "Branch B: ten sorted modulo-10 shards sized 14/14/14/14/13/13/13/13/13/13; 134 games, census and equal weighting unchanged.",
+    "Shard-count constants, job index/size validation and shard-dependent test expectations updated; 3-hour Slurm wall-clock and 9,600-second runner timeout unchanged.",
+    "Version and execution documentation now specifies shard-0 timing sentinel, strict 6,720-second release threshold, and startup failures counting as attempts.",
+    "Authorized integration fixes: E tests target the package checker; known completion-token expectation 54 to 28; execution-task freeze guard filters directories.",
+    "Four unchanged v1 JSON reports explicitly marked as inherited history; new full pytest log, exit code, current-input hashes and v1.1 validation record included.",
+    "Population, frozen model/planner configuration, checker logic, scoring, primary/secondary analyses, attempt selection and source package unchanged from v1."
+  ],
+  "local_validation": {
+    "tests": "19 passed, 41 subtests passed in 233.99s (0:03:53)",
+    "pytest_exit_code": 0,
+    "slurm_syntax": "PASS",
+    "record": "validation/v11-validation.json",
+    "inherited_v1_json_reports_preserved": true
+  },
+  "files": [
+    {
+      "path": "analyze_e.py",
+      "bytes": 18062,
+      "sha256": "fdc755573130e8af7e3e33f2f528e16d7c3d7204bbf0f3e56f77fc47603fef9a"
+    },
+    {
+      "path": "check_smoke.py",
+      "bytes": 18698,
+      "sha256": "75becf605c4a40aa3587b12b5d20941b49d4bfcbea13b44d42c2ba7d476bea5d"
+    },
+    {
+      "path": "e_games.json",
+      "bytes": 35146,
+      "sha256": "81dfc32c29d917c62e562b9c2d3a5a7cb655e4047112a7f302f0a328821d78d3"
+    },
+    {
+      "path": "EVALUATION_PLAN.md",
+      "bytes": 4187,
+      "sha256": "a9ca7e66cec8048c667d5012b0218e88db9ec2513ff50930f8b7d2ea2581a2e9"
+    },
+    {
+      "path": "frozen_config.json",
+      "bytes": 2860,
+      "sha256": "7fa9d0fc6deedc126c7cb9460e0003eeb4b77edb092b279d8e150787b8623ad7"
+    },
+    {
+      "path": "make_e_shards.py",
+      "bytes": 4148,
+      "sha256": "752139c40a7c24f4783dea605999ee6ecacdf95edabaaf03fdf25396a7b7984b"
+    },
+    {
+      "path": "OWNER_NOTICE.md",
+      "bytes": 1457,
+      "sha256": "ebff7e8d8bba0637f503e94b71d02d11063551b96a4b60d8c1f4cc53ea84e5b4"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9095,
+      "sha256": "2261b71d9110060b3a5367e2d6d5b878f8fa1b6f710a7154e9349327d0043675"
+    },
+    {
+      "path": "run_aim3_e.slurm",
+      "bytes": 6926,
+      "sha256": "b6bd0aa46714f39b8b98734de6cfea4df4131d502d34151faac837b1c310e2a3"
+    },
+    {
+      "path": "shards/e-shard-0.json",
+      "bytes": 3802,
+      "sha256": "fd41dfd186ca7470eedcbfa45f6c8a8056ad6950f9e2fdd0c32b8577618ba035"
+    },
+    {
+      "path": "shards/e-shard-1.json",
+      "bytes": 3808,
+      "sha256": "ea92c1530174da26c8eb7cb267a5d45021290d2005ee2f416848f2e08a1b34a9"
+    },
+    {
+      "path": "shards/e-shard-2.json",
+      "bytes": 3833,
+      "sha256": "4a4b05f811937c870697d450d1a0c19df86ce92428be4ccbb40cb52b865c0a6f"
+    },
+    {
+      "path": "shards/e-shard-3.json",
+      "bytes": 3833,
+      "sha256": "2411baaea38ee7aa3ae59a49a1d7b43a78da9187eec2ebab3399efdcbb81c977"
+    },
+    {
+      "path": "shards/e-shard-4.json",
+      "bytes": 3563,
+      "sha256": "f3d801f78017452542b8ea54a7f40a6a083406d81a454e988274aab162c7637a"
+    },
+    {
+      "path": "shards/e-shard-5.json",
+      "bytes": 3559,
+      "sha256": "ccc19f2b1250c55487cb6e695c04768adbe5e0070017c61f2a57ac764e969c49"
+    },
+    {
+      "path": "shards/e-shard-6.json",
+      "bytes": 3550,
+      "sha256": "7e498371ae6377a950e8f7ce5a268a1ae5ab2f1550f52b73b3eb940735e713ed"
+    },
+    {
+      "path": "shards/e-shard-7.json",
+      "bytes": 3543,
+      "sha256": "4f772ea1aa0c0771c884d060072a80c136399173b2750ab7737bf438fd0bdeba"
+    },
+    {
+      "path": "shards/e-shard-8.json",
+      "bytes": 3540,
+      "sha256": "daee855afba9e3b8b559db1f8a0c8b1361b1b7e1a4396340faff4b5a2bc58938"
+    },
+    {
+      "path": "shards/e-shard-9.json",
+      "bytes": 3534,
+      "sha256": "b17940381827e87a1035ef04acf1c9bf949c095156877818435658cfa07dd67e"
+    },
+    {
+      "path": "shards_manifest.json",
+      "bytes": 5448,
+      "sha256": "ce667a77eb0b190a599d9c34dd78ed85008096c09dbc87ad07a392e07b226398"
+    },
+    {
+      "path": "SMOKE_INTERPRETATION.md",
+      "bytes": 3893,
+      "sha256": "8ce267a25ebb220f67126435680a80e360b1c4006c0147f0c53800b992b84758"
+    },
+    {
+      "path": "source_package.json",
+      "bytes": 17824,
+      "sha256": "0d8a589e8b5c6174309e438600f85f8c01ed2402c8de64ba79468a7f9759d14b"
+    },
+    {
+      "path": "validation/checker-regression.json",
+      "bytes": 12477,
+      "sha256": "4769093c9c69ce27c135f45f05150fd60390d5f75a9104e79b1a0d7bf7d744f1"
+    },
+    {
+      "path": "validation/empty-attempts.json",
+      "bytes": 18,
+      "sha256": "5bcd7b5770c9de21c3c50fc2286e590b44c37a6a3570530229c86ee09907dcc6"
+    },
+    {
+      "path": "validation/integration-validation.json",
+      "bytes": 879,
+      "sha256": "41693abee365bc67bd7ed37a0702141517f098ded348ca5959a85e0831141fb7"
+    },
+    {
+      "path": "validation/job-shards-validation.json",
+      "bytes": 2002,
+      "sha256": "bf0506d83eeb4a5698d3edb91993f943469f6d1f303096f365159e5b59f99419"
+    },
+    {
+      "path": "validation/no-e-results.json",
+      "bytes": 14264,
+      "sha256": "e3ea2df57e6a223f636fb313523d89a02c848e8bf27fa034fe79faf5d9958b5a"
+    },
+    {
+      "path": "validation/pytest-v11-authorized.exitcode",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "validation/pytest-v11-authorized.log",
+      "bytes": 92,
+      "sha256": "ccdefb7bc010fbcb683917afaa4c8833c169e72952aa94c5d562a09665097f6e"
+    },
+    {
+      "path": "validation/README.md",
+      "bytes": 2954,
+      "sha256": "3fcdb2aa03aaca1f60e0a03f8f279ff7f4b00db7cf24fd2635a12ad59ed4451e"
+    },
+    {
+      "path": "validation/slurm-syntax-v11.exitcode",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "validation/slurm-syntax-v11.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "validation/test_e_analysis.py",
+      "bytes": 12332,
+      "sha256": "810561754614d28ba54ee5f260e3695f8cd8520572878a90cce3808969cde01d"
+    },
+    {
+      "path": "validation/test_e_checker.py",
+      "bytes": 14774,
+      "sha256": "4b48f410951dd7c505a2b605374f2e9c7409114b670ff5368a16cacd473c609a"
+    },
+    {
+      "path": "validation/v11-validation.json",
+      "bytes": 5240,
+      "sha256": "e8d11edbf228c4d606b0d204ea44196bf6f9d712c94178944687d0f46a672fae"
+    },
+    {
+      "path": "verify_code.py",
+      "bytes": 1491,
+      "sha256": "ea9ee492b7c4fbeab6b98a4efcafd6d0dbffc17a8724733979d154cf61315ccd"
+    }
+  ]
+}

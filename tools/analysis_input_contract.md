@@ -1,5 +1,19 @@
 # Portable D0 snapshot input contract
 
+## Complete development report
+
+The primary public command is now `python -B tools/build_d0_report.py --out gpu_analysis/generated/d0_report_new.json`. It reads six sealed JSON files in `gpu_analysis/data` (override with `--data-dir`): the unchanged snapshot, rollout summaries and accounting summary, plus `d0_identity_evidence.json`, `d0_cost_evidence.json` and `d0_np_evidence.json`. It writes a complete Chinese Markdown report, the matching JSON and a standalone `_np_candidates.json`, without overwriting an existing output.
+
+The original `analyze`, `select_cases`, `summarize_sensitivity` and physical behavior definitions remain byte-identical. The report reuses their outputs. Cross-job exclusion uses the same frozen primitives on derived rows verified `false`, preserving original J, k_j and weight mass; it does not fabricate a smaller original dataset. Main metrics are exactly equal to the previously published checkpoint.
+
+`d0_paths.py` joins all physical groups, verifies D-reference observations, and invokes the byte-identical N/P selector. `d0_costs.py` summarizes actual logical-call rows and separately presents accepted accounting totals. `d0_report_markdown.py` renders those same results. This explicit composition does not call the historical hydrated `make_report` interface or claim to have rebuilt its full input.
+
+Identity evidence links local first actions and physical groups to their actual job/service receipts, including retained samples. N/P evidence binds recovery records and the actual source audit. Cost evidence supplies audited call IDs for each accepted group; zero-mu groups have zero recorded calls and no invented audit. A ready candidate list is not a live replay result.
+
+All six input seals and all frozen analysis source hashes are checked. The JSON binds every used input and analysis implementation file. The three new evidence exporters require the original archive, check used original bindings, and are not imported by ordinary report generation. See [implementation and change list](../gpu_analysis/docs/D0_ANALYSIS_IMPLEMENTATION.md).
+
+## Preserved metrics-only baseline
+
 The supported entry point is `python -B tools/analyze_d0_snapshot.py --dataset gpu_analysis/data/d0_snapshot.json --out gpu_analysis/generated/d0_metrics.json` from the repository root. Python 3.10 or newer and its standard library are sufficient. The command creates new JSON and Markdown outputs and refuses to overwrite either file.
 
 The six original sidecar modules and `ANALYSIS_SPEC.json` retain their original paths and bytes. `analysis_metrics.py` binds the existing production text scorer by SHA-256. `tools/analysis_sources.json` records every copied file and its source path. Preserve those bytes when committing/checking out; use `-text` Git attributes for the listed paths. `analysis_tool.py` is retained for its helpers and the future full-report function; its original dataset/report CLI is not supported by this minimal checkout because its execution/input reconstruction dependencies are deliberately absent.
@@ -20,14 +34,14 @@ A source draft failure stays in the original point denominator. Its `source_deci
 
 Seal the root object after removing `sha256`: SHA-256 of UTF-8 `json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':'), allow_nan=False)`. The CLI checks this seal and source-copy bytes. This is an integrity check, not a replacement for verifying or reconstructing the original evidence chain.
 
-## Analysis scope
+## Metrics-only analysis scope
 
 The CLI calls unchanged `analyze`, `select_cases`, and `summarize_sensitivity`. It retains the original weights, exact score ties, missing-value rules, fixed case hashes, score directions and definitions. It inventories exported cross-job labels but does not claim the cross-job exclusion sensitivity has been completed.
 
 The output is `metrics_only_development_description`. It has no full provenance audit, per-call cost reconstruction, physical behavior analysis, N/P candidate selection, N/P execution, GPU calls, environment instances, formal inference, or completed full D0 report. Separate accepted accounting totals may be shipped for context; they must not be inserted as fake per-call evidence.
 
-## Future full-report input
+## Historical hydrated full-report input
 
-Unchanged `make_report(dataset)` additionally requires a content `sha256`, collection fields (`no_observed_decision_games`, `collection_incomplete_games`, `admission_pending_games`), full diagnostic fields, and actual `cost_evidence` with `calls`, `games`, and `physical_groups`. Calls need original ledger identity and terminal/attempt evidence; physical groups need actual rollout/step records. The final accounting summary is not a substitute for those lists. Do not fill them with empty arrays or zero costs to make the full report execute. The final accepted evidence reader and complete per-call cost association remain follow-up work under `D0_ANALYSIS_MINIMAL_TASK.md`.
+Unchanged historical `make_report(dataset)` additionally requires a content `sha256`, collection fields (`no_observed_decision_games`, `collection_incomplete_games`, `admission_pending_games`), full diagnostic fields, and actual `cost_evidence` with `calls`, `games`, and `physical_groups`. Calls need original ledger identity and terminal/attempt evidence; physical groups need actual rollout/step records. The final accounting summary is not a substitute for those lists. The current report instead composes frozen metrics with the explicit portable evidence described above; it does not fabricate these historical hydration fields.
 
 Existing pure-function regressions can be run with `python -B -m pytest research_progress/2026-10-10-d0-analysis/tests -q -p no:cacheprovider` after installing pytest. These tests use synthetic outcomes and do not validate GPU services or the entire real evidence export.

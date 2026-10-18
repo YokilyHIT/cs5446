@@ -1,0 +1,213 @@
+{
+  "purpose": "Presentation of existing frozen aggregate outputs; no new inference.",
+  "sources": {
+    "D0": {
+      "path": "gpu_analysis/checkpoints/d0_report.json",
+      "sha256": "57d9c7cdea5fcb3097f939a0738f9ad29da8c333eb6e5b7db11a751c31e2940c"
+    },
+    "E": {
+      "path": "aim3_e/results/analysis.public.json",
+      "sha256": "527644ce446c4fcf3fee5e2f97b0642523eadd70bee8fe3f107842c6f81123cf"
+    }
+  },
+  "public_copies": {
+    "D0": "gpu_analysis/checkpoints/d0_report.json",
+    "E": "aim3_e/results/analysis.public.json"
+  },
+  "rendering": {
+    "python": "3.11.16",
+    "matplotlib": "3.11.1",
+    "numpy": "2.4.6",
+    "backend": "Agg",
+    "environment": "cs5242"
+  },
+  "figures": {
+    "01_d0_action_outcome": {
+      "title": "D0 actions and terminal outcomes",
+      "description": "Unweighted descriptive counts, not an inferential comparison.",
+      "fields": [
+        "integrity.action_changes_unweighted",
+        "integrity.observed_difference_counts_unweighted"
+      ],
+      "values": [
+        {
+          "comparison": "admission",
+          "actions_changed": 31,
+          "actions_comparable": 68,
+          "terminal_outcomes_changed": 1,
+          "terminal_outcomes_comparable": 68
+        },
+        {
+          "comparison": "info",
+          "actions_changed": 28,
+          "actions_comparable": 67,
+          "terminal_outcomes_changed": 2,
+          "terminal_outcomes_comparable": 68
+        },
+        {
+          "comparison": "revision",
+          "actions_changed": 20,
+          "actions_comparable": 67,
+          "terminal_outcomes_changed": 1,
+          "terminal_outcomes_comparable": 68
+        }
+      ],
+      "denominator_note": "Action pairs involving N exclude one nonparsable action; outcome pairs retain it. All three source-draft failures remain missing."
+    },
+    "02_d0_confidence": {
+      "title": "D0 confidence, prediction accuracy and observed utility",
+      "description": "Frozen weighted quartile summaries and descriptive rank correlation.",
+      "fields": [
+        "metrics.confidence_bins[*].summary.accuracy",
+        "metrics.confidence_bins[*].summary.observed_U",
+        "metrics.relationships.confidence_accuracy.*.spearman",
+        "metrics.ranking_diagnostics.confidence.G",
+        "metrics.ranking_diagnostics.confidence.analytic_Random_G"
+      ],
+      "order": "descending_mean_logprob",
+      "EM": [
+        0.8248175182481752,
+        0.4744525547445255,
+        0.29927007299270075,
+        0.03649635036496351
+      ],
+      "token_F1": [
+        0.9164709615994923,
+        0.7234989494201519,
+        0.6959371874165949,
+        0.4864873889332463
+      ],
+      "observed_U": {
+        "admission": [
+          0.0,
+          -0.058394160583941604,
+          0.0,
+          0.0
+        ],
+        "info": [
+          0.0,
+          -0.058394160583941604,
+          0.0,
+          0.058394160583941604
+        ],
+        "revision": [
+          0.0,
+          0.0,
+          0.0,
+          -0.058394160583941604
+        ]
+      },
+      "spearman_definition": "weighted_Pearson_of_unweighted_average_ranks",
+      "weighted_rank_correlations": {
+        "EM": 0.6160920512583594,
+        "token_F1": 0.566795215875394
+      },
+      "G_admission": -0.0072992700729927005,
+      "random_G_admission": 0.0,
+      "bin_denominators": [
+        {
+          "points": 18,
+          "games": 12,
+          "original_weight_mass": 0.2378472222222222
+        },
+        {
+          "points": 18,
+          "games": 13,
+          "original_weight_mass": 0.2378472222222222
+        },
+        {
+          "points": 18,
+          "games": 12,
+          "original_weight_mass": 0.2378472222222222
+        },
+        {
+          "points": 17,
+          "games": 12,
+          "original_weight_mass": 0.2378472222222222
+        }
+      ]
+    },
+    "03_e_outcomes": {
+      "title": "E success rates and primary paired interval",
+      "description": "All intervals copied from the existing frozen analysis; no interval is recomputed.",
+      "fields": [
+        "arm_outcomes.*.study_successes",
+        "arm_outcomes.*.planned",
+        "arm_outcomes.*.study_success_rate",
+        "arm_outcomes.*.study_success_rate_ci95",
+        "comparisons.always_minus_no_info"
+      ],
+      "arm_order": [
+        "always",
+        "no_info",
+        "none"
+      ],
+      "successes": [
+        25,
+        23,
+        22
+      ],
+      "success_rates": [
+        0.1865671641791045,
+        0.17164179104477612,
+        0.16417910447761194
+      ],
+      "primary_difference": 0.014925373134328358,
+      "primary_interval": {
+        "method": "clopper_pearson_rescue_harm_bonferroni",
+        "level": 0.975,
+        "marginal_level": 0.9875,
+        "low": -0.11604909737770391,
+        "high": 0.14470916445098153,
+        "direction": "not_resolved"
+      },
+      "n_pairs": 134,
+      "rescued": 13,
+      "harmed": 11,
+      "history_eligibility": "unverified; user confirmed not yet checked with owners on 2026-10-18"
+    },
+    "04_e_cost": {
+      "title": "E recorded model costs",
+      "description": "Existing selected-arm totals with arithmetic display ratios to none; no resource-time extrapolation.",
+      "fields": [
+        "selected_cost_by_arm.*.known_components.logical_calls",
+        "selected_cost_by_arm.*.known_components.sum_known_request_elapsed_s",
+        "selected_cost_by_arm.*.known_components.calls_without_latency"
+      ],
+      "arm_order": [
+        "always",
+        "no_info",
+        "none"
+      ],
+      "logical_calls": {
+        "values": [
+          10104,
+          6742,
+          3540
+        ],
+        "relative_to_none": [
+          2.854237288135593,
+          1.9045197740112993,
+          1.0
+        ]
+      },
+      "sum_known_request_elapsed_s": {
+        "values": [
+          14010.459605907658,
+          11001.751231092829,
+          5636.369634801711
+        ],
+        "relative_to_none": [
+          2.4857240588694194,
+          1.9519215282054285,
+          1.0
+        ]
+      },
+      "calls_without_latency": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

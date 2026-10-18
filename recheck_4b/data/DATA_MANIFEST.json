@@ -1,0 +1,79 @@
+{
+  "kind": "aim3_e_public_episode_outcomes",
+  "rows": 402,
+  "games": 134,
+  "arms": [
+    "always",
+    "no_info",
+    "none"
+  ],
+  "file": "e_episode_outcomes.jsonl",
+  "sha256": "3fbd8e9b46ce72545ff7ff9828d8ef9f6ef390a49e9333fc6bc42a88ba96fbc2",
+  "bytes": 324792,
+  "selected_attempts": [
+    {
+      "shard_index": 0,
+      "run_id": "aim3-e-s0-a1-968227",
+      "rows_sha256": "ddf14499cc949c35a720a73eeb2fb1fafc13c88fc23c9fb15849a84bb3fb1133",
+      "rows_bytes": 25725580
+    },
+    {
+      "shard_index": 1,
+      "run_id": "aim3-e-s1-a1-968520",
+      "rows_sha256": "a906855f5d979f4f3e1e23bf7178d89feba69c11627b50ed980b218b495a86cd",
+      "rows_bytes": 26711795
+    },
+    {
+      "shard_index": 2,
+      "run_id": "aim3-e-s2-a1-968521",
+      "rows_sha256": "7e48266ccd0cb5dec288ec0ae89432247e65dbf84275681a441038836a223486",
+      "rows_bytes": 27445254
+    },
+    {
+      "shard_index": 3,
+      "run_id": "aim3-e-s3-a1-968522",
+      "rows_sha256": "0632d754031f2d0e5b95e7a0901faeb6d7eaccacc8a4bbfb0f28654b46952fd5",
+      "rows_bytes": 24185219
+    },
+    {
+      "shard_index": 4,
+      "run_id": "aim3-e-s4-a1-968523",
+      "rows_sha256": "0876089390b5d1102e05754931f9a5bf13dd550d29c9b4f6177fbf73d254e494",
+      "rows_bytes": 24861657
+    },
+    {
+      "shard_index": 5,
+      "run_id": "aim3-e-s5-a1-968524",
+      "rows_sha256": "850c7ed7bde23210b9594b89886f55eefdb2389d5f9cc4f17a6bce608beda893",
+      "rows_bytes": 26248126
+    },
+    {
+      "shard_index": 6,
+      "run_id": "aim3-e-s6-a1-968525",
+      "rows_sha256": "fbcca971b365c83d893e42e5fd277bea53cc2edd630a8cb1ba46fad5fa2962af",
+      "rows_bytes": 21384453
+    },
+    {
+      "shard_index": 7,
+      "run_id": "aim3-e-s7-a1-968526",
+      "rows_sha256": "a2dbd3e64099e4614f395a0d8ceb13a0c9c7d393402ca8a072ed51d6f415ab3c",
+      "rows_bytes": 25808583
+    },
+    {
+      "shard_index": 8,
+      "run_id": "aim3-e-s8-a1-968527",
+      "rows_sha256": "03d04545d6046991a2d6f39baaa715b2c3abfcfe2942682bf8ba33553127b0bd",
+      "rows_bytes": 26743200
+    },
+    {
+      "shard_index": 9,
+      "run_id": "aim3-e-s9-a1-968528",
+      "rows_sha256": "0640781f595fc439998722d2e61a291ea48b04845c6507dc744394c39c0e0146",
+      "rows_bytes": 23015403
+    }
+  ],
+  "game_identifier": "ALFWorld '<task>/<trial>' taken from the frozen gamefile path; machine prefixes removed",
+  "failure_fields": "raw_finish_reason and completion_tokens read from the failing call in the certified call audit",
+  "extraction_script": "recheck_4b/extract_e_outcomes.py",
+  "scope": "Selected (first evidence-complete) attempt of every shard; certified on the cluster and locally."
+}

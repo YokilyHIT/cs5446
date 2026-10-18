@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "split": "eval_out_of_distribution",
+  "source_census_sha256": "81dfc32c29d917c62e562b9c2d3a5a7cb655e4047112a7f302f0a328821d78d3",
+  "n_games": 134,
+  "n_shards": 10,
+  "assignment": "Sort gamefile strings lexicographically; shard_index = sorted_index % 10.",
+  "task_type_counts": {
+    "look_at_obj_in_light": 18,
+    "pick_and_place_simple": 24,
+    "pick_clean_then_place_in_recep": 31,
+    "pick_cool_then_place_in_recep": 21,
+    "pick_heat_then_place_in_recep": 23,
+    "pick_two_obj_and_place": 17
+  },
+  "task_type_max_minus_min_across_shards": {
+    "look_at_obj_in_light": 1,
+    "pick_and_place_simple": 1,
+    "pick_clean_then_place_in_recep": 1,
+    "pick_cool_then_place_in_recep": 1,
+    "pick_heat_then_place_in_recep": 1,
+    "pick_two_obj_and_place": 1
+  },
+  "no_duplicates": true,
+  "exact_census_union": true,
+  "shards": [
+    {
+      "shard_index": 0,
+      "path": "shards/e-shard-0.json",
+      "n_games": 14,
+      "sha256": "fd41dfd186ca7470eedcbfa45f6c8a8056ad6950f9e2fdd0c32b8577618ba035",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 3,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 2,
+        "pick_two_obj_and_place": 2
+      }
+    },
+    {
+      "shard_index": 1,
+      "path": "shards/e-shard-1.json",
+      "n_games": 14,
+      "sha256": "ea92c1530174da26c8eb7cb267a5d45021290d2005ee2f416848f2e08a1b34a9",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 3,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 2,
+        "pick_two_obj_and_place": 2
+      }
+    },
+    {
+      "shard_index": 2,
+      "path": "shards/e-shard-2.json",
+      "n_games": 14,
+      "sha256": "4a4b05f811937c870697d450d1a0c19df86ce92428be4ccbb40cb52b865c0a6f",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 2,
+        "pick_clean_then_place_in_recep": 4,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 2,
+        "pick_two_obj_and_place": 2
+      }
+    },
+    {
+      "shard_index": 3,
+      "path": "shards/e-shard-3.json",
+      "n_games": 14,
+      "sha256": "2411baaea38ee7aa3ae59a49a1d7b43a78da9187eec2ebab3399efdcbb81c977",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 2,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 3,
+        "pick_heat_then_place_in_recep": 2,
+        "pick_two_obj_and_place": 2
+      }
+    },
+    {
+      "shard_index": 4,
+      "path": "shards/e-shard-4.json",
+      "n_games": 13,
+      "sha256": "f3d801f78017452542b8ea54a7f40a6a083406d81a454e988274aab162c7637a",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 2,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 3,
+        "pick_two_obj_and_place": 1
+      }
+    },
+    {
+      "shard_index": 5,
+      "path": "shards/e-shard-5.json",
+      "n_games": 13,
+      "sha256": "ccc19f2b1250c55487cb6e695c04768adbe5e0070017c61f2a57ac764e969c49",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 2,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 3,
+        "pick_two_obj_and_place": 1
+      }
+    },
+    {
+      "shard_index": 6,
+      "path": "shards/e-shard-6.json",
+      "n_games": 13,
+      "sha256": "7e498371ae6377a950e8f7ce5a268a1ae5ab2f1550f52b73b3eb940735e713ed",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 2,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 3,
+        "pick_two_obj_and_place": 1
+      }
+    },
+    {
+      "shard_index": 7,
+      "path": "shards/e-shard-7.json",
+      "n_games": 13,
+      "sha256": "4f772ea1aa0c0771c884d060072a80c136399173b2750ab7737bf438fd0bdeba",
+      "task_type_counts": {
+        "look_at_obj_in_light": 2,
+        "pick_and_place_simple": 2,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 2,
+        "pick_two_obj_and_place": 2
+      }
+    },
+    {
+      "shard_index": 8,
+      "path": "shards/e-shard-8.json",
+      "n_games": 13,
+      "sha256": "daee855afba9e3b8b559db1f8a0c8b1361b1b7e1a4396340faff4b5a2bc58938",
+      "task_type_counts": {
+        "look_at_obj_in_light": 1,
+        "pick_and_place_simple": 3,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 2,
+        "pick_two_obj_and_place": 2
+      }
+    },
+    {
+      "shard_index": 9,
+      "path": "shards/e-shard-9.json",
+      "n_games": 13,
+      "sha256": "b17940381827e87a1035ef04acf1c9bf949c095156877818435658cfa07dd67e",
+      "task_type_counts": {
+        "look_at_obj_in_light": 1,
+        "pick_and_place_simple": 3,
+        "pick_clean_then_place_in_recep": 3,
+        "pick_cool_then_place_in_recep": 2,
+        "pick_heat_then_place_in_recep": 2,
+        "pick_two_obj_and_place": 2
+      }
+    }
+  ]
+}

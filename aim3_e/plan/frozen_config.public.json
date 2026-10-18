@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "reference_run_id": "aim3-smoke-967880",
+  "planner_profile": "react_single_env_action_v1",
+  "prediction_profile": {
+    "profile_schema_version": 5,
+    "confidence_scope": "prediction_tokens_v2",
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "model_revision_declared": null,
+    "runtime_identity": "declared_config_only",
+    "temperature": 0.0,
+    "top_p": 0.5,
+    "seed": 42,
+    "max_tokens_action": 384,
+    "max_tokens_prediction": 256,
+    "history_length": 50,
+    "prompt_sha256": {
+      "draft": "55a920edfaed97f2f3c3f616cc21aa3a6278bb6d3796dc1ab7c300cd5f641031",
+      "revision": "897f518a8cd4bb482f62c488ff177dcdc18a06f368f37c5ee2dfeb4b6aafbf04",
+      "prediction_block": "745352d3b640e4cded4b0750f85c4f0c42de8e41582f88a78704749825add23b",
+      "world_model": "1bb44b16ca0633141b0a5965f70475dc25826057be213eae1714a636cc560e72"
+    },
+    "memory": {
+      "enabled": false,
+      "k": null,
+      "bank_sha256": null
+    },
+    "planner_name": "react_single_env_action_v1",
+    "max_tokens_reasoning": 0,
+    "protocol_id": "prediction_admission_v2",
+    "admission_policy_sha256": "64adca825806c230af01042f75ec08e8018276705c31509d012e559cc27fa2a7",
+    "auditing": {
+      "enabled": true,
+      "top_logprobs": 20
+    },
+    "parser_sha256": "c5c8411e8f8438ed766fdad617dbf260a80b39464a1748d1726d02c31072007f",
+    "policy_sha256": "1d561029de5c58740ed88c6073f3aa8e206e641e93693d8fff3d561e8f3588ee"
+  },
+  "prediction_profile_id": "473b7486185518e803002628d1385a77039de2970af94bad5655def044d740f9",
+  "parameters": {
+    "arms": [
+      "always",
+      "no_info",
+      "none"
+    ],
+    "max_steps": 30,
+    "model": "Qwen/Qwen3-4B-Instruct-2507",
+    "seed": 42,
+    "decoding": {
+      "temperature": 0.0,
+      "top_p": 0.5,
+      "max_tokens_action": 384,
+      "max_tokens_prediction": 256,
+      "max_tokens_reasoning": 0,
+      "top_logprobs": 20
+    },
+    "history_length": 50,
+    "workers": 1,
+    "memory": {
+      "enabled": false,
+      "bank": null,
+      "k": 5
+    },
+    "confidence_scope": "prediction_tokens_v2",
+    "confirmatory_level": null
+  },
+  "evaluation_split": "eval_out_of_distribution",
+  "total_games": 134,
+  "source_package_sha256": "0d8a589e8b5c6174309e438600f85f8c01ed2402c8de64ba79468a7f9759d14b",
+  "source_archive_sha256": "1011ad3788e11e2b4409ad832c70850fcab10b550b82695b4563fb7fba297f50",
+  "source_archive_remote": "<CLUSTER_PROJECT>/env-action-v1-20261009-63f515f4/source.tar.gz",
+  "history_eligibility": "unverified; user confirmed not yet checked with owners on 2026-10-18",
+  "execution_status": "not_submitted",
+  "interpretation_scope": "fixed134 candidate unseen games; no untouched-confirmatory claim until history is resolved; no silent game replacement"
+}

@@ -1,0 +1,54 @@
+{
+  "recheck_by": null,
+  "method_notes": null,
+  "E": {
+    "arms": {
+      "always": {"successes": null, "policy_failed": null},
+      "no_info": {"successes": null, "policy_failed": null},
+      "none": {"successes": null, "policy_failed": null}
+    },
+    "paired": {
+      "always_minus_no_info": {"rescued": null, "harmed": null, "difference": null, "interval_975": [null, null], "interval_95": [null, null], "mcnemar_p": null},
+      "always_minus_none": {"rescued": null, "harmed": null, "difference": null, "interval_95": [null, null], "mcnemar_p": null},
+      "no_info_minus_none": {"rescued": null, "harmed": null, "difference": null, "interval_95": [null, null], "mcnemar_p": null}
+    },
+    "sensitivity_both_no_policy_failure": {
+      "always_minus_no_info": {"kept": null, "difference": null},
+      "always_minus_none": {"kept": null, "difference": null},
+      "no_info_minus_none": {"kept": null, "difference": null}
+    },
+    "failures": {
+      "always": {"draft": {"calls": null, "failures": null}, "replan": {"calls": null, "failures": null}},
+      "no_info": {"draft": {"calls": null, "failures": null}, "no_info": {"calls": null, "failures": null}},
+      "none": {"draft": {"calls": null, "failures": null}},
+      "length_384_failures_all_arms": null
+    },
+    "cost": {
+      "always": {"logical_calls": null, "prompt_tokens": null, "completion_tokens": null, "request_seconds": null},
+      "no_info": {"logical_calls": null, "prompt_tokens": null, "completion_tokens": null, "request_seconds": null},
+      "none": {"logical_calls": null, "prompt_tokens": null, "completion_tokens": null, "request_seconds": null}
+    }
+  },
+  "D0": {
+    "unweighted": {
+      "successes": {"D": null, "N": null, "P": null},
+      "nonzero_differences": {"admission": null, "info": null, "revision": null},
+      "action_changes": {"admission": [null, null], "info": [null, null], "revision": [null, null]}
+    },
+    "weighted": {
+      "mean_Y": {"D": null, "N": null, "P": null},
+      "mean_difference": {"admission": null, "info": null, "revision": null},
+      "EM": null,
+      "token_F1": null,
+      "rank_corr_EM": null,
+      "rank_corr_token_F1": null
+    },
+    "confidence_quartiles": [
+      {"EM": null, "token_F1": null, "admission": null, "info": null, "revision": null},
+      {"EM": null, "token_F1": null, "admission": null, "info": null, "revision": null},
+      {"EM": null, "token_F1": null, "admission": null, "info": null, "revision": null},
+      {"EM": null, "token_F1": null, "admission": null, "info": null, "revision": null}
+    ],
+    "G": {"admission": null, "info": null, "revision": null}
+  }
+}

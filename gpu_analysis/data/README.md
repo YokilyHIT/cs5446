@@ -1,6 +1,6 @@
 # D0 portable development snapshot
 
-This is a **derived analysis snapshot**, exported from already accepted local D0 evidence on 2026-10-15. It is not an original acceptance artifact, a new experiment, a complete production audit, or the final research report. `status: complete` describes the accepted data collection; it does not claim that every analysis or evidence audit is complete.
+This is **derived analysis evidence**, exported from already accepted local D0 records on 2026-10-15. It is not an original acceptance artifact, a new experiment or a complete production audit. The complete CPU description is now in [the report checkpoint](../checkpoints/d0_report.md); `status: complete` inside the original snapshot still describes data collection.
 
 ## Included files
 
@@ -12,6 +12,16 @@ This is a **derived analysis snapshot**, exported from already accepted local D0
 | `source_bindings.json` | SHA-256/size/logical-path bindings for the 148 source files used or checked by the exporter. The original archive files are not included. |
 
 The four JSON files total **1,971,598 bytes**. Each contains a `sha256` seal over the canonical JSON object after removing that top-level field: UTF-8, `ensure_ascii=False`, `sort_keys=True`, `separators=(',', ':')`, `allow_nan=False`. This detects accidental changes to the export; a matching seal alone does not independently authenticate its origin.
+
+Three additional sealed files supply the remaining evidence for the complete report; the four original files above are unchanged:
+
+| File | Added evidence |
+|---|---|
+| `d0_identity_evidence.json` | All 71 local state identities and 117 physical groups, traced through actual origin manifests and runtime receipts. Labels are 67 verified false, 1 true, 0 unknown, and 3 not applicable. Recorded identities are not new live service verification. |
+| `d0_cost_evidence.json` | Unique original ledger plus call-ID rows, real terminal and attempt usage, missing terminals, source/local/backend scope, accepted-group call IDs, and exact reconciliation with the separate accounting counters. |
+| `d0_np_evidence.json` | Actual rollout, recovery and call-audit bindings for all 117 groups, including samples retained from the earlier job. This supports selection, not a replay-pass claim. |
+
+Each evidence file lists only the original source bindings it used. The exporters under `tools/export_d0_*_evidence.py` rebuild them from the source archive; ordinary CPU analysis only reads these portable files. Costs retain unknown totals and do not turn charged reservations into invented calls.
 
 ## Preserved semantics
 
@@ -42,7 +52,7 @@ These are observed differences within the accepted development sample, not proof
 
 The accounting excerpt is not `cost_evidence` and is not accepted as a replacement by the production cost-analysis pipeline. Recorded counters for stopped attempts can be incomplete. Conservative charged values are not successful model calls or counts of observed policy failures; the original 935310 reservation and unknown-outcome treatment remain explicit. Do not turn this excerpt into fabricated empty audit records.
 
-Full request/response audits, raw token/top-logprob arrays, full per-step menus, runtime/hardware receipts, and restoration artifacts remain in the source archive. This package supports CPU descriptive metrics, fixed-hash cases, and specified sensitivity summaries. It does not independently re-run full provenance, branch-cost attribution, endpoint reconstruction, or production `make_report` validation.
+Full request/response audits, raw token/top-logprob arrays, full per-step menus, runtime/hardware receipts, and restoration artifacts remain in the source archive. The complete report adds cost attribution, identity sensitivity and N/P selection through the three explicit evidence files above. It does not independently re-run full production provenance, endpoint reconstruction or historical hydrated `make_report` validation.
 
 ## Reproduce the export from the source archive
 
