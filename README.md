@@ -6,7 +6,7 @@
 
 ## 4B 基线报告、E 结果与队友复验（2026-10-18）
 
-**参加复验的队友请先只读 [`recheck_4b/README.md`](recheck_4b/README.md)，用自己的代码算完并交回结果后，再打开本页其余链接。** 仓库公开，盲法只靠自觉。
+**参加复验的队友请先只读 [`recheck_4b/README.md`](recheck_4b/README.md)，用自己的代码算完并交回结果后，再打开本页其余链接。** 
 
 | 位置 | 内容 |
 |---|---|
@@ -18,13 +18,12 @@
 
 ## 先读什么
 
-1. [两位负责人的方向、分工和实验方法](gpu_analysis/docs/GPU_NPU_OWNER_ALIGNMENT.md)
+1. [目前方向、分工和实验方法](gpu_analysis/docs/GPU_NPU_OWNER_ALIGNMENT.md)
 2. [D0 当前结果及最小后续工作](gpu_analysis/docs/D0_STATUS_AND_NEXT_STEPS.md)
 3. [D/N/P 与整局三臂协议](gpu_analysis/docs/RESEARCH_PROTOCOL.md)
 4. [研究计划正文摘录](gpu_analysis/docs/RESEARCH_PLAN.md)及[与队友路线的对照](gpu_analysis/docs/ROUTE_ALIGNMENT.md)
 5. [数据内容、字段语义与证据范围](gpu_analysis/data/README.md)
 
-两人先确认 A 的交付层级、NPU 是否主跑 E、E 的资格及实验方案，再分配具体分析任务。分工建议不表示这些研究修订已被共同批准。
 
 ## 直接复算
 
