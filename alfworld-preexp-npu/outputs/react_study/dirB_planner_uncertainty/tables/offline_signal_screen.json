@@ -1,0 +1,588 @@
+{
+  "unbiased": {
+    "n": 127,
+    "signals": {
+      "wm/pr/planner_action_lp": {
+        "auroc_pos": 0.769774011299435,
+        "auroc_neg": 0.6688405797101449,
+        "auroc_nonzero": 0.7333782569631626,
+        "spearman": 0.02646895334446089,
+        "gain_at_30": -0.0009842519685039361,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "wm/pr/planner_full_lp": {
+        "auroc_pos": 0.7909604519774012,
+        "auroc_neg": 0.6978260869565217,
+        "auroc_nonzero": 0.761455525606469,
+        "spearman": 0.01703363979975369,
+        "gain_at_30": -0.005003280839895012,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "wm/pr/sample_disagree": {
+        "auroc_pos": 0.7678907721280602,
+        "auroc_neg": 0.6630434782608695,
+        "auroc_nonzero": 0.7288858939802336,
+        "spearman": 0.03009084835056666,
+        "gain_at_30": -0.006315616797900262,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "wm/pr/sample_n_distinct": {
+        "auroc_pos": 0.7768361581920904,
+        "auroc_neg": 0.6717391304347826,
+        "auroc_nonzero": 0.738544474393531,
+        "spearman": 0.027117964288532644,
+        "gain_at_30": -0.007053805774278214,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "wm/pr/base_inadmissible": {
+        "auroc_pos": 0.6421845574387948,
+        "auroc_neg": 0.6152173913043478,
+        "auroc_nonzero": 0.6392632524707996,
+        "spearman": -0.012786095707841795,
+        "gain_at_30": -0.006643700787401575,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "wm/pr/wm_predicts_failure": {
+        "auroc_pos": 0.7358757062146892,
+        "auroc_neg": 0.6960144927536231,
+        "auroc_nonzero": 0.734052111410602,
+        "spearman": -0.021353729962359926,
+        "gain_at_30": -0.006725721784776903,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "wm/pr/wm_changes_action": {
+        "auroc_pos": 0.8771186440677966,
+        "auroc_neg": 0.8869565217391304,
+        "auroc_nonzero": 0.9198113207547169,
+        "spearman": -0.09678687839731952,
+        "gain_at_30": -0.00951443569553806,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "wm/pr/wm_confidence": {
+        "auroc_pos": 0.4500941619585687,
+        "auroc_neg": 0.42971014492753623,
+        "auroc_nonzero": 0.4326145552560647,
+        "spearman": 0.018373873021637552,
+        "gain_at_30": -0.006889763779527559,
+        "random_at_30": -0.002854330708661417,
+        "oracle_at_30": 0.012303149606299213
+      },
+      "oracle/pr/planner_action_lp": {
+        "auroc_pos": 0.7732142857142857,
+        "auroc_neg": 0.737460815047022,
+        "auroc_nonzero": 0.7714067278287462,
+        "spearman": -0.04697999180401706,
+        "gain_at_30": -0.008612204724409446,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "oracle/pr/planner_full_lp": {
+        "auroc_pos": 0.8607142857142858,
+        "auroc_neg": 0.6003134796238244,
+        "auroc_nonzero": 0.7196738022426096,
+        "spearman": 0.10225647514085551,
+        "gain_at_30": 0.0030347769028871404,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "oracle/pr/sample_disagree": {
+        "auroc_pos": 0.8422619047619048,
+        "auroc_neg": 0.6775078369905956,
+        "auroc_nonzero": 0.7619775739041794,
+        "spearman": 0.030247166020154807,
+        "gain_at_30": -0.007545931758530183,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "oracle/pr/sample_n_distinct": {
+        "auroc_pos": 0.8541666666666666,
+        "auroc_neg": 0.6778996865203761,
+        "auroc_nonzero": 0.7673292558613659,
+        "spearman": 0.037194079240290535,
+        "gain_at_30": -0.005331364829396325,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "oracle/pr/base_inadmissible": {
+        "auroc_pos": 0.6482142857142857,
+        "auroc_neg": 0.7884012539184952,
+        "auroc_nonzero": 0.7510193679918451,
+        "spearman": -0.18628551867146506,
+        "gain_at_30": -0.012959317585301834,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "oracle/pr/wm_predicts_failure": {
+        "auroc_pos": 0.6815476190476191,
+        "auroc_neg": 0.67358934169279,
+        "auroc_nonzero": 0.6906218144750255,
+        "spearman": -0.05905943859691428,
+        "gain_at_30": -0.0068077427821522304,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "oracle/pr/wm_changes_action": {
+        "auroc_pos": 0.7952380952380952,
+        "auroc_neg": 0.7343260188087775,
+        "auroc_nonzero": 0.7787971457696228,
+        "spearman": -0.04021794289684565,
+        "gain_at_30": -0.004921259842519685,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "oracle/pr/wm_confidence": {
+        "auroc_pos": 0.5428571428571428,
+        "auroc_neg": 0.42554858934169276,
+        "auroc_nonzero": 0.46992864424057085,
+        "spearman": 0.07148775777442898,
+        "gain_at_30": -0.0018044619422572176,
+        "random_at_30": -0.002952755905511811,
+        "oracle_at_30": 0.008940288713910761
+      },
+      "wm/success/planner_action_lp": {
+        "auroc_pos": 0.7494747899159664,
+        "auroc_neg": 0.6991452991452991,
+        "auroc_nonzero": 0.7398063200815495,
+        "spearman": -0.0018280910228658312,
+        "gain_at_30": -0.002952755905511811,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "wm/success/planner_full_lp": {
+        "auroc_pos": 0.7794117647058824,
+        "auroc_neg": 0.7555555555555555,
+        "auroc_nonzero": 0.7879714576962283,
+        "spearman": -0.017331848316140135,
+        "gain_at_30": -0.003937007874015748,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "wm/success/sample_disagree": {
+        "auroc_pos": 0.7647058823529411,
+        "auroc_neg": 0.6876068376068376,
+        "auroc_nonzero": 0.740316004077472,
+        "spearman": 0.01573644346334814,
+        "gain_at_30": -0.010826771653543307,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "wm/success/sample_n_distinct": {
+        "auroc_pos": 0.7589285714285714,
+        "auroc_neg": 0.685042735042735,
+        "auroc_nonzero": 0.7359836901121305,
+        "spearman": 0.01334289890453493,
+        "gain_at_30": -0.011811023622047244,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "wm/success/base_inadmissible": {
+        "auroc_pos": 0.6113445378151261,
+        "auroc_neg": 0.6132478632478633,
+        "auroc_nonzero": 0.6215596330275229,
+        "spearman": -0.019876680635314614,
+        "gain_at_30": -0.002952755905511811,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "wm/success/wm_predicts_failure": {
+        "auroc_pos": 0.7116596638655462,
+        "auroc_neg": 0.7017094017094017,
+        "auroc_nonzero": 0.722986748216106,
+        "spearman": -0.02868749825070855,
+        "gain_at_30": -0.002952755905511811,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "wm/success/wm_changes_action": {
+        "auroc_pos": 0.8739495798319328,
+        "auroc_neg": 0.8803418803418803,
+        "auroc_nonzero": 0.908256880733945,
+        "spearman": -0.0688381200200842,
+        "gain_at_30": -0.008858267716535433,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "wm/success/wm_confidence": {
+        "auroc_pos": 0.38235294117647056,
+        "auroc_neg": 0.41623931623931626,
+        "auroc_nonzero": 0.3929663608562691,
+        "spearman": -0.012404734246334412,
+        "gain_at_30": -0.010826771653543307,
+        "random_at_30": -0.00265748031496063,
+        "oracle_at_30": 0.024606299212598427
+      },
+      "oracle/success/planner_action_lp": {
+        "auroc_pos": 0.7486225895316805,
+        "auroc_neg": 0.7487179487179487,
+        "auroc_nonzero": 0.7654842342342343,
+        "spearman": -0.07547331547409745,
+        "gain_at_30": -0.023622047244094488,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      },
+      "oracle/success/planner_full_lp": {
+        "auroc_pos": 0.8581267217630854,
+        "auroc_neg": 0.5905982905982906,
+        "auroc_nonzero": 0.706081081081081,
+        "spearman": 0.09763948366492638,
+        "gain_at_30": 0.007874015748031496,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      },
+      "oracle/success/sample_disagree": {
+        "auroc_pos": 0.8512396694214877,
+        "auroc_neg": 0.6658119658119658,
+        "auroc_nonzero": 0.7528153153153153,
+        "spearman": 0.0299576999687618,
+        "gain_at_30": -0.021653543307086614,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      },
+      "oracle/success/sample_n_distinct": {
+        "auroc_pos": 0.8443526170798898,
+        "auroc_neg": 0.6534188034188034,
+        "auroc_nonzero": 0.7418355855855856,
+        "spearman": 0.038227898679993794,
+        "gain_at_30": -0.017716535433070866,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      },
+      "oracle/success/base_inadmissible": {
+        "auroc_pos": 0.609504132231405,
+        "auroc_neg": 0.7760683760683761,
+        "auroc_nonzero": 0.7266328828828829,
+        "spearman": -0.18941235310935298,
+        "gain_at_30": -0.017716535433070866,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      },
+      "oracle/success/wm_predicts_failure": {
+        "auroc_pos": 0.6425619834710744,
+        "auroc_neg": 0.7017094017094017,
+        "auroc_nonzero": 0.6911599099099099,
+        "spearman": -0.10695311710259478,
+        "gain_at_30": -0.005905511811023622,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      },
+      "oracle/success/wm_changes_action": {
+        "auroc_pos": 0.7803030303030303,
+        "auroc_neg": 0.7175213675213675,
+        "auroc_nonzero": 0.7578828828828829,
+        "spearman": -0.039054660966468716,
+        "gain_at_30": -0.006889763779527559,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      },
+      "oracle/success/wm_confidence": {
+        "auroc_pos": 0.46831955922865015,
+        "auroc_neg": 0.4076923076923077,
+        "auroc_nonzero": 0.42623873873873874,
+        "spearman": 0.04404066640249372,
+        "gain_at_30": -0.010826771653543307,
+        "random_at_30": -0.006200787401574803,
+        "oracle_at_30": 0.01673228346456693
+      }
+    }
+  },
+  "all": {
+    "n": 200,
+    "signals": {
+      "wm/pr/planner_action_lp": {
+        "auroc_pos": 0.6928811928811929,
+        "auroc_neg": 0.6290581806493089,
+        "auroc_nonzero": 0.6666320598006644,
+        "spearman": -0.0035958206120849665,
+        "gain_at_30": -0.006510416666666668,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "wm/pr/planner_full_lp": {
+        "auroc_pos": 0.7484367484367485,
+        "auroc_neg": 0.6528447444551592,
+        "auroc_nonzero": 0.7059800664451827,
+        "spearman": 0.006914923907211456,
+        "gain_at_30": -0.0020833333333333324,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "wm/pr/sample_disagree": {
+        "auroc_pos": 0.708994708994709,
+        "auroc_neg": 0.6544519447123112,
+        "auroc_nonzero": 0.6899916943521595,
+        "spearman": -0.015807469720930504,
+        "gain_at_30": -0.008072916666666667,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "wm/pr/sample_n_distinct": {
+        "auroc_pos": 0.7025012025012025,
+        "auroc_neg": 0.6608807457409194,
+        "auroc_nonzero": 0.6913413621262459,
+        "spearman": -0.02517976127220301,
+        "gain_at_30": -0.009791666666666667,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "wm/pr/base_inadmissible": {
+        "auroc_pos": 0.594997594997595,
+        "auroc_neg": 0.6068788171006108,
+        "auroc_nonzero": 0.6100498338870431,
+        "spearman": -0.042116891109423245,
+        "gain_at_30": -0.003333333333333333,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "wm/pr/wm_predicts_failure": {
+        "auroc_pos": 0.6801346801346801,
+        "auroc_neg": 0.7094181935069109,
+        "auroc_nonzero": 0.7130398671096345,
+        "spearman": -0.0913888029814624,
+        "gain_at_30": -0.0015104166666666669,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "wm/pr/wm_changes_action": {
+        "auroc_pos": 0.8597883597883598,
+        "auroc_neg": 0.8715846994535519,
+        "auroc_nonzero": 0.8953488372093024,
+        "spearman": -0.12555993379624616,
+        "gain_at_30": -0.010416666666666664,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "wm/pr/wm_confidence": {
+        "auroc_pos": 0.4497354497354497,
+        "auroc_neg": 0.44198007071681134,
+        "auroc_nonzero": 0.44082225913621265,
+        "spearman": 0.0142811454372776,
+        "gain_at_30": -0.00859375,
+        "random_at_30": -0.0032187500000000003,
+        "oracle_at_30": 0.008125
+      },
+      "oracle/pr/planner_action_lp": {
+        "auroc_pos": 0.7484002326934264,
+        "auroc_neg": 0.6190990990990991,
+        "auroc_nonzero": 0.6793323863636364,
+        "spearman": 0.021676586299650184,
+        "gain_at_30": -0.006354166666666668,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "oracle/pr/planner_full_lp": {
+        "auroc_pos": 0.8074461896451425,
+        "auroc_neg": 0.5679279279279279,
+        "auroc_nonzero": 0.6697443181818182,
+        "spearman": 0.08569278443494605,
+        "gain_at_30": 0.0019270833333333342,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "oracle/pr/sample_disagree": {
+        "auroc_pos": 0.8336242001163467,
+        "auroc_neg": 0.6227027027027027,
+        "auroc_nonzero": 0.7163825757575758,
+        "spearman": 0.05802231673011711,
+        "gain_at_30": -0.0038541666666666668,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "oracle/pr/sample_n_distinct": {
+        "auroc_pos": 0.7995927865037813,
+        "auroc_neg": 0.6045045045045045,
+        "auroc_nonzero": 0.6905776515151515,
+        "spearman": 0.05670148406469289,
+        "gain_at_30": -0.0010416666666666667,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "oracle/pr/base_inadmissible": {
+        "auroc_pos": 0.6468877254217569,
+        "auroc_neg": 0.8198198198198198,
+        "auroc_nonzero": 0.7698863636363636,
+        "spearman": -0.21186571870752702,
+        "gain_at_30": -0.008125,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "oracle/pr/wm_predicts_failure": {
+        "auroc_pos": 0.6253635834787667,
+        "auroc_neg": 0.7135135135135136,
+        "auroc_nonzero": 0.6912878787878788,
+        "spearman": -0.13835786401379144,
+        "gain_at_30": -0.004375,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "oracle/pr/wm_changes_action": {
+        "auroc_pos": 0.797847585805701,
+        "auroc_neg": 0.6873873873873874,
+        "auroc_nonzero": 0.7443181818181818,
+        "spearman": -0.004605338425813724,
+        "gain_at_30": -0.00203125,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "oracle/pr/wm_confidence": {
+        "auroc_pos": 0.5264688772542175,
+        "auroc_neg": 0.39387387387387385,
+        "auroc_nonzero": 0.44105113636363635,
+        "spearman": 0.0826123465781434,
+        "gain_at_30": -0.0011458333333333331,
+        "random_at_30": -0.002296875,
+        "oracle_at_30": 0.007083333333333335
+      },
+      "wm/success/planner_action_lp": {
+        "auroc_pos": 0.7080078125,
+        "auroc_neg": 0.6378648233486943,
+        "auroc_nonzero": 0.6732635342185904,
+        "spearman": -0.016185522407752832,
+        "gain_at_30": -0.01,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "wm/success/planner_full_lp": {
+        "auroc_pos": 0.75390625,
+        "auroc_neg": 0.7031490015360983,
+        "auroc_nonzero": 0.7346782431052093,
+        "spearman": -0.03777844499739163,
+        "gain_at_30": 0.000625,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "wm/success/sample_disagree": {
+        "auroc_pos": 0.7418619791666666,
+        "auroc_neg": 0.6394009216589862,
+        "auroc_nonzero": 0.6875638406537283,
+        "spearman": -0.0045612405248788585,
+        "gain_at_30": -0.013125,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "wm/success/sample_n_distinct": {
+        "auroc_pos": 0.736328125,
+        "auroc_neg": 0.6236559139784946,
+        "auroc_nonzero": 0.674923391215526,
+        "spearman": 0.003968301429249536,
+        "gain_at_30": -0.015,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "wm/success/base_inadmissible": {
+        "auroc_pos": 0.6171875,
+        "auroc_neg": 0.6209677419354839,
+        "auroc_nonzero": 0.6264044943820225,
+        "spearman": -0.04660138602459215,
+        "gain_at_30": -0.0025,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "wm/success/wm_predicts_failure": {
+        "auroc_pos": 0.71875,
+        "auroc_neg": 0.6970046082949308,
+        "auroc_nonzero": 0.716802860061287,
+        "spearman": -0.06872463242332807,
+        "gain_at_30": 0.0,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "wm/success/wm_changes_action": {
+        "auroc_pos": 0.8541666666666666,
+        "auroc_neg": 0.8655913978494624,
+        "auroc_nonzero": 0.8820224719101124,
+        "spearman": -0.13946151856498673,
+        "gain_at_30": -0.010625,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "wm/success/wm_confidence": {
+        "auroc_pos": 0.421875,
+        "auroc_neg": 0.37864823348694315,
+        "auroc_nonzero": 0.38866189989785493,
+        "spearman": 0.047881051313676336,
+        "gain_at_30": -0.01125,
+        "random_at_30": -0.0039375,
+        "oracle_at_30": 0.015625
+      },
+      "oracle/success/planner_action_lp": {
+        "auroc_pos": 0.709192439862543,
+        "auroc_neg": 0.6236559139784946,
+        "auroc_nonzero": 0.6570833333333334,
+        "spearman": -0.02593816426386823,
+        "gain_at_30": -0.01875,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      },
+      "oracle/success/planner_full_lp": {
+        "auroc_pos": 0.8402061855670103,
+        "auroc_neg": 0.5610599078341014,
+        "auroc_nonzero": 0.6541666666666667,
+        "spearman": 0.06608671118371434,
+        "gain_at_30": 0.0,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      },
+      "oracle/success/sample_disagree": {
+        "auroc_pos": 0.8316151202749141,
+        "auroc_neg": 0.6125192012288786,
+        "auroc_nonzero": 0.6886111111111111,
+        "spearman": 0.020308157388058353,
+        "gain_at_30": -0.015625,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      },
+      "oracle/success/sample_n_distinct": {
+        "auroc_pos": 0.8251718213058419,
+        "auroc_neg": 0.5831413210445469,
+        "auroc_nonzero": 0.6652777777777777,
+        "spearman": 0.04236768691204405,
+        "gain_at_30": -0.006875,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      },
+      "oracle/success/base_inadmissible": {
+        "auroc_pos": 0.615979381443299,
+        "auroc_neg": 0.8129800307219662,
+        "auroc_nonzero": 0.7638888888888888,
+        "spearman": -0.24627760211338823,
+        "gain_at_30": -0.02,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      },
+      "oracle/success/wm_predicts_failure": {
+        "auroc_pos": 0.6520618556701031,
+        "auroc_neg": 0.7354070660522274,
+        "auroc_nonzero": 0.7194444444444444,
+        "spearman": -0.17184399765699993,
+        "gain_at_30": -0.00875,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      },
+      "oracle/success/wm_changes_action": {
+        "auroc_pos": 0.7646048109965635,
+        "auroc_neg": 0.67357910906298,
+        "auroc_nonzero": 0.7111111111111111,
+        "spearman": -0.0483246432769674,
+        "gain_at_30": -0.005,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      },
+      "oracle/success/wm_confidence": {
+        "auroc_pos": 0.49054982817869414,
+        "auroc_neg": 0.3774961597542243,
+        "auroc_nonzero": 0.4083333333333333,
+        "spearman": 0.08005354233797815,
+        "gain_at_30": -0.006875,
+        "random_at_30": -0.007124999999999999,
+        "oracle_at_30": 0.010625
+      }
+    }
+  }
+}

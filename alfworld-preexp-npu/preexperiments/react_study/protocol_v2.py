@@ -127,6 +127,20 @@ Thought: <one or two sentences of reasoning>
 Action: <one action>"""
 
 
+def action_line_lp(tok_lps, text) -> float:
+    """Mean logprob of the tokens inside the last 'Action:' line's value (nan if absent)."""
+    ms = list(_ACTION_RE.finditer(text or ""))
+    if not ms or not tok_lps:
+        return float("nan")
+    s, e = ms[-1].start(1), ms[-1].end(1)
+    pos, acc = 0, []
+    for t, lp in tok_lps:
+        if pos + len(t) > s and pos < e:
+            acc.append(lp)
+        pos += len(t)
+    return sum(acc) / len(acc) if acc else float("nan")
+
+
 class PipelineV2(DirectionBPipeline):
     """Same LLM/WM/decoding as v1; only the planner prompt + parser differ."""
 
@@ -145,8 +159,19 @@ class PipelineV2(DirectionBPipeline):
 
     def _dispatch_choose(self, state: Dict[str, Any], foresight_block: str):
         prompt = self._react_prompt(state, foresight_block)
+        # logprobs do not change decoding; they give direction B's free planner-uncertainty signal
         resp = self.llm.complete(prompt, seed=self.seed, temperature=self.temperature,
-                                 top_p=self.top_p, max_tokens=self.max_tokens_action_react)
+                                 top_p=self.top_p, max_tokens=self.max_tokens_action_react, logprobs=True)
         action, forced = parse_action_v2(resp.text, state["admissible_actions"])
         return action, forced, resp.completion_tokens, {"mode": "react_v2", "prompt": prompt,
-                                                         "raw_response": resp.text, "matched": not forced}
+                                                         "raw_response": resp.text, "matched": not forced,
+                                                         "action_lp": action_line_lp(resp.token_logprobs, resp.text)}
+
+    def sample_action(self, state: Dict[str, Any], foresight_block: str, temperature: float, seed: int):
+        """Stochastic draw from the same planner prompt (exploration / candidate generation)."""
+        prompt = self._react_prompt(state, foresight_block)
+        resp = self.llm.complete(prompt, seed=seed, temperature=temperature, top_p=0.95,
+                                 max_tokens=self.max_tokens_action_react)
+        action, forced = parse_action_v2(resp.text, state["admissible_actions"])
+        return action, forced, resp.text
+

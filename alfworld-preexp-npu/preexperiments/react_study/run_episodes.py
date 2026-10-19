@@ -97,6 +97,8 @@ def main(a: argparse.Namespace) -> None:
                         history_length=hist_len, record_state=a.record_state,
                         second_call_when_closed=a.second_call_when_closed, memory=memory)
         r["rep"] = a.rep
+        if a.label:
+            r["arm"] = a.label
         r["wall_s"] = time.time() - t0
         return r
 
@@ -142,6 +144,7 @@ def build_arg_parser():
     p.add_argument("--variant", default="query", choices=["query", "list"], help="v2 only")
     p.add_argument("--second_call_when_closed", action="store_true")
     p.add_argument("--prefix", default="", help="output file prefix, e.g. v2query_")
+    p.add_argument("--label", default="", help="override the arm name written to rows (e.g. random_pre_p0.1)")
     p.add_argument("--memory", default="off", choices=["off", "online"])
     p.add_argument("--memory_init", default="", help="seed the online bank from a previous dump")
     p.add_argument("--k_me", type=int, default=5)

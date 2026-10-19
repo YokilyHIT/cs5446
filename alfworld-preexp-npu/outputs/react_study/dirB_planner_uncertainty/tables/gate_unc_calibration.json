@@ -1,0 +1,5 @@
+{
+  "action_lp_threshold": -0.0010878292144795411,
+  "usage_target": 0.3,
+  "source": "200 step-0c states (140 dev tasks, disjoint from eval460)"
+}

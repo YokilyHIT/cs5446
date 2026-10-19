@@ -1,0 +1,18 @@
+{
+  "frozen_at": "2026-10-14, after dev460 round-3 results, BEFORE any of these unseen runs",
+  "split": "eval_out_of_distribution (AgentBoard 134)",
+  "protocol": "v2-list, NO identical second call when a gate is closed",
+  "arms": {
+    "gate_unc": "5 reps (B: planner action-logprob gate, threshold from dirB_planner_uncertainty/tables/gate_unc_calibration.json)",
+    "fore_topk_p0.3": "5 reps (C: candidate comparison on random 30% of steps, gate_seed 2027)",
+    "explore_stuck": "5 reps (A: temperature-0.7 resample when stuck, no WM)",
+    "random_pre_nc_p0.3": "5 reps (control: same random 30% steps, single-prediction foresight)",
+    "none": "reuse step4_unseen_test unseen_none__rep0-4 (identical protocol for this arm)"
+  },
+  "hypotheses": {
+    "H1_B": "PR(gate_unc) > PR(random_pre_nc_p0.3)",
+    "H2_C": "PR(fore_topk_p0.3) > PR(random_pre_nc_p0.3)",
+    "H3_A": "SR(explore_stuck) > SR(none)"
+  },
+  "test": "paired task bootstrap (20k), two-sided, Holm over H1-H3; all other contrasts reported as exploratory"
+}

@@ -26,3 +26,18 @@ Code: `preexperiments/react_study/`. Each subdirectory has its own README (desig
 
 Environment: 8 × 910B3, vLLM instances on ports 8001–8008 (`PREEXP_API_BASES`); `preexp_env/env.sh` sets `TMPDIR` to the data disk (avoids the container quota).
 Third-party: AgentBoard code/data in `5446/third_party_dl/` (the prompt and test labels are copied into `preexperiments/react_study/assets/`).
+
+## Round 3 (2026-10-13 – 14, directions A–F; protocol v2, 460 held-out dev tasks × 2 + unseen 134 pre-registered)
+| Directory | One-line conclusion |
+|---|---|
+| [dirA_D_mechanism_dose/](dirA_D_mechanism_dose/README.md) | The closed-gate identical second call randomly changes the action 12% of the time (a confound). The SR gain is mostly explained by perturbation (pure perturbation +2.3, explore-when-stuck +3.5); the PR gain needs WM information and rises with usage |
+| [dirB_planner_uncertainty/](dirB_planner_uncertainty/README.md) | Planner uncertainty finds where intervention changes the outcome (AUROC ≈ 0.75) but cannot judge whether it helps; WM confidence carries no information (0.43). gate_unc matches always's PR at 65% of the cost |
+| [dirC_interface/](dirC_interface/README.md) | On dev, candidate comparison is +2.7 PR over single prediction on the same steps, but it does not reproduce on unseen; showing only predicted failures gives SR +3.5 on dev; B+C are not additive |
+| [dirE_larger_planner/](dirE_larger_planner/README.md) | 14B planner +44.7 pp SR; with 14B even oracle is only +0.3 (gain shrinks by 6 pp vs 4B): single-step foresight only has value for a weak planner |
+| [dirF_final_eval/](dirF_final_eval/README.md) | Evaluation rules (460 dev as main battleground, PR primary, Holm, pre-registration). On unseen none of H1–H3 holds; gate_unc ΔPR +4.1 vs none is the highest at the lowest cost |
+
+### Main conclusions of round 3
+1. **Planner capability is the dominant factor** (4B → 14B: +45 pp), and a strong planner barely benefits from single-step foresight (oracle +0.3).
+2. With a weak planner, the "selective intervention" SR gain mostly comes from perturbation / escaping loops; only the PR gain needs WM information.
+3. Gating can be split into "where" (planner uncertainty works, AUROC ≈ 0.75) and "whether it helps" (unsolved; confidence, outcome comparison and existing features all fail). gate_unc's cost advantage holds on both sets, but its advantage over a random gate does not pass the pre-registered test.
+4. 134 test tasks can only resolve differences of about 4 pp or more; dev results for C / A did not reproduce on unseen, and task-set heterogeneity is large.

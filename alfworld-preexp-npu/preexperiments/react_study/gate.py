@@ -125,3 +125,17 @@ def learned_open(history, a_base, admissible, step) -> bool:
 if __name__ == "__main__":
     m = fit(ROOT / "outputs" / "react_study" / "step0_protocol_v2_measurement")
     print(json.dumps({k: v for k, v in m.items() if k not in ("mu", "sd", "w")}, indent=2))
+
+
+_UNC = None
+
+
+def planner_uncertain(diag) -> bool:
+    """Direction B gate: open when the planner's own action-token logprob is below the
+    30%-usage threshold calibrated on the step-0c states (dirB_planner_uncertainty)."""
+    global _UNC
+    if _UNC is None:
+        _UNC = json.loads((ROOT / "outputs" / "react_study" / "dirB_planner_uncertainty" / "tables" /
+                           "gate_unc_calibration.json").read_text())["action_lp_threshold"]
+    lp = diag.get("action_lp", float("nan"))
+    return lp == lp and lp < _UNC

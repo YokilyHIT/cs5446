@@ -44,7 +44,23 @@ from preexperiments.react_study.protocol_v2 import CHECK_VALID, history_v2, init
 import threading
 
 ARMS = ("none", "rethink", "always", "selective", "random_post", "random_pre", "oracle", "loop_hint",
-        "gate_stuck", "gate_learned")
+        "gate_stuck", "gate_learned",
+        # round 3 (directions A-E)
+        "none_resample", "explore_stuck", "fore_topk", "fore_surprise", "gate_unc", "unc_topk")
+
+# fore_topk (direction C): several candidate actions, each with its predicted outcome.
+TOPK_BLOCK_HEAD = """
+A world model predicts the next observation for several candidate actions:
+"""
+TOPK_BLOCK_TAIL = """
+These have NOT happened yet. You are still at the current state described above.
+Choose the action that makes the most progress toward the task.
+"""
+
+
+def _seed(task_id: str, step: int, k: int) -> int:
+    import hashlib
+    return int(hashlib.sha256(f"{task_id}|{step}|{k}".encode()).hexdigest()[:8], 16)
 
 # Same layout as FORESIGHT_BLOCK, prediction removed. Keeps the second pass's
 # prompt length/shape close to the foresight pass so "rethink" isolates the
@@ -154,6 +170,18 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
     if arm == "none":
         return rec
 
+    if arm == "none_resample":  # A: identical-prompt second call, no information
+        return _closed(pipe, state, rec, True)
+
+    if arm == "explore_stuck":  # A: explicit exploration when stuck, no WM
+        from preexperiments.react_study.gate import is_stuck
+        rec["gate_open"] = is_stuck(recent or [], a_base)
+        if rec["gate_open"]:
+            set_role("planner_second")
+            a2, f2, raw = pipe.sample_action(state, "", 0.7, _seed(task_id, step, 1))
+            rec.update(action=a2, action_forced=bool(f2), second_action=a2, second_raw=raw, rethink_used=True)
+        return rec
+
     if arm == "rethink":
         set_role("planner_second")
         a2, f2, _t, d2 = pipe._dispatch_choose(state, RETHINK_BLOCK.format(base_action=a_base))
@@ -186,6 +214,42 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
 
     u = gate_uniform(gate_seed, task_id, step)
     rec["gate_u"] = u
+    if arm in ("fore_topk", "unc_topk"):  # C: candidate comparison (B+C: opened by planner uncertainty)
+        if arm == "unc_topk":
+            from preexperiments.react_study.gate import planner_uncertain
+            rec["base_action_lp"] = diag.get("action_lp")
+            opened = planner_uncertain(diag)
+        else:
+            opened = u < p_gate
+        rec["gate_open"] = bool(opened)
+        if not opened:
+            return _closed(pipe, state, rec, second_call_when_closed)
+        cands = [a_base]
+        set_role("planner_second")
+        for k in (1, 2):
+            a_k, _f, _r = pipe.sample_action(state, "", 0.7, _seed(task_id, step, 10 + k))
+            if a_k not in cands:
+                cands.append(a_k)
+        set_role("wm")
+        preds = []
+        for a_k in cands:
+            pr = pipe.predict(state, a_k, memory_block=memory.render(a_k) if memory is not None else "")
+            preds.append(pr["wm_prediction"] or "(no prediction)")
+        lines = "".join(f'{i}. "{a_k}" -> {pr}\n' for i, (a_k, pr) in enumerate(zip(cands, preds), 1))
+        set_role("planner_second")
+        a2, f2, _t, d2 = pipe._dispatch_choose(state, TOPK_BLOCK_HEAD + lines + TOPK_BLOCK_TAIL)
+        rec.update(action=a2, action_forced=bool(f2), second_action=a2, second_raw=d2["raw_response"],
+                   foresight_used=True, wm_called=True, topk_candidates=cands, topk_predictions=preds)
+        return rec
+
+    if arm == "gate_unc":  # B: planner-uncertainty pre-call gate (sample disagreement)
+        from preexperiments.react_study.gate import planner_uncertain
+        g = planner_uncertain(diag)
+        rec["base_action_lp"] = diag.get("action_lp")
+        rec["gate_open"] = bool(g)
+        if not g:
+            return _closed(pipe, state, rec, second_call_when_closed)
+
     if arm == "random_pre" and not (u < p_gate):
         return _closed(pipe, state, rec, second_call_when_closed)  # closed before any WM call
     if arm in ("gate_stuck", "gate_learned"):  # step 3 pre-call gates (agent-visible features only)
@@ -205,8 +269,10 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
                wm_confidence_logprob=(conf if conf == conf else None))
     if not pred["wm_prediction"]:
         return _closed(pipe, state, rec, second_call_when_closed)
-    if arm in ("always", "random_pre", "gate_stuck", "gate_learned"):
+    if arm in ("always", "random_pre", "gate_stuck", "gate_learned", "gate_unc"):
         use = True
+    elif arm == "fore_surprise":  # C: show only predicted failures
+        use = "nothing happens" in pred["wm_prediction"].lower()
     elif arm == "selective":
         use = conf == conf and conf > tau
     elif arm == "random_post":

@@ -1,0 +1,35 @@
+{
+  "fail_avoid": {
+    "n_changed": 64,
+    "n_adopt": 31,
+    "n_reject_or_tie": 33,
+    "mean_Upr_adopt": -0.022849462365591402,
+    "mean_Upr_rest": -0.04356060606060606,
+    "mean_Usucc_adopt": -0.004032258064516129,
+    "mean_Usucc_rest": -0.07575757575757576,
+    "mean_Upr_all_changed": -0.033528645833333336,
+    "auroc_score_Upos_vs_Uneg": 0.5213903743315508
+  },
+  "subgoal": {
+    "n_changed": 64,
+    "n_adopt": 8,
+    "n_reject_or_tie": 56,
+    "mean_Upr_adopt": -0.0390625,
+    "mean_Upr_rest": -0.03273809523809524,
+    "mean_Usucc_adopt": -0.109375,
+    "mean_Usucc_rest": -0.03125,
+    "mean_Upr_all_changed": -0.033528645833333336,
+    "auroc_score_Upos_vs_Uneg": 0.40106951871657753
+  },
+  "combined": {
+    "n_changed": 64,
+    "n_adopt": 35,
+    "n_reject_or_tie": 29,
+    "mean_Upr_adopt": -0.02916666666666667,
+    "mean_Upr_rest": -0.03879310344827586,
+    "mean_Usucc_adopt": -0.02857142857142857,
+    "mean_Usucc_rest": -0.05603448275862069,
+    "mean_Upr_all_changed": -0.033528645833333336,
+    "auroc_score_Upos_vs_Uneg": 0.42780748663101603
+  }
+}

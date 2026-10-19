@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import hashlib
 import itertools
+import json
 import os
 import threading
 import time
@@ -38,6 +39,12 @@ STAGES = {
     12: "step2_episodic_memory",
     13: "step3_gating",
     14: "step4_unseen_test",
+    # round 3 (directions A-F, started 2026-10-13)
+    20: "dirA_D_mechanism_dose",
+    21: "dirB_planner_uncertainty",
+    22: "dirC_interface",
+    23: "dirE_larger_planner",
+    24: "dirF_final_eval",
 }
 SUBDIRS = ("raw", "tables", "figures", "logs")
 
@@ -115,8 +122,38 @@ class MeteredLLM:
         self.model = m["name"]
         self._rr = itertools.count()
         self._lock = threading.Lock()
+        # Direction E: optional separate planner model. Planner roles ("planner_*") are routed
+        # to PREEXP_PLANNER_BASES with PREEXP_PLANNER_MODEL; PREEXP_PLANNER_CHAT_KWARGS (JSON,
+        # e.g. {"enable_thinking": false}) is injected as vLLM chat_template_kwargs.
+        self.planner_clients = []
+        pb = os.environ.get("PREEXP_PLANNER_BASES", "").strip()
+        if pb:
+            pm = os.environ["PREEXP_PLANNER_MODEL"]
+            kw = json.loads(os.environ.get("PREEXP_PLANNER_CHAT_KWARGS", "{}"))
+            for ep in [e for e in pb.split(",") if e.strip()]:
+                c = LLMClient(model=pm, api_base=ep.strip(), api_key=m.get("api_key", "EMPTY"),
+                              temperature=s["temperature"], top_p=s["top_p"],
+                              max_tokens=s["max_tokens_per_action"],
+                              request_timeout_s=m.get("request_timeout_s", 120),
+                              max_retries=m.get("max_retries", 5))
+                if kw:
+                    orig = c._client.chat.completions.create
+
+                    def create(*a, _orig=orig, _kw=kw, **k):
+                        k["extra_body"] = {**(k.get("extra_body") or {}), "chat_template_kwargs": _kw}
+                        return _orig(*a, **k)
+                    c._client.chat.completions.create = create
+                self.planner_clients.append(c)
+        self._rr_p = itertools.count()
 
     def _client(self) -> LLMClient:
+        if self.planner_clients and getattr(_TLS, "role", "").startswith("planner"):
+            c = getattr(_TLS, "pclient", None)
+            if c is None:
+                with self._lock:
+                    c = self.planner_clients[next(self._rr_p) % len(self.planner_clients)]
+                _TLS.pclient = c
+            return c
         c = getattr(_TLS, "client", None)
         if c is None:
             with self._lock:

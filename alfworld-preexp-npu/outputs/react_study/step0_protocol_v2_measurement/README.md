@@ -81,6 +81,13 @@ Design: 200 points (160 from "solvable" tasks / 40 from never-solved tasks, ≤ 
 2. Confidence measures whether the prediction is correct, not whether it is useful, so the WorldEvolver-style confidence gate is not a suitable selector.
 3. The loop hint used without a condition is harmful (−6.7 pp). It only works when triggered conditionally (whole-episode results in Step 1).
 
+## Per-run outcomes (added 2026-10-18)
+`per_task_dev600_v2.csv` only has the per-task average over the 2 runs (0.5 cannot tell which run succeeded), so the 0c unbiased subset cannot be reconstructed from it alone. Two files were added:
+- `tables/per_task_per_rep_dev600.csv`: 600 tasks × {none, always} × {rep0, rep1}, giving success / progress / steps for each (plus task_type, gamefile).
+- `tables/branch_k_unbiased_points.csv`: all 200 0c points with point_id, task_id, t, group, stratum, none_rep0_success, none_rep1_success, and in_unbiased_subset.
+  **Unbiased subset = in_unbiased_subset == 1 (none_rep1_success == 1 and replay_ok): 127 points / 81 tasks.**
+Note: on its own the CSV only reproduces the subset definition and the U-label statistics. Retraining the learned gate in `gate.py` also needs the rep0 trajectories' step observations (from the raw JSONL, not packaged).
+
 ## Directory layout
 ```
 raw/devpool600_games.txt, devpool600_chunk{0,1,2}, pilot102_games.txt
