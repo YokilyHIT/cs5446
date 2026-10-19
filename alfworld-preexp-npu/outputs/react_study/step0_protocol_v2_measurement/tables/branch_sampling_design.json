@@ -1,0 +1,32 @@
+{
+  "n_tasks": 600,
+  "n_solvable_tasks": 162,
+  "candidates": {
+    "solvable": 2235,
+    "unsolved": 11388
+  },
+  "candidate_stuck_frac": {
+    "solvable": 0.39105145413870246,
+    "unsolved": 0.5651563048823323
+  },
+  "chosen": {
+    "solvable": 160,
+    "unsolved": 40
+  },
+  "chosen_stratum": {
+    "solvable/stuck": 60,
+    "solvable/normal": 100,
+    "unsolved/stuck": 24,
+    "unsolved/normal": 16
+  },
+  "chosen_task_type": {
+    "pick_and_place_simple": 42,
+    "pick_heat_then_place_in_recep": 41,
+    "look_at_obj_in_light": 42,
+    "pick_clean_then_place_in_recep": 42,
+    "pick_cool_then_place_in_recep": 25,
+    "pick_two_obj_and_place": 8
+  },
+  "n_distinct_tasks": 140,
+  "seed": 2027
+}

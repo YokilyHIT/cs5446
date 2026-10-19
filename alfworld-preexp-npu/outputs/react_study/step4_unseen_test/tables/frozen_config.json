@@ -1,0 +1,16 @@
+{
+  "frozen_at": "2026-10-13, before any unseen run",
+  "split": "eval_out_of_distribution (= AgentBoard ALFWorld 134, verified 134/134)",
+  "protocol": "v2-list + second_call_when_closed, max_steps 30, temp 0 / top_p 0.5 / seed 42",
+  "arms": {
+    "none": "5 reps",
+    "always": "5 reps (no memory)",
+    "selective_em": "5 sequential attempts, online EM carried across attempts, tau=tau_em_usage30 from dev",
+    "oracle": "3 reps",
+    "loop_hint": "3 reps",
+    "gate_stuck": "3 reps (best gate chosen on dev step 3 by dPR)"
+  },
+  "tau_em": 0.9999953944076774,
+  "primary_metric": "single-attempt SR and PR, mean over reps, paired task bootstrap vs none",
+  "secondary": "best-of-k (k=1..5) for none/always/selective_em"
+}

@@ -1,0 +1,28 @@
+{
+  "always:none": {
+    "n_tasks": 600,
+    "reps_averaged": 2,
+    "success": {
+      "mean_diff": 0.005833333333333334,
+      "sd_task_diff": 0.28228019602989035,
+      "se": 0.011524040746100687,
+      "discordant_frac": 0.17833333333333334,
+      "N_needed": {
+        "2pp": 1564,
+        "3pp": 695,
+        "5pp": 251
+      }
+    },
+    "progress": {
+      "mean_diff": 0.014375,
+      "sd_task_diff": 0.22457931389479419,
+      "se": 0.009168412097109701,
+      "discordant_frac": 0.405,
+      "N_needed": {
+        "2pp": 990,
+        "3pp": 440,
+        "5pp": 159
+      }
+    }
+  }
+}

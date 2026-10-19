@@ -1,0 +1,108 @@
+{
+  "a": "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/none__rep0.jsonl",
+  "b": "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/none__rep1.jsonl",
+  "arm": "none",
+  "n_tasks": 10,
+  "n_identical_trajectories": 4,
+  "n_success_disagree": 0,
+  "first_divergence_steps": [
+    1,
+    3,
+    5,
+    5,
+    5,
+    6
+  ],
+  "per_task": [
+    {
+      "task_id": "trial_T20190906_202340_749336",
+      "identical": true,
+      "first_divergence_step": null,
+      "len_a": 30,
+      "len_b": 30,
+      "success_a": false,
+      "success_b": false
+    },
+    {
+      "task_id": "trial_T20190907_012519_974044",
+      "identical": true,
+      "first_divergence_step": null,
+      "len_a": 30,
+      "len_b": 30,
+      "success_a": false,
+      "success_b": false
+    },
+    {
+      "task_id": "trial_T20190907_042856_259139",
+      "identical": false,
+      "first_divergence_step": 5,
+      "len_a": 30,
+      "len_b": 30,
+      "success_a": false,
+      "success_b": false
+    },
+    {
+      "task_id": "trial_T20190907_201243_698086",
+      "identical": true,
+      "first_divergence_step": null,
+      "len_a": 8,
+      "len_b": 8,
+      "success_a": true,
+      "success_b": true
+    },
+    {
+      "task_id": "trial_T20190908_042713_075616",
+      "identical": false,
+      "first_divergence_step": 5,
+      "len_a": 30,
+      "len_b": 30,
+      "success_a": false,
+      "success_b": false
+    },
+    {
+      "task_id": "trial_T20190908_122858_883968",
+      "identical": true,
+      "first_divergence_step": null,
+      "len_a": 7,
+      "len_b": 7,
+      "success_a": true,
+      "success_b": true
+    },
+    {
+      "task_id": "trial_T20190908_144357_621068",
+      "identical": false,
+      "first_divergence_step": 1,
+      "len_a": 30,
+      "len_b": 30,
+      "success_a": false,
+      "success_b": false
+    },
+    {
+      "task_id": "trial_T20190909_012524_159092",
+      "identical": false,
+      "first_divergence_step": 6,
+      "len_a": 30,
+      "len_b": 30,
+      "success_a": false,
+      "success_b": false
+    },
+    {
+      "task_id": "trial_T20190909_032340_274147",
+      "identical": false,
+      "first_divergence_step": 5,
+      "len_a": 30,
+      "len_b": 30,
+      "success_a": false,
+      "success_b": false
+    },
+    {
+      "task_id": "trial_T20190909_044715_250790",
+      "identical": false,
+      "first_divergence_step": 3,
+      "len_a": 12,
+      "len_b": 4,
+      "success_a": true,
+      "success_b": true
+    }
+  ]
+}

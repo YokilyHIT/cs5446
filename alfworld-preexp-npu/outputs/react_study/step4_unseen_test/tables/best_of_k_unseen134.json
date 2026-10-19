@@ -1,0 +1,246 @@
+{
+  "random_pre": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2
+    ],
+    "sequential": false,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.29353233830845765,
+        "cum_tokens_per_task": 71687.74129353234
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.35074626865671643,
+        "cum_tokens_per_task": 143375.48258706467
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.373134328358209,
+        "cum_tokens_per_task": 215063.223880597
+      }
+    ]
+  },
+  "selective_nomem": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2
+    ],
+    "sequential": false,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.2835820895522388,
+        "cum_tokens_per_task": 81206.56218905473
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.3383084577114428,
+        "cum_tokens_per_task": 162413.12437810944
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.373134328358209,
+        "cum_tokens_per_task": 243619.68656716417
+      }
+    ]
+  },
+  "selective_em": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "sequential": true,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.30597014925373134,
+        "cum_tokens_per_task": 88509.35820895522
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.3656716417910448,
+        "cum_tokens_per_task": 176078.92537313432
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.373134328358209,
+        "cum_tokens_per_task": 263232.87313432834
+      },
+      {
+        "k": 4,
+        "best_of_k_sr": 0.3805970149253731,
+        "cum_tokens_per_task": 350903.6417910448
+      },
+      {
+        "k": 5,
+        "best_of_k_sr": 0.39552238805970147,
+        "cum_tokens_per_task": 437089.7388059702
+      }
+    ]
+  },
+  "always": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "sequential": false,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.2582089552238806,
+        "cum_tokens_per_task": 83885.64626865671
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.3,
+        "cum_tokens_per_task": 167771.29253731342
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.32313432835820893,
+        "cum_tokens_per_task": 251656.9388059702
+      },
+      {
+        "k": 4,
+        "best_of_k_sr": 0.33880597014925373,
+        "cum_tokens_per_task": 335542.58507462684
+      },
+      {
+        "k": 5,
+        "best_of_k_sr": 0.35074626865671643,
+        "cum_tokens_per_task": 419428.2313432836
+      }
+    ]
+  },
+  "gate_stuck": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2
+    ],
+    "sequential": false,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.291044776119403,
+        "cum_tokens_per_task": 77267.315920398
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.34825870646766166,
+        "cum_tokens_per_task": 154534.631840796
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.373134328358209,
+        "cum_tokens_per_task": 231801.94776119402
+      }
+    ]
+  },
+  "loop_hint": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2
+    ],
+    "sequential": false,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.2960199004975124,
+        "cum_tokens_per_task": 56450.76119402985
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.3432835820895523,
+        "cum_tokens_per_task": 112901.5223880597
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.373134328358209,
+        "cum_tokens_per_task": 169352.28358208956
+      }
+    ]
+  },
+  "none": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "sequential": false,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.2611940298507463,
+        "cum_tokens_per_task": 34644.064179104476
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.2992537313432836,
+        "cum_tokens_per_task": 69288.12835820895
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.32238805970149254,
+        "cum_tokens_per_task": 103932.19253731343
+      },
+      {
+        "k": 4,
+        "best_of_k_sr": 0.3417910447761193,
+        "cum_tokens_per_task": 138576.2567164179
+      },
+      {
+        "k": 5,
+        "best_of_k_sr": 0.3582089552238806,
+        "cum_tokens_per_task": 173220.3208955224
+      }
+    ]
+  },
+  "oracle": {
+    "n_tasks": 134,
+    "reps": [
+      0,
+      1,
+      2
+    ],
+    "sequential": false,
+    "curve": [
+      {
+        "k": 1,
+        "best_of_k_sr": 0.30845771144278605,
+        "cum_tokens_per_task": 67390.16417910448
+      },
+      {
+        "k": 2,
+        "best_of_k_sr": 0.3756218905472637,
+        "cum_tokens_per_task": 134780.32835820896
+      },
+      {
+        "k": 3,
+        "best_of_k_sr": 0.4253731343283582,
+        "cum_tokens_per_task": 202170.49253731343
+      }
+    ]
+  }
+}

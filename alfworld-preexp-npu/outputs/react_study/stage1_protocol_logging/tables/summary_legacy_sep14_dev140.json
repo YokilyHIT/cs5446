@@ -1,0 +1,166 @@
+{
+  "tag": "legacy_sep14_dev140",
+  "inputs": [
+    "outputs/react_study/stage1_protocol_logging/raw/legacy_sep14/episode_level_react_confidencefix.jsonl"
+  ],
+  "n_common_tasks": 140,
+  "ref_arm": "none",
+  "arms": {
+    "none": {
+      "per_rep": {
+        "0": {
+          "n": 140,
+          "success_rate": 0.17857142857142858,
+          "n_success": 25,
+          "mean_steps": 26.557142857142857,
+          "foresight_usage_step_level": 0.0,
+          "wm_calls_total": 0,
+          "wm_calls_per_task": 0.0,
+          "second_pass_steps": 0,
+          "action_change_rate_given_second_pass": null
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.17857142857142858,
+        "sr_min": 0.17857142857142858,
+        "sr_max": 0.17857142857142858,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.17857142857142858,
+          "n_success": 25.0,
+          "mean_steps": 26.557142857142857,
+          "foresight_usage_step_level": 0.0,
+          "wm_calls_total": 0.0,
+          "wm_calls_per_task": 0.0,
+          "second_pass_steps": 0.0
+        }
+      }
+    },
+    "always": {
+      "per_rep": {
+        "0": {
+          "n": 140,
+          "success_rate": 0.19285714285714287,
+          "n_success": 27,
+          "mean_steps": 26.09285714285714,
+          "foresight_usage_step_level": 1.0,
+          "wm_calls_total": 3653,
+          "wm_calls_per_task": 26.09285714285714,
+          "second_pass_steps": 0,
+          "action_change_rate_given_second_pass": null
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.19285714285714287,
+        "sr_min": 0.19285714285714287,
+        "sr_max": 0.19285714285714287,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.19285714285714287,
+          "n_success": 27.0,
+          "mean_steps": 26.09285714285714,
+          "foresight_usage_step_level": 1.0,
+          "wm_calls_total": 3653.0,
+          "wm_calls_per_task": 26.09285714285714,
+          "second_pass_steps": 0.0
+        }
+      }
+    },
+    "selective": {
+      "per_rep": {
+        "0": {
+          "n": 140,
+          "success_rate": 0.19285714285714287,
+          "n_success": 27,
+          "mean_steps": 26.57857142857143,
+          "foresight_usage_step_level": 0.2760010749798441,
+          "wm_calls_total": 3721,
+          "wm_calls_per_task": 26.57857142857143,
+          "second_pass_steps": 0,
+          "action_change_rate_given_second_pass": null
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.19285714285714287,
+        "sr_min": 0.19285714285714287,
+        "sr_max": 0.19285714285714287,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.19285714285714287,
+          "n_success": 27.0,
+          "mean_steps": 26.57857142857143,
+          "foresight_usage_step_level": 0.2760010749798441,
+          "wm_calls_total": 3721.0,
+          "wm_calls_per_task": 26.57857142857143,
+          "second_pass_steps": 0.0
+        }
+      }
+    }
+  },
+  "sr_by_task_type": {
+    "none": {
+      "look_at_obj_in_light": 0.23076923076923078,
+      "pick_and_place_simple": 0.45714285714285713,
+      "pick_clean_then_place_in_recep": 0.037037037037037035,
+      "pick_cool_then_place_in_recep": 0.0,
+      "pick_heat_then_place_in_recep": 0.125,
+      "pick_two_obj_and_place": 0.125
+    },
+    "always": {
+      "look_at_obj_in_light": 0.15384615384615385,
+      "pick_and_place_simple": 0.42857142857142855,
+      "pick_clean_then_place_in_recep": 0.037037037037037035,
+      "pick_cool_then_place_in_recep": 0.04,
+      "pick_heat_then_place_in_recep": 0.25,
+      "pick_two_obj_and_place": 0.16666666666666666
+    },
+    "selective": {
+      "look_at_obj_in_light": 0.23076923076923078,
+      "pick_and_place_simple": 0.34285714285714286,
+      "pick_clean_then_place_in_recep": 0.037037037037037035,
+      "pick_cool_then_place_in_recep": 0.08,
+      "pick_heat_then_place_in_recep": 0.1875,
+      "pick_two_obj_and_place": 0.25
+    }
+  },
+  "n_by_task_type": {
+    "look_at_obj_in_light": 13,
+    "pick_and_place_simple": 35,
+    "pick_clean_then_place_in_recep": 27,
+    "pick_cool_then_place_in_recep": 25,
+    "pick_heat_then_place_in_recep": 16,
+    "pick_two_obj_and_place": 24
+  },
+  "vs_ref": {
+    "always": {
+      "n_tasks": 140,
+      "delta": 0.014285714285714285,
+      "ci_low": -0.03571428571428571,
+      "ci_high": 0.06428571428571428,
+      "per_rep": {
+        "0": {
+          "ref_only": 5,
+          "arm_only": 7,
+          "mcnemar_p": 0.7744140625
+        }
+      }
+    },
+    "selective": {
+      "n_tasks": 140,
+      "delta": 0.014285714285714285,
+      "ci_low": -0.03571428571428571,
+      "ci_high": 0.06428571428571428,
+      "per_rep": {
+        "0": {
+          "ref_only": 5,
+          "arm_only": 7,
+          "mcnemar_p": 0.7744140625
+        }
+      }
+    }
+  },
+  "repeat_stability": {}
+}

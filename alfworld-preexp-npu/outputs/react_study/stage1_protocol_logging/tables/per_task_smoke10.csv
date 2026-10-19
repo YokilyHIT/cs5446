@@ -1,0 +1,11 @@
+task_id,task_type,none_mean_success,rethink_mean_success,always_mean_success,selective_mean_success,random_post_mean_success,random_pre_mean_success
+trial_T20190906_202340_749336,pick_clean_then_place_in_recep,0.000,0.000,0.000,0.000,0.000,0.000
+trial_T20190907_012519_974044,pick_two_obj_and_place,0.000,0.000,0.000,0.000,0.000,0.000
+trial_T20190907_042856_259139,pick_and_place_simple,0.000,0.000,0.000,0.000,0.000,0.000
+trial_T20190907_201243_698086,pick_heat_then_place_in_recep,1.000,1.000,1.000,1.000,1.000,1.000
+trial_T20190908_042713_075616,pick_cool_then_place_in_recep,0.000,1.000,0.000,0.000,0.000,0.000
+trial_T20190908_122858_883968,pick_and_place_simple,1.000,1.000,1.000,1.000,1.000,1.000
+trial_T20190908_144357_621068,pick_clean_then_place_in_recep,0.000,0.000,0.000,0.000,0.000,0.000
+trial_T20190909_012524_159092,pick_cool_then_place_in_recep,0.000,0.000,0.000,0.000,0.000,0.000
+trial_T20190909_032340_274147,pick_and_place_simple,0.000,0.000,1.000,0.000,1.000,1.000
+trial_T20190909_044715_250790,look_at_obj_in_light,1.000,1.000,1.000,1.000,1.000,1.000

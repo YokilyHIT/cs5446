@@ -1,0 +1,6 @@
+{
+  "tau_usage30": 0.9994254631355148,
+  "n_conf": 5897,
+  "calibration_tasks": "140 step-0c branch-point tasks (always runs)",
+  "eval_tasks": 460
+}

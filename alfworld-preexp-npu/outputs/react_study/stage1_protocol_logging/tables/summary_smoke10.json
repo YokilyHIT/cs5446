@@ -1,0 +1,557 @@
+{
+  "tag": "smoke10",
+  "inputs": [
+    "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/always__rep0.jsonl",
+    "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/none__rep0.jsonl",
+    "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/none__rep1.jsonl",
+    "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/random_post__rep0.jsonl",
+    "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/random_pre__rep0.jsonl",
+    "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/rethink__rep0.jsonl",
+    "outputs/react_study/stage1_protocol_logging/raw/eval_in_distribution/selective__rep0.jsonl"
+  ],
+  "n_common_tasks": 10,
+  "ref_arm": "none",
+  "arms": {
+    "none": {
+      "per_rep": {
+        "0": {
+          "n": 10,
+          "success_rate": 0.3,
+          "n_success": 3,
+          "mean_steps": 23.7,
+          "foresight_usage_step_level": 0.0,
+          "wm_calls_total": 0,
+          "wm_calls_per_task": 0.0,
+          "second_pass_steps": 0,
+          "action_change_rate_given_second_pass": null,
+          "legal_action_rate": 0.9240506329113924,
+          "tokens_in_per_task": 17815.2,
+          "tokens_out_per_task": 1316.8,
+          "llm_latency_s_per_task": 39.22728960514068,
+          "llm_calls_per_task": 23.7,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 23.7,
+          "planner_base_tokens_in_per_task": 17815.2,
+          "planner_base_tokens_out_per_task": 1316.8,
+          "planner_second_calls_per_task": 0.0,
+          "planner_second_tokens_in_per_task": 0.0,
+          "planner_second_tokens_out_per_task": 0.0,
+          "wm_tokens_in_per_task": 0.0,
+          "wm_tokens_out_per_task": 0.0,
+          "tokens_total_per_task": 19132.0,
+          "wall_s_per_task": 87.07670240402221
+        },
+        "1": {
+          "n": 10,
+          "success_rate": 0.3,
+          "n_success": 3,
+          "mean_steps": 22.9,
+          "foresight_usage_step_level": 0.0,
+          "wm_calls_total": 0,
+          "wm_calls_per_task": 0.0,
+          "second_pass_steps": 0,
+          "action_change_rate_given_second_pass": null,
+          "legal_action_rate": 0.9956331877729258,
+          "tokens_in_per_task": 16690.1,
+          "tokens_out_per_task": 1280.5,
+          "llm_latency_s_per_task": 37.650268006324765,
+          "llm_calls_per_task": 22.9,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 22.9,
+          "planner_base_tokens_in_per_task": 16690.1,
+          "planner_base_tokens_out_per_task": 1280.5,
+          "planner_second_calls_per_task": 0.0,
+          "planner_second_tokens_in_per_task": 0.0,
+          "planner_second_tokens_out_per_task": 0.0,
+          "wm_tokens_in_per_task": 0.0,
+          "wm_tokens_out_per_task": 0.0,
+          "tokens_total_per_task": 17970.6,
+          "wall_s_per_task": 87.01920773983002
+        }
+      },
+      "aggregate": {
+        "n_reps": 2,
+        "sr_mean": 0.3,
+        "sr_min": 0.3,
+        "sr_max": 0.3,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.3,
+          "n_success": 3.0,
+          "mean_steps": 23.299999999999997,
+          "foresight_usage_step_level": 0.0,
+          "wm_calls_total": 0.0,
+          "wm_calls_per_task": 0.0,
+          "second_pass_steps": 0.0,
+          "legal_action_rate": 0.9598419103421592,
+          "tokens_in_per_task": 17252.65,
+          "tokens_out_per_task": 1298.65,
+          "llm_latency_s_per_task": 38.438778805732724,
+          "llm_calls_per_task": 23.299999999999997,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 23.299999999999997,
+          "planner_base_tokens_in_per_task": 17252.65,
+          "planner_base_tokens_out_per_task": 1298.65,
+          "planner_second_calls_per_task": 0.0,
+          "planner_second_tokens_in_per_task": 0.0,
+          "planner_second_tokens_out_per_task": 0.0,
+          "wm_tokens_in_per_task": 0.0,
+          "wm_tokens_out_per_task": 0.0,
+          "tokens_total_per_task": 18551.3,
+          "wall_s_per_task": 87.04795507192611
+        }
+      }
+    },
+    "rethink": {
+      "per_rep": {
+        "0": {
+          "n": 10,
+          "success_rate": 0.4,
+          "n_success": 4,
+          "mean_steps": 23.1,
+          "foresight_usage_step_level": 0.0,
+          "wm_calls_total": 0,
+          "wm_calls_per_task": 0.0,
+          "second_pass_steps": 231,
+          "action_change_rate_given_second_pass": 0.29004329004329005,
+          "legal_action_rate": 0.8138528138528138,
+          "tokens_in_per_task": 34283.0,
+          "tokens_out_per_task": 2490.3,
+          "llm_latency_s_per_task": 69.5026305437088,
+          "llm_calls_per_task": 46.2,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 23.1,
+          "planner_base_tokens_in_per_task": 16715.6,
+          "planner_base_tokens_out_per_task": 1230.8,
+          "planner_second_calls_per_task": 23.1,
+          "planner_second_tokens_in_per_task": 17567.4,
+          "planner_second_tokens_out_per_task": 1259.5,
+          "wm_tokens_in_per_task": 0.0,
+          "wm_tokens_out_per_task": 0.0,
+          "tokens_total_per_task": 36773.3,
+          "wall_s_per_task": 114.15480723381043
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.4,
+        "sr_min": 0.4,
+        "sr_max": 0.4,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.4,
+          "n_success": 4.0,
+          "mean_steps": 23.1,
+          "foresight_usage_step_level": 0.0,
+          "wm_calls_total": 0.0,
+          "wm_calls_per_task": 0.0,
+          "second_pass_steps": 231.0,
+          "action_change_rate_given_second_pass": 0.29004329004329005,
+          "legal_action_rate": 0.8138528138528138,
+          "tokens_in_per_task": 34283.0,
+          "tokens_out_per_task": 2490.3,
+          "llm_latency_s_per_task": 69.5026305437088,
+          "llm_calls_per_task": 46.2,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 23.1,
+          "planner_base_tokens_in_per_task": 16715.6,
+          "planner_base_tokens_out_per_task": 1230.8,
+          "planner_second_calls_per_task": 23.1,
+          "planner_second_tokens_in_per_task": 17567.4,
+          "planner_second_tokens_out_per_task": 1259.5,
+          "wm_tokens_in_per_task": 0.0,
+          "wm_tokens_out_per_task": 0.0,
+          "tokens_total_per_task": 36773.3,
+          "wall_s_per_task": 114.15480723381043
+        }
+      }
+    },
+    "always": {
+      "per_rep": {
+        "0": {
+          "n": 10,
+          "success_rate": 0.4,
+          "n_success": 4,
+          "mean_steps": 21.3,
+          "foresight_usage_step_level": 1.0,
+          "wm_calls_total": 213,
+          "wm_calls_per_task": 21.3,
+          "second_pass_steps": 213,
+          "action_change_rate_given_second_pass": 0.2347417840375587,
+          "legal_action_rate": 0.9061032863849765,
+          "tokens_in_per_task": 42607.3,
+          "tokens_out_per_task": 3096.4,
+          "llm_latency_s_per_task": 82.24683418273926,
+          "llm_calls_per_task": 63.9,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 21.3,
+          "planner_base_tokens_in_per_task": 15279.9,
+          "planner_base_tokens_out_per_task": 1185.6,
+          "planner_second_calls_per_task": 21.3,
+          "planner_second_tokens_in_per_task": 16647.7,
+          "planner_second_tokens_out_per_task": 1099.1,
+          "wm_tokens_in_per_task": 10679.7,
+          "wm_tokens_out_per_task": 811.7,
+          "tokens_total_per_task": 45703.7,
+          "wall_s_per_task": 127.2462384223938
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.4,
+        "sr_min": 0.4,
+        "sr_max": 0.4,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.4,
+          "n_success": 4.0,
+          "mean_steps": 21.3,
+          "foresight_usage_step_level": 1.0,
+          "wm_calls_total": 213.0,
+          "wm_calls_per_task": 21.3,
+          "second_pass_steps": 213.0,
+          "action_change_rate_given_second_pass": 0.2347417840375587,
+          "legal_action_rate": 0.9061032863849765,
+          "tokens_in_per_task": 42607.3,
+          "tokens_out_per_task": 3096.4,
+          "llm_latency_s_per_task": 82.24683418273926,
+          "llm_calls_per_task": 63.9,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 21.3,
+          "planner_base_tokens_in_per_task": 15279.9,
+          "planner_base_tokens_out_per_task": 1185.6,
+          "planner_second_calls_per_task": 21.3,
+          "planner_second_tokens_in_per_task": 16647.7,
+          "planner_second_tokens_out_per_task": 1099.1,
+          "wm_tokens_in_per_task": 10679.7,
+          "wm_tokens_out_per_task": 811.7,
+          "tokens_total_per_task": 45703.7,
+          "wall_s_per_task": 127.2462384223938
+        }
+      }
+    },
+    "selective": {
+      "per_rep": {
+        "0": {
+          "n": 10,
+          "success_rate": 0.3,
+          "n_success": 3,
+          "mean_steps": 23.3,
+          "foresight_usage_step_level": 0.2703862660944206,
+          "wm_calls_total": 233,
+          "wm_calls_per_task": 23.3,
+          "second_pass_steps": 63,
+          "action_change_rate_given_second_pass": 0.15873015873015872,
+          "legal_action_rate": 0.9570815450643777,
+          "tokens_in_per_task": 34467.3,
+          "tokens_out_per_task": 2530.9,
+          "llm_latency_s_per_task": 70.72606985569,
+          "llm_calls_per_task": 52.9,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 23.3,
+          "planner_base_tokens_in_per_task": 17324.0,
+          "planner_base_tokens_out_per_task": 1339.4,
+          "planner_second_calls_per_task": 6.3,
+          "planner_second_tokens_in_per_task": 4779.2,
+          "planner_second_tokens_out_per_task": 299.8,
+          "wm_tokens_in_per_task": 12364.1,
+          "wm_tokens_out_per_task": 891.7,
+          "tokens_total_per_task": 36998.2,
+          "wall_s_per_task": 114.80051958560944
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.3,
+        "sr_min": 0.3,
+        "sr_max": 0.3,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.3,
+          "n_success": 3.0,
+          "mean_steps": 23.3,
+          "foresight_usage_step_level": 0.2703862660944206,
+          "wm_calls_total": 233.0,
+          "wm_calls_per_task": 23.3,
+          "second_pass_steps": 63.0,
+          "action_change_rate_given_second_pass": 0.15873015873015872,
+          "legal_action_rate": 0.9570815450643777,
+          "tokens_in_per_task": 34467.3,
+          "tokens_out_per_task": 2530.9,
+          "llm_latency_s_per_task": 70.72606985569,
+          "llm_calls_per_task": 52.9,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 23.3,
+          "planner_base_tokens_in_per_task": 17324.0,
+          "planner_base_tokens_out_per_task": 1339.4,
+          "planner_second_calls_per_task": 6.3,
+          "planner_second_tokens_in_per_task": 4779.2,
+          "planner_second_tokens_out_per_task": 299.8,
+          "wm_tokens_in_per_task": 12364.1,
+          "wm_tokens_out_per_task": 891.7,
+          "tokens_total_per_task": 36998.2,
+          "wall_s_per_task": 114.80051958560944
+        }
+      }
+    },
+    "random_post": {
+      "per_rep": {
+        "0": {
+          "n": 10,
+          "success_rate": 0.4,
+          "n_success": 4,
+          "mean_steps": 21.9,
+          "foresight_usage_step_level": 0.2876712328767123,
+          "wm_calls_total": 219,
+          "wm_calls_per_task": 21.9,
+          "second_pass_steps": 63,
+          "action_change_rate_given_second_pass": 0.2222222222222222,
+          "legal_action_rate": 0.8995433789954338,
+          "tokens_in_per_task": 32482.9,
+          "tokens_out_per_task": 2446.2,
+          "llm_latency_s_per_task": 67.67007424831391,
+          "llm_calls_per_task": 50.1,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 21.9,
+          "planner_base_tokens_in_per_task": 16041.6,
+          "planner_base_tokens_out_per_task": 1285.2,
+          "planner_second_calls_per_task": 6.3,
+          "planner_second_tokens_in_per_task": 5195.4,
+          "planner_second_tokens_out_per_task": 316.8,
+          "wm_tokens_in_per_task": 11245.9,
+          "wm_tokens_out_per_task": 844.2,
+          "tokens_total_per_task": 34929.1,
+          "wall_s_per_task": 114.6883713722229
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.4,
+        "sr_min": 0.4,
+        "sr_max": 0.4,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.4,
+          "n_success": 4.0,
+          "mean_steps": 21.9,
+          "foresight_usage_step_level": 0.2876712328767123,
+          "wm_calls_total": 219.0,
+          "wm_calls_per_task": 21.9,
+          "second_pass_steps": 63.0,
+          "action_change_rate_given_second_pass": 0.2222222222222222,
+          "legal_action_rate": 0.8995433789954338,
+          "tokens_in_per_task": 32482.9,
+          "tokens_out_per_task": 2446.2,
+          "llm_latency_s_per_task": 67.67007424831391,
+          "llm_calls_per_task": 50.1,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 21.9,
+          "planner_base_tokens_in_per_task": 16041.6,
+          "planner_base_tokens_out_per_task": 1285.2,
+          "planner_second_calls_per_task": 6.3,
+          "planner_second_tokens_in_per_task": 5195.4,
+          "planner_second_tokens_out_per_task": 316.8,
+          "wm_tokens_in_per_task": 11245.9,
+          "wm_tokens_out_per_task": 844.2,
+          "tokens_total_per_task": 34929.1,
+          "wall_s_per_task": 114.6883713722229
+        }
+      }
+    },
+    "random_pre": {
+      "per_rep": {
+        "0": {
+          "n": 10,
+          "success_rate": 0.4,
+          "n_success": 4,
+          "mean_steps": 22.9,
+          "foresight_usage_step_level": 0.28820960698689957,
+          "wm_calls_total": 66,
+          "wm_calls_per_task": 6.6,
+          "second_pass_steps": 66,
+          "action_change_rate_given_second_pass": 0.3333333333333333,
+          "legal_action_rate": 0.9039301310043668,
+          "tokens_in_per_task": 25712.2,
+          "tokens_out_per_task": 1809.2,
+          "llm_latency_s_per_task": 52.734662199020384,
+          "llm_calls_per_task": 36.1,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 22.9,
+          "planner_base_tokens_in_per_task": 16754.6,
+          "planner_base_tokens_out_per_task": 1269.6,
+          "planner_second_calls_per_task": 6.6,
+          "planner_second_tokens_in_per_task": 5365.8,
+          "planner_second_tokens_out_per_task": 321.8,
+          "wm_tokens_in_per_task": 3591.8,
+          "wm_tokens_out_per_task": 217.8,
+          "tokens_total_per_task": 27521.4,
+          "wall_s_per_task": 100.95197672843933
+        }
+      },
+      "aggregate": {
+        "n_reps": 1,
+        "sr_mean": 0.4,
+        "sr_min": 0.4,
+        "sr_max": 0.4,
+        "sr_std": 0.0,
+        "mean_over_reps": {
+          "success_rate": 0.4,
+          "n_success": 4.0,
+          "mean_steps": 22.9,
+          "foresight_usage_step_level": 0.28820960698689957,
+          "wm_calls_total": 66.0,
+          "wm_calls_per_task": 6.6,
+          "second_pass_steps": 66.0,
+          "action_change_rate_given_second_pass": 0.3333333333333333,
+          "legal_action_rate": 0.9039301310043668,
+          "tokens_in_per_task": 25712.2,
+          "tokens_out_per_task": 1809.2,
+          "llm_latency_s_per_task": 52.734662199020384,
+          "llm_calls_per_task": 36.1,
+          "failed_calls_per_task": 0.0,
+          "planner_base_calls_per_task": 22.9,
+          "planner_base_tokens_in_per_task": 16754.6,
+          "planner_base_tokens_out_per_task": 1269.6,
+          "planner_second_calls_per_task": 6.6,
+          "planner_second_tokens_in_per_task": 5365.8,
+          "planner_second_tokens_out_per_task": 321.8,
+          "wm_tokens_in_per_task": 3591.8,
+          "wm_tokens_out_per_task": 217.8,
+          "tokens_total_per_task": 27521.4,
+          "wall_s_per_task": 100.95197672843933
+        }
+      }
+    }
+  },
+  "sr_by_task_type": {
+    "none": {
+      "look_at_obj_in_light": 1.0,
+      "pick_and_place_simple": 0.3333333333333333,
+      "pick_clean_then_place_in_recep": 0.0,
+      "pick_cool_then_place_in_recep": 0.0,
+      "pick_heat_then_place_in_recep": 1.0,
+      "pick_two_obj_and_place": 0.0
+    },
+    "rethink": {
+      "look_at_obj_in_light": 1.0,
+      "pick_and_place_simple": 0.3333333333333333,
+      "pick_clean_then_place_in_recep": 0.0,
+      "pick_cool_then_place_in_recep": 0.5,
+      "pick_heat_then_place_in_recep": 1.0,
+      "pick_two_obj_and_place": 0.0
+    },
+    "always": {
+      "look_at_obj_in_light": 1.0,
+      "pick_and_place_simple": 0.6666666666666666,
+      "pick_clean_then_place_in_recep": 0.0,
+      "pick_cool_then_place_in_recep": 0.0,
+      "pick_heat_then_place_in_recep": 1.0,
+      "pick_two_obj_and_place": 0.0
+    },
+    "selective": {
+      "look_at_obj_in_light": 1.0,
+      "pick_and_place_simple": 0.3333333333333333,
+      "pick_clean_then_place_in_recep": 0.0,
+      "pick_cool_then_place_in_recep": 0.0,
+      "pick_heat_then_place_in_recep": 1.0,
+      "pick_two_obj_and_place": 0.0
+    },
+    "random_post": {
+      "look_at_obj_in_light": 1.0,
+      "pick_and_place_simple": 0.6666666666666666,
+      "pick_clean_then_place_in_recep": 0.0,
+      "pick_cool_then_place_in_recep": 0.0,
+      "pick_heat_then_place_in_recep": 1.0,
+      "pick_two_obj_and_place": 0.0
+    },
+    "random_pre": {
+      "look_at_obj_in_light": 1.0,
+      "pick_and_place_simple": 0.6666666666666666,
+      "pick_clean_then_place_in_recep": 0.0,
+      "pick_cool_then_place_in_recep": 0.0,
+      "pick_heat_then_place_in_recep": 1.0,
+      "pick_two_obj_and_place": 0.0
+    }
+  },
+  "n_by_task_type": {
+    "look_at_obj_in_light": 1,
+    "pick_and_place_simple": 3,
+    "pick_clean_then_place_in_recep": 2,
+    "pick_cool_then_place_in_recep": 2,
+    "pick_heat_then_place_in_recep": 1,
+    "pick_two_obj_and_place": 1
+  },
+  "vs_ref": {
+    "rethink": {
+      "n_tasks": 10,
+      "delta": 0.1,
+      "ci_low": 0.0,
+      "ci_high": 0.3,
+      "per_rep": {
+        "0": {
+          "ref_only": 0,
+          "arm_only": 1,
+          "mcnemar_p": 1.0
+        }
+      }
+    },
+    "always": {
+      "n_tasks": 10,
+      "delta": 0.1,
+      "ci_low": 0.0,
+      "ci_high": 0.3,
+      "per_rep": {
+        "0": {
+          "ref_only": 0,
+          "arm_only": 1,
+          "mcnemar_p": 1.0
+        }
+      }
+    },
+    "selective": {
+      "n_tasks": 10,
+      "delta": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "per_rep": {
+        "0": {
+          "ref_only": 0,
+          "arm_only": 0,
+          "mcnemar_p": 1.0
+        }
+      }
+    },
+    "random_post": {
+      "n_tasks": 10,
+      "delta": 0.1,
+      "ci_low": 0.0,
+      "ci_high": 0.3,
+      "per_rep": {
+        "0": {
+          "ref_only": 0,
+          "arm_only": 1,
+          "mcnemar_p": 1.0
+        }
+      }
+    },
+    "random_pre": {
+      "n_tasks": 10,
+      "delta": 0.1,
+      "ci_low": 0.0,
+      "ci_high": 0.3,
+      "per_rep": {
+        "0": {
+          "ref_only": 0,
+          "arm_only": 1,
+          "mcnemar_p": 1.0
+        }
+      }
+    }
+  },
+  "repeat_stability": {
+    "none": {
+      "n_tasks_outcome_varies_across_reps": 0,
+      "frac": 0.0
+    }
+  }
+}
