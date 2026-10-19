@@ -1,0 +1,33 @@
+ok  600 unique tasks
+ok  same task set as devpool600_games.txt
+ok  100 tasks per type
+ok  none: (rep0+rep1)/2 equals per_task_dev600_v2 mean
+    none: SR rep0 0.2217 rep1 0.2217 | PR 0.4171 / 0.4078 | steps 25.79 | tasks whose success differs across reps 58
+ok  always: (rep0+rep1)/2 equals per_task_dev600_v2 mean
+    always: SR rep0 0.2250 rep1 0.2300 | PR 0.4246 / 0.4290 | steps 25.71 | tasks whose success differs across reps 53
+ok  200 points, ids match branch_points
+ok  task_id / t / group / stratum match branch_points
+ok  rep outcomes match the per-rep table
+ok  task_solve_rate equals mean of the two reps
+ok  in_unbiased_subset == solvable by rep1
+ok  127 points / 81 tasks  (127 points, 81 tasks)
+    solvable points from rep0 trajectories that succeeded: 112/160
+    checks passed: 11/11
+
+# D/N/P on the unbiased subset: 127 points, 81 tasks
+  metric=success
+    vs base: wm (P-D)        changed  30%  mean -0.009 [-0.043, +0.023]  excess-var  8.37  rho(conf,U|changed) -0.010 (n=38)
+    vs base: oracle          changed  30%  mean -0.021 [-0.054, +0.010]  excess-var  8.10  rho(conf,U|changed) -0.041 (n=38)
+    vs base: rethink (N-D)   changed  45%  mean -0.014 [-0.064, +0.034]  excess-var 10.87  rho(conf,U|changed) -0.170 (n=57)
+    vs base: loophint        changed  58%  mean -0.067 [-0.118, -0.018]  excess-var 10.20  rho(conf,U|changed) +0.049 (n=74)
+    information P-N          changed  42%  mean +0.005 [-0.046, +0.055]  excess-var 12.84  rho(conf,U|changed) +0.219 (n=53)  EM=1 +0.003 EM=0 +0.006
+    perfect info P*-N        changed  42%  mean -0.007 [-0.056, +0.041]  excess-var 10.57  rho(conf,U|changed) +0.166 (n=53)
+  metric=pr
+    vs base: wm (P-D)        changed  30%  mean -0.010 [-0.030, +0.009]  excess-var  5.00  rho(conf,U|changed) -0.018 (n=38)
+    vs base: oracle          changed  30%  mean -0.010 [-0.026, +0.005]  excess-var  4.06  rho(conf,U|changed) -0.100 (n=38)
+    vs base: rethink (N-D)   changed  45%  mean -0.020 [-0.054, +0.012]  excess-var  8.71  rho(conf,U|changed) -0.108 (n=57)
+    vs base: loophint        changed  58%  mean -0.027 [-0.056, +0.001]  excess-var  9.91  rho(conf,U|changed) +0.087 (n=74)
+    information P-N          changed  42%  mean +0.010 [-0.023, +0.044]  excess-var 11.91  rho(conf,U|changed) +0.127 (n=53)  EM=1 +0.011 EM=0 +0.010
+    perfect info P*-N        changed  42%  mean +0.010 [-0.020, +0.042]  excess-var  8.58  rho(conf,U|changed) +0.077 (n=53)
+  G (success): {'admission': np.float64(0.0143), 'info': np.float64(0.0231), 'revision': np.float64(-0.0088)}
+  rank corr conf-EM 0.580, conf-F1 0.505

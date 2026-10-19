@@ -1,10 +1,10 @@
 # Confidence 能否识别有用的 Foresight？4B 测量研究、负结果与机制诊断（draft）
 
-整理于 2026-10-20。本版汇总本组已完成的 4B D0 与 E，保留冻结结果；队友尚未完成的实验留待后续扩展。文件、图表和复算入口见[结果索引](README.md)。
+整理于 2026-10-20。本版保留本组已冻结的 4B D0 与 E，并在第 4.6 节纳入队友已复核的 Step 0c 和方向 B 离线结果，作为另一协议下的补充测量与探索性对照。队友尚未完成的实验留待后续扩展。文件、图表和复算入口见[结果索引](README.md)。
 
 本研究以 ALFWorld 中固定的 Qwen3-4B ReAct Planner 与一步 World Model（WM）为对象，测量预测准确性、局部决策效用和整局任务表现。主要发现是：**在 D0 中，confidence 能排序预测准确性，但动作改变很少转化为终局改变。** D0 的 68 个完整状态中，confidence 与 EM、token-F1 的加权秩相关分别为 0.616、0.567；带预测再决策相对原 draft 改变了 31/68 个首动作，而 P−D 仅在 1/68 个状态非零。进一步以无预测再决策为对照，P 相对 N 在双方首动作可解析的状态中改变了 28/67 个动作，P−N 却只有 2/68 个终局差异，一正一负。局部观测效用近乎退化，使当前开发数据无法可靠辨识 confidence 的稳定效用排序能力。E 的 134 个固定候选游戏上，Always、no_info、none 的 SR@30 分别为 18.66%、17.16%、16.42%；主对比 Always − no_info 为 +1.49 个百分点，预定 97.5% 区间为 [−11.60, +14.47] 个百分点，方向未定。Always 的调用量约为 no_info 的 1.5 倍、none 的 2.9 倍。效用稀疏、收益方向未定与已记录的额外成本共同构成本配置下的测量发现；按 proposal 预设条件，Utility Gate 学习分支未触发。
 
-这里的“基线”是项目已完成的 4B 测量交付，不是 32B 模型性能的统计下界。数据、指标和本次分析结果沿用已有冻结版本；本文仍是供课程写作使用的 draft，正式 AI 使用声明待课程格式提供。报告不依赖 32B 取得正向结果，也不把 D0 或 E 写成已经完成 D1 独立验证。
+这里的“基线”是项目已完成的 4B 测量交付，不是 32B 模型性能的统计下界。本组 D0/E 数据、指标和分析结果沿用已有冻结版本；补充测量复用既有离线复核输出，不与 D0/E 合并。本文仍是供课程写作使用的 draft，正式 AI 使用声明待课程格式提供。报告不依赖 32B 取得正向结果，也不把 D0、E 或补充测量写成已经完成 D1 独立验证。
 
 ## 1. 问题与动机
 
@@ -17,6 +17,7 @@
 | D0 | 同一状态下，再决策和预测信息如何改变动作及后续结果；confidence 与预测准确性、观测效用有何关系 | 已完成的开发期描述 |
 | D1 | 在独立局部验证数据上检验预先固定的 confidence 与效用关系或排序规则 | 本轮没有 D1 执行或验收；不宣称完成 |
 | E | 在整局中持续采用不同策略，成功率和成本如何变化 | 已完成 Aim 3 三臂评估与一次预定合并分析；按固定候选集上的条件性结果报告 |
+| 补充测量：Step 0c／方向 B | 另一协议下的局部效用分布及候选信号与效用的关系 | 已有开发数据的探索性对照；两项分析复用同批标签，不是 D1 |
 
 D1 和 E 对应不同的实验单位和干预方式，E 完成不能补作 D1 验证。原交接将 D1 列为尚未完成的独立局部验证任务；本轮执行记录仅涉及 E。[研究阶段定义](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/gpu_analysis/docs/RESEARCH_PROTOCOL.md?plain=1#L56)
 
@@ -32,7 +33,7 @@ D1 和 E 对应不同的实验单位和干预方式，E 完成不能补作 D1 �
 
 ### 3.1 固定配置
 
-Planner 和 WM 均使用 Qwen3-4B-Instruct-2507，profile 为 `react_single_env_action_v1`。配置固定为 seed 42、temperature 0、top_p 0.5、history 50、无 memory，planner/WM 输出上限分别为 384/256 tokens，动作预算 H=30。
+本组 D0/E 的 Planner 和 WM 均使用 Qwen3-4B-Instruct-2507，profile 为 `react_single_env_action_v1`。配置固定为 seed 42、temperature 0、top_p 0.5、history 50、无 memory，planner/WM 输出上限分别为 384/256 tokens，动作预算 H=30。
 
 ### 3.2 D/N/P 局部干预
 
@@ -93,7 +94,7 @@ D0 的独立 N/P 抽查在该报告快照中仅完成候选准备：6 组、6 �
 
 proposal 将 Utility Gate 设为有条件的学习任务：标签可靠、效用存在可预测的变化且资源许可时，才训练小型 admission-utility 模型；其交付路径明确写明 “If learning is unsupported, deliver the measurement study.”。条件与交付约定分别见 proposal 第 3 节 Research Plan 的 Aim 2 和第 6 节 Risks and Mitigations。
 
-D0 的 P−D 仅在 1/68 个状态非零，未建立稳定可预测的 admission 信号，N/P 复现抽查亦未完成。本轮因此采用预定的 measurement study 交付路径：**Utility Gate 学习分支未触发，没有训练或验证 Gate**。这里不是声称某个已训练 Gate 检验失败，也没有把 1/68 事后改成预注册的数值阈值，更不能将其当作 `C<2.5pp` 的正式认证。D1 的独立局部验证仍是未完成事项，与 Aim 2 的条件式交付区别记录。
+D0 的 P−D 仅在 1/68 个状态非零，未建立稳定可预测的 admission 信号，N/P 复现抽查亦未完成。本组因此采用预定的 measurement study 交付路径：**本组 Utility Gate 学习分支未触发，没有训练或验证 Gate**。这里不是声称某个已训练 Gate 检验失败，也没有把 1/68 事后改成预注册的数值阈值，更不能将其当作 `C<2.5pp` 的正式认证。D1 的独立局部验证仍是未完成事项，与 Aim 2 的条件式交付区别记录。队友曾用 Step 0c 数据拟合自己的门控，这属于另一开发流程；本报告仅引用其局部测量与离线信号筛选，不据此改写本组 Aim 2 的状态。
 
 ### 4.3 Aim 3：E 整局成功率
 
@@ -160,6 +161,44 @@ rescued 指前者成功而后者失败，harmed 指前者失败而后者成功�
 
 图 4 分别显示模型调用数和已知请求耗时，两者不相加。Always 包括 WM 请求，倍数以 none 为基准。该图不表示完整 GPU 资源成本或能耗。
 
+### 4.6 补充测量：另一协议下的 Step 0c 与方向 B
+
+本节选录队友固定提交 `a26e7e45c88716efc38279dd0d7af68ddba3826d` 的已有数据及已通过离线复验的输出。本轮没有运行模型或重新计算统计量。[补充来源与既有复算脚本](supplementary/README.md)保留所用输出、版本和口径。Step 0c 与方向 B 使用同一批局部效用标签，下面是同一批开发数据的两种分析，不是两次独立验证。
+
+#### 4.6.1 Step 0c：多次续跑下的局部效用
+
+Step 0c 从 rep0 轨迹选取状态，以另一次运行 rep1 是否成功定义“可解”子集，保留 127 个状态、81 个游戏。它减少了按采样轨迹自身后续成功与否选择状态的问题，但仍限定于该筛选子集，不能称为对所有状态无偏。[子集清单](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/step0_protocol_v2_measurement/tables/branch_k_unbiased_points.csv)
+
+队友使用 AgentBoard 指令与同类任务示例、完整历史和动作写法归一化；本组采用零样本提示与 history 50。其 base 是恢复后重新生成的动作，不能等同于本组保留的原 draft。每个干预的首动作只生成一次，每个不同首动作再用无预测策略续跑 8 次；首动作相同的干预共享续跑。其温度仍为 0，这些重复用于记录该部署下的续跑变化，不是对随机解码策略进行 8 次完整干预采样。[协议与采样说明](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/step0_protocol_v2_measurement/README.md)
+
+下表中的 D/N/P 分别对应队友的 base/rethink/wm，仅作为功能对应。结果来自既有 [127 点复核输出](supplementary/check_unbiased.txt)：每状态以 8 次续跑的成功比例构造效用，状态等权，95% 区间按游戏聚类 bootstrap；它与本组 D0 的原状态权重和单次贪心结果不是同一个估计口径。这里统一采用既有复核区间，不混用队友 README 的另一组 bootstrap 端点。
+
+| 局部对比 | 首动作改变比例（约数） | 平均成功比例差 | 描述性 95% 区间 |
+| --- | --- | --- | --- |
+| admission：P−D | 30% | −0.009 | [−0.043, +0.023] |
+| info：P−N | 42% | +0.005 | [−0.046, +0.055] |
+| revision：N−D | 45% | −0.014 | [−0.064, +0.034] |
+
+该子集中，confidence 与预测 EM、token-F1 的普通 Spearman 相关分别为 **0.580、0.505**；在 P 与 D 首动作不同的 38 个状态上，confidence 与 admission 成功比例差的相关为 **−0.010**。这些相关对应不同合格集合，且与本组加权秩相关的定义不同，不能直接比较大小或将差异归因于某个实现改动。上述值取自既有复核输出，未沿用原 README 中混用较早 160 点口径的 confidence 段落。
+
+方向 B 的同批标签清点显示：成功率口径的 admission 效用有 8 个正值、10 个负值；PR（子目标完成比例）口径则有 9 个正值、12 个负值。与本组 D0 相比，这里观察到更多非零局部差异，但尚不能把差异归因于提示、状态筛选、后端或续跑次数中的任何单一因素。三种成功比例差的区间均包含零，不能把小均值写成效用为零；confidence 的准确性关联也尚未转化为已验证的效用排序规则。
+
+#### 4.6.2 方向 B：定位变化与判断收益方向是不同问题
+
+方向 B 在上述 127 点子集上，以 Step 0c 的 **WM 相对 base 的 PR 效用**为目标筛选候选信号。下表选取 WM confidence 对应研究问题、planner 整段 logprob 作为候选信号，以及“WM 是否改变动作”作为标签结构参照；完整八信号结果见 [既有复核输出](supplementary/dirB_screen.txt)和[原公开 JSON](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/dirB_planner_uncertainty/tables/offline_signal_screen.json)。logprob/confidence 取负值，使“越低越开门”；正效用和负效用的 AUROC 分别以其他全部状态为对照。
+
+| 信号（越高越倾向开门） | AUROC：U≠0 | AUROC：U>0 | AUROC：U<0 | Spearman（信号，U） |
+| --- | --- | --- | --- | --- |
+| 低 WM confidence | 0.433 | 0.450 | 0.430 | +0.018 |
+| 低 planner 整段 logprob | 0.761 | 0.791 | 0.698 | +0.017 |
+| WM 是否改变首动作 | 0.920 | 0.877 | 0.887 | −0.097 |
+
+低 planner 整段 logprob 在这批开发数据上与“非零效用”有排序关联，但对正、负效用的一对其余分类都较高，不能由此断言它已能区分帮助与伤害。低 WM confidence 的 0.433 对应反向高 confidence 的 0.567，不能解释为“confidence 完全没有信息”。这些是小样本上的探索性筛选值，未据此选定或验证新 Gate，也没有追加区间或检验。
+
+“WM 是否改变动作”的高 AUROC 部分来自标签构造：首动作相同便共享续跑，效用被定义为零；该信号还需要看到干预生成的首动作，不能直接当作调用 WM 之前可用的选择器。既有复核对全部 200 点发现的浮点残差和合法伪动作修正均不影响这里的 127 点子集。本节不纳入方向 B 的在线门控成绩，也不据此判断动作行 logprob 错位对历史在线运行的影响。
+
+这批 127 点还用于队友门控训练，保存的模型记录 `n_train=127`，方向 B 又在同批标签上筛选信号。[训练产物](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/step3_gating/tables/learned_gate.json) 本节提供另一协议下的开发期对照，**不能替代预先固定规则、按游戏隔离的 D1 独立局部验证；D1 仍未完成。** 它也不改变本组 D0/E 的任何数据、权重、统计结果或结论。
+
 ## 5. 讨论：效用为何很少出现
 
 ### 5.1 稀疏效用是测量发现
@@ -190,13 +229,15 @@ WorldEvolver 用预测 confidence 筛选可能不可靠的预测；本文进一�
 
 上述条件限于排序相对随机选择的增量：若每个预测都有相同正收益，Always 仍可能有用，却不需要 confidence 来排序。本文贡献在于将这两个问题分开测量。当前发现也提示，后续实验应考察何种状态和策略能把预测信息转化为可持续的任务进展，而不是仅追求更准确的下一步文本。多步预测、能利用预测的更强 planner，以及在固定预算内仍可挽救且需要信息的状态，是待验证的条件；单纯让任务更难也可能加重地板。
 
+补充测量使这一问题不再只停留在本组 D0 的稀疏性上：Step 0c 中已有更多正、负局部效用，confidence 仍与文本准确性相关，但现有探索性分析尚未建立稳定的正向效用排序证据。方向 B 提示“预测哪里会发生变化”与“判断变化是否有益”需要分别测量。这些对照增加了问题的经验依据，没有把同批标签上的多项分析变成独立验证，也不能证明 confidence 或门控普遍无效。
+
 ## 6. 局限
 
-E 冻结时将 134 局的历史用途记为“未核实”。同一批游戏已出现在队友的 [Step 4 记录](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/step4_unseen_test/README.md#L3)和[方向 F 记录](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/dirF_final_eval/README.md#L3)中，所记日期分别为 2026-10-13 和 2026-10-14，均早于本组 [E 冻结记录](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/aim3_e/plan/FREEZE.json#L4)中的 2026-10-18 04:33（UTC+8）。前两者是运行方记载，不是独立作业时间戳。本文因此将 E 作为固定候选集上的条件性结果，不宣称它是团队未使用过的独立测试集。这些记录本身不能证明本组冻结前接触过队友结果或据此调参；原冻结记录与分析保持不变。该资料只用于限定数据资格，队友的实验成绩未纳入本报告。JSON 中 `confirmatory_status=available` 只表示结果足以计算预定统计量，不构成资格证明。
+E 冻结时将 134 局的历史用途记为“未核实”。同一批游戏已出现在队友的 [Step 4 记录](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/step4_unseen_test/README.md#L3)和[方向 F 记录](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/dirF_final_eval/README.md#L3)中，所记日期分别为 2026-10-13 和 2026-10-14，均早于本组 [E 冻结记录](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/aim3_e/plan/FREEZE.json#L4)中的 2026-10-18 04:33（UTC+8）。前两者是运行方记载，不是独立作业时间戳。本文因此将 E 作为固定候选集上的条件性结果，不宣称它是团队未使用过的独立测试集。这些记录本身不能证明本组冻结前接触过队友结果或据此调参；原冻结记录与分析保持不变。该资料只用于限定数据资格，队友的整局实验成绩未纳入本报告；其局部测量与离线筛选另见第 4.6 节。JSON 中 `confirmatory_status=available` 只表示结果足以计算预定统计量，不构成资格证明。
 
 区间依赖 iid 游戏配对总体模型，且当前精度仍容许相当幅度的正负差异；各片按 Always / no_info / none 固定顺序执行，也保留时间块局限。整局结果不能替代局部 admission/info 的独立证据。
 
-本研究只覆盖一个固定的贪心解码配置与所记录的后端，未验证跨模型、解码配置或后端的泛化。T=0 避免随机 token 采样，但本身不能保证不同硬件、调度或服务条件下逐字节相同；复现结论应依据实际重放记录，而不是仅凭 seed 或 temperature。[vLLM 复现说明](https://docs.vllm.ai/en/v0.11.1/usage/reproducibility/)
+本组 D0/E 只覆盖一个固定的贪心解码配置与所记录的后端；第 4.6 节的跨协议开发期对照不构成跨模型、解码配置或后端的独立泛化验证。T=0 避免随机 token 采样，但本身不能保证不同硬件、调度或服务条件下逐字节相同；复现结论应依据实际重放记录，而不是仅凭 seed 或 temperature。[vLLM 复现说明](https://docs.vllm.ai/en/v0.11.1/usage/reproducibility/)
 
 D0 是 24 个开发游戏内的状态样本，状态有聚类和共享物理路径，不能视为 68 次独立游戏试验。其 confidence–accuracy 关系属于开发期描述，准确性指标也不直接测量规划所需信息。D1 未执行，N/P 复现抽查未完成；r=1 与历史成本缺口限制了跨配置和重复运行的外推。稀疏终局差是本配置的发现，但不足以确认稳定的排序关系或真实效用为零。E 中双臂无失败子集经过处理后筛选，不能用来替代主效应。
 
@@ -224,7 +265,7 @@ D1 可在游戏隔离、用途核实和分析规则预先固定的条件下，�
 
 **本次 4B 测量研究发现，在 D0 中 confidence 能排序预测的文本准确性，但单步干预经常改变动作、几乎不改变终局。局部观测效用近乎退化，使当前开发数据不足以可靠辨识 confidence 的效用排序能力。在固定的 134 局 E 候选集上，Always − no_info 为 +1.49 pp，97.5% 区间 [−11.60, +14.47]，方向未定；Always 的调用量约为 no_info 的 1.5 倍、none 的 2.9 倍。按预设条件，Utility Gate 学习分支未触发，交付测量研究、负结果与机制诊断。**
 
-这份 D0 描述、E 配对评估、失败诊断和成本对照构成独立的 4B baseline draft；D1 未完成及数据资格限制如实保留，不宣称原 proposal 的全部目标已实现。4B 数据与分析结果据此固定，后续课程排版和 AI 声明不改变实验口径。32B 的计划附录本轮暂缓；未来结果应作为独立配置扩展，不与 4B 合并，也不作为本 draft 交付的前置条件。
+这份 D0 描述、E 配对评估、失败诊断和成本对照构成独立的 4B baseline draft；本版另以队友 Step 0c 和方向 B 的既有复核结果补充探索性讨论，不合并样本或替换主结果。D1 未完成及数据资格限制如实保留，不宣称原 proposal 的全部目标已实现。4B 数据与分析结果据此固定，后续课程排版和 AI 声明不改变实验口径。32B 的计划附录本轮暂缓；未来结果应作为独立配置扩展，不与 4B 合并，也不作为本 draft 交付的前置条件。
 
 ## 附录：复算入口与版本
 
@@ -246,4 +287,4 @@ E 保持 v1.1 冻结，`FREEZE.json` SHA256 为 `30554636830cfc9af3b291d0054e6c2
 
 现有四图由 `cs5242` 环境中的 matplotlib 绘制；[图表来源记录](figures/figure_sources.json)列出两份输入 JSON 的哈希、字段和值。数值与区间均直接复用已有输出，只有比例、单位和显示舍入运算。本次保留全部 PNG/SVG 和绘图脚本，不重新绘制。
 
-本版保留原结果表、四图和统计规则，仅更新报告文字与公开导航；版本变化由仓库提交历史记录，历史执行回执不回写。队友复验回执及课程 AI 声明格式待补；本报告不预写复验通过，也不采用另算区间替换预定主分析。
+本版保留本组 D0/E 原结果表、四图和统计规则，新增第 4.6 节补充结果表及其既有复核来源；版本变化由仓库提交历史记录，历史执行回执不回写。队友复验回执及课程 AI 声明格式待补；本报告不预写复验通过，也不采用另算区间替换预定主分析。
