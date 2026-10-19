@@ -1,5 +1,7 @@
 # Confidence 能否识别有用的 Foresight？4B 测量研究、负结果与机制诊断（draft）
 
+整理于 2026-10-20。本版汇总本组已完成的 4B D0 与 E，保留冻结结果；队友尚未完成的实验留待后续扩展。文件、图表和复算入口见[结果索引](README.md)。
+
 本研究以 ALFWorld 中固定的 Qwen3-4B ReAct Planner 与一步 World Model（WM）为对象，测量预测准确性、局部决策效用和整局任务表现。主要发现是：**confidence 能排序预测准确性，但动作改变很少转化为终局改变。** D0 的 68 个完整状态中，confidence 与 EM、token-F1 的加权秩相关分别为 0.616、0.567；带预测再决策相对原 draft 改变了 31/68 个首动作，而 P−D 仅在 1/68 个状态非零。局部观测效用近乎退化，使当前开发数据无法可靠辨识 confidence 的稳定效用排序能力。E 的 134 个固定候选游戏上，Always、no_info、none 的 SR@30 分别为 18.66%、17.16%、16.42%；主对比 Always − no_info 为 +1.49 个百分点，预定 97.5% 区间为 [−11.60, +14.47] 个百分点，方向未定。Always 的调用量约为 none 的 2.9 倍、no_info 的 1.5 倍。效用稀疏、收益方向未定与已记录的额外成本共同构成本配置下的测量发现；按 proposal 预设条件，Utility Gate 学习分支未触发。
 
 这里的“基线”是项目已完成的 4B 测量交付，不是 32B 模型性能的统计下界。数据、指标和本次分析结果沿用已有冻结版本；本文仍是供课程写作使用的 draft，正式 AI 使用声明待课程格式提供。报告不依赖 32B 取得正向结果，也不把 D0 或 E 写成已经完成 D1 独立验证。
@@ -14,9 +16,9 @@
 | --- | --- | --- |
 | D0 | 同一状态下，再决策和预测信息如何改变动作及后续结果；confidence 与预测准确性、观测效用有何关系 | 已完成的开发期描述 |
 | D1 | 在独立局部验证数据上检验预先固定的 confidence 与效用关系或排序规则 | 本轮没有 D1 执行或验收；不宣称完成 |
-| E | 在整局中持续采用不同策略，成功率和成本如何变化 | 已完成 Aim 3 三臂评估与一次预定合并分析；历史资格未核实 |
+| E | 在整局中持续采用不同策略，成功率和成本如何变化 | 已完成 Aim 3 三臂评估与一次预定合并分析；按固定候选集上的条件性结果报告 |
 
-D1 和 E 对应不同的实验单位和干预方式，E 完成不能补作 D1 验证。原交接将 D1 列为尚未完成的独立局部验证任务；本轮执行记录仅涉及 E。[研究阶段定义](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/docs/RESEARCH_PROTOCOL.md?plain=1#L56)
+D1 和 E 对应不同的实验单位和干预方式，E 完成不能补作 D1 验证。原交接将 D1 列为尚未完成的独立局部验证任务；本轮执行记录仅涉及 E。[研究阶段定义](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/gpu_analysis/docs/RESEARCH_PROTOCOL.md?plain=1#L56)
 
 ## 2. 相关工作
 
@@ -40,7 +42,7 @@ D0 包含 24 个开发游戏、71 个预选状态，其中 68 个具有完整 D/
 
 ### 3.3 E 三臂整局评估
 
-E 在每个游戏中分别执行 none、no_info、always 三个整局策略。主对比为 Always − no_info，用来区分预测信息与额外再决策；另外两个对比为描述性分析。与 none 的对比包含额外 planner 调用带来的成本和失败机会。[冻结 E 方法](https://github.com/YokilyHIT/cs5446/blob/gpu/aim3_e/plan/EVALUATION_PLAN.md)
+E 在每个游戏中分别执行 none、no_info、always 三个整局策略。主对比为 Always − no_info，用来区分预测信息与额外再决策；另外两个对比为描述性分析。与 none 的对比包含额外 planner 调用带来的成本和失败机会。[冻结 E 方法](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/aim3_e/plan/EVALUATION_PLAN.md)
 
 E 固定为 `eval_out_of_distribution` 清单中的 134 个候选游戏，每游戏等权，每臂一次，SR@30 为主指标。policy failure 与预算耗尽计 0，技术缺失保持 null。主对比直接复用 `paired_study_comparison`：救回/伤害率的 Clopper–Pearson 区间经 Bonferroni 合成预定 97.5% 差值区间。方向只由该区间的 `direction` 字段判定，McNemar p 作为补充，不选择更有利的判据。缺失任何计划配对时，按冻结规则暂停主点估计和推断，不静默转为完整案例分析。
 
@@ -83,19 +85,19 @@ E 固定为 `eval_out_of_distribution` 清单中的 134 个候选游戏，每游
 
 图 2 左侧是同一组 68 个合格状态按原权重分组的 EM/F1，右侧分别显示 admission、info、revision 的单次观测均值。各组占合格权重 25%，边界按比例分权；图示相关与 G 均来自既有描述输出，没有新增推断。
 
-一个按固定规则选出的案例中，WM 正确预测了咖啡机处的空观察，但 D/N/P 最终都因预算耗尽失败。该案例展示了“预测正确”和“任务完成”之间的差别；它本身不能证明失败的因果机制。完整报告同时保留跨作业敏感性、逐游戏删除分析和物理路径记录。[完整 D0 报告](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/checkpoints/d0_report.md)
+一个按固定规则选出的案例中，WM 正确预测了咖啡机处的空观察，但 D/N/P 最终都因预算耗尽失败。该案例展示了“预测正确”和“任务完成”之间的差别；它本身不能证明失败的因果机制。完整报告同时保留跨作业敏感性、逐游戏删除分析和物理路径记录。[完整 D0 报告](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/gpu_analysis/checkpoints/d0_report.md)
 
 D0 的独立 N/P 抽查在该报告快照中仅完成候选准备：6 组、6 游戏、83 次原新 μ 调用，不写作复现已通过。历史中断尝试存在缺失的调用终端记录，已知 token 和请求时间只能作为覆盖范围内的小计，未知量不补零，也不把请求时间换成完整 GPU 墙钟。
 
 ### 4.2 Aim 2：按预设条件未触发 Gate 学习
 
-proposal 将 Utility Gate 设为有条件的学习任务：标签可靠、效用存在可预测的变化且资源许可时，才训练小型 admission-utility 模型；其交付路径明确写明 “If learning is unsupported, deliver the measurement study.”。Aim 2 条件（proposal 第 2 节 Aim 2）、交付约定（proposal 第 5 节 Risks and Mitigations）
+proposal 将 Utility Gate 设为有条件的学习任务：标签可靠、效用存在可预测的变化且资源许可时，才训练小型 admission-utility 模型；其交付路径明确写明 “If learning is unsupported, deliver the measurement study.”。条件与交付约定分别见 proposal 第 3 节 Research Plan 的 Aim 2 和第 6 节 Risks and Mitigations。
 
 D0 的 P−D 仅在 1/68 个状态非零，未建立稳定可预测的 admission 信号，N/P 复现抽查亦未完成。本轮因此采用预定的 measurement study 交付路径：**Utility Gate 学习分支未触发，没有训练或验证 Gate**。这里不是声称某个已训练 Gate 检验失败，也没有把 1/68 事后改成预注册的数值阈值，更不能将其当作 `C<2.5pp` 的正式认证。D1 的独立局部验证仍是未完成事项，与 Aim 2 的条件式交付区别记录。
 
 ### 4.3 Aim 3：E 整局成功率
 
-最终分析状态为 `complete`，10 个分片均选择 attempt 1，共 134 个游戏、402 条游戏–策略记录；无技术缺失、未运行或重跑。以下数值均来自唯一一次最终 [analysis.json](https://github.com/YokilyHIT/cs5446/blob/gpu/aim3_e/results/analysis.public.json)，这里只做单位换算和显示舍入，未追加统计分析。完整性认证表示输出、身份和审计可复算，不表示策略有效。[E 执行记录](https://github.com/YokilyHIT/cs5446/blob/gpu/aim3_e/results/E_RUN_STATUS.public.md)
+最终分析状态为 `complete`，10 个分片均选择 attempt 1，共 134 个游戏、402 条游戏–策略记录；无技术缺失、未运行或重跑。以下数值均来自唯一一次最终 [analysis.public.json](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/aim3_e/results/analysis.public.json)，这里只做单位换算和显示舍入，未追加统计分析。完整性认证表示输出、身份和审计可复算，不表示策略有效。[E 执行记录](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/aim3_e/results/E_RUN_STATUS.public.md)
 
 | 策略 | 成功游戏 / 计划游戏 | SR@30 | policy failure 游戏 / 计划游戏 |
 | --- | --- | --- | --- |
@@ -174,9 +176,9 @@ D/N/P 分解保留了这种区别。P−N 的加权净值为 0，由一个正差
 | 11–20 | 24 / 15 | 0.1250 | 0.0833 | 0.0833 |
 | 21–30 | 28 / 17 | 0.2105 | 0.2105 | 0.2105 |
 
-在剩余预算 1–10 步的 16 个状态中，P 相对 D 的加权首动作改变率为 **75%**，但三分支终局 Y 均为 0。这是所采后期状态中的观测地板；它不证明这些状态在所有策略下都不可挽救，也不证明增加预算必然有效。[D0 预算分层](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/checkpoints/d0_report.md?plain=1#L96)
+在剩余预算 1–10 步的 16 个状态中，P 相对 D 的加权首动作改变率为 **75%**，但三分支终局 Y 均为 0。这是所采后期状态中的观测地板；它不证明这些状态在所有策略下都不可挽救，也不证明增加预算必然有效。[D0 预算分层](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/gpu_analysis/checkpoints/d0_report.md?plain=1#L96)
 
-路径诊断也显示了后续策略的限制：117 个物理续跑组中，88 个预算耗尽、14 个环境终止、15 个 policy failure；μ 转移中的相邻动作重复为 277/1280，最长连续相同动作为 20。这些是物理路径计数，不是按状态权重计算的总体率。固定的咖啡机案例中，三条不同首动作之后，下一步都执行了 examine coffeemachine，随后反复出现类似动作，最后均耗尽预算。相同动作不等于完整环境状态重新合流。[路径统计](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/checkpoints/d0_report.md?plain=1#L149)、[固定案例](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/checkpoints/d0_report.md?plain=1#L171)
+路径诊断也显示了后续策略的限制：117 个物理续跑组中，88 个预算耗尽、14 个环境终止、15 个 policy failure；μ 转移中的相邻动作重复为 277/1280，最长连续相同动作为 20。这些是物理路径计数，不是按状态权重计算的总体率。固定的咖啡机案例中，三条不同首动作之后，下一步都执行了 examine coffeemachine，随后反复出现类似动作，最后均耗尽预算。相同动作不等于完整环境状态重新合流。[路径统计](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/gpu_analysis/checkpoints/d0_report.md?plain=1#L149)、[固定案例](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/gpu_analysis/checkpoints/d0_report.md?plain=1#L171)
 
 一种待检验的解释是，低成功率、剩余预算和共享续跑策略的行为，使单步差异难以表现为终局差异。现有数据尚不能区分“干预本身无益”“有局部进展但预算不足”或“后续策略抵消差异”；因此“续跑把单步收益冲掉”保留为机制假设，不当作已确认结论。E 的 49/52 截断诊断则表明输出约束是另一条值得检验的路径，不能与 D0 的地板直接合并为同一原因。
 
@@ -188,7 +190,9 @@ WorldEvolver 用预测 confidence 筛选可能不可靠的预测；本文进一�
 
 ## 6. 局限
 
-134 局的历史用途仍未核实，因此 E 结果只能称为固定候选集上的条件性计算，不能宣称通过 untouched 资格审查。JSON 中 `confirmatory_status=available` 只表示结果足以计算预定统计量，不构成资格证明。区间依赖 iid 游戏配对总体模型，且当前精度仍容许相当幅度的正负差异；各片按 Always / no_info / none 固定顺序执行，也保留时间块局限。整局结果不能替代局部 admission/info 的独立证据。
+E 冻结时将 134 局的历史用途记为“未核实”。同一批游戏已出现在队友的 [Step 4 记录](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/step4_unseen_test/README.md#L3)和[方向 F 记录](https://github.com/YokilyHIT/cs5446/blob/a26e7e45c88716efc38279dd0d7af68ddba3826d/alfworld-preexp-npu/outputs/react_study/dirF_final_eval/README.md#L3)中，所记日期分别为 2026-10-13 和 2026-10-14，均早于本组 [E 冻结记录](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/aim3_e/plan/FREEZE.json#L4)中的 2026-10-18 04:33（UTC+8）。前两者是运行方记载，不是独立作业时间戳。本文因此将 E 作为固定候选集上的条件性结果，不宣称它是团队未使用过的独立测试集。这些记录本身不能证明本组冻结前接触过队友结果或据此调参；原冻结记录与分析保持不变。该资料只用于限定数据资格，队友的实验成绩未纳入本报告。JSON 中 `confirmatory_status=available` 只表示结果足以计算预定统计量，不构成资格证明。
+
+区间依赖 iid 游戏配对总体模型，且当前精度仍容许相当幅度的正负差异；各片按 Always / no_info / none 固定顺序执行，也保留时间块局限。整局结果不能替代局部 admission/info 的独立证据。
 
 本研究只覆盖一个固定的贪心解码配置与所记录的后端，未验证跨模型、解码配置或后端的泛化。T=0 避免随机 token 采样，但本身不能保证不同硬件、调度或服务条件下逐字节相同；复现结论应依据实际重放记录，而不是仅凭 seed 或 temperature。[vLLM 复现说明](https://docs.vllm.ai/en/v0.11.1/usage/reproducibility/)
 
@@ -222,14 +226,14 @@ D1 可在游戏隔离、用途核实和分析规则预先固定的条件下，�
 
 ## 附录：复算入口与版本
 
-D0 数值复用已有完整报告。其 [验收记录](https://github.com/YokilyHIT/cs5446/blob/gpu/gpu_analysis/checkpoints/d0_report_validation.json) 记载 78 项测试通过，以及隔离 CPU 复算输出逐字节一致；这是既有验收记录，本次报告写作没有重新运行实验或测试。在发布 checkout 中可用新输出名复算：
+D0 数值复用已有完整报告。其 [验收记录](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/gpu_analysis/checkpoints/d0_report_validation.json) 记载 78 项测试通过，以及隔离 CPU 复算输出逐字节一致；这是既有验收记录，本次整理没有重新运行实验或测试。以下入口按已有公开快照 `a9d837dc2ac3a54423943040551a04ae4576f3b5` 核对；在该 checkout 中可用新输出名复算：
 
 ```powershell
 # 在团队仓库 gpu 分支的根目录运行
 & python -B tools/build_d0_report.py --out gpu_analysis/generated/d0_baseline_report_new.json
 ```
 
-E 保持 v1.1 冻结，`FREEZE.json` SHA256 为 `30554636830cfc9af3b291d0054e6c2471ab6973198ca506778dc7eebabba5be`。唯一一次正式合并的前置条件和命令见 [EXECUTION_TASK.md 第 7 节](https://github.com/YokilyHIT/cs5446/blob/gpu/aim3_e/results/EXECUTION_TASK.public.md)。本报告使用的最终 `analysis.json` SHA256 为 `8b6c90435041c174945f88b754e9dc8ee353ddc7a9bd26e9ccbdd31ce05ef24e`。本轮直接读取既有 JSON 生成图表并核对转写、链接和哈希，没有再次运行分析器、checker、模型或实验，也没有修改冻结包、执行状态或原始证据。
+E 保持 v1.1 冻结，`FREEZE.json` SHA256 为 `30554636830cfc9af3b291d0054e6c2471ab6973198ca506778dc7eebabba5be`。唯一一次正式合并的前置条件和命令见 [EXECUTION_TASK.md 第 7 节](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/aim3_e/results/EXECUTION_TASK.public.md)。本报告使用的原始最终 `analysis.json` SHA256 为 `8b6c90435041c174945f88b754e9dc8ee353ddc7a9bd26e9ccbdd31ce05ef24e`；公开脱敏副本 `analysis.public.json` 的 SHA256 为 `527644ce446c4fcf3fee5e2f97b0642523eadd70bee8fe3f107842c6f81123cf`。本次整理只读取既有输出核对转写、图表来源、链接和哈希，未再次运行冻结合并器或逐片 checker。独立复验可使用公开的 [402 条逐局结果与复验说明](https://github.com/YokilyHIT/cs5446/blob/a9d837dc2ac3a54423943040551a04ae4576f3b5/recheck_4b/README.md)；公开分析是脱敏副本，逐局表用于数值复验；原始调用审计由项目组保留，公开材料入口见结果索引。
 
 四图同时提供 PNG 与同名 SVG。只重绘已有结果的命令为：
 
@@ -238,8 +242,6 @@ E 保持 v1.1 冻结，`FREEZE.json` SHA256 为 `30554636830cfc9af3b291d0054e6c2
 & python -B report_4b/figures/plot_baseline.py
 ```
 
-绘图使用已有 `cs5242` 环境中的 matplotlib，不更改实验环境；[图表来源记录](figures/figure_sources.json)列出两份输入 JSON 的哈希、字段和值。数值与区间均直接复用已有输出，只有比例、单位和显示舍入运算。
+现有四图由 `cs5242` 环境中的 matplotlib 绘制；[图表来源记录](figures/figure_sources.json)列出两份输入 JSON 的哈希、字段和值。数值与区间均直接复用已有输出，只有比例、单位和显示舍入运算。本次保留全部 PNG/SVG 和绘图脚本，不重新绘制。
 
-早期未含最终 E 的草稿保存在 第一版副本（本地留存 `MINIMAL_REPORT_DRAFT.before-final-E-20261018.md`），本轮修改前的完整草稿保存在 修订前副本（本地留存 `MINIMAL_REPORT_DRAFT.before-baseline-revision-20261018.md`）。E 的旧 `COMPLETION.json` 继续记录旧版本哈希，不回写历史回执；本轮文件与来源另记于 `BASELINE_DELIVERY.json`。用户报告的独立复算属于另一次核查，本 draft 不把尚未收到的完成/字节比对回执写成已通过，也未采用复核中新给出的 bootstrap 区间替换预定主分析。
-
-本轮按测量研究、负结果与机制诊断重组正文，补充了既有预算分层与路径描述、Math-Shepherd 相关工作，以及未启动的未来研究方向；没有改变原统计规则或重绘四图。重组前的 baseline draft（本地留存 `MINIMAL_REPORT_DRAFT.before-measurement-framing-20261018.md`） 和 交付记录（本地留存 `BASELINE_DELIVERY.before-measurement-framing-20261018.json`） 均保留，当前版本由更新后的 `BASELINE_DELIVERY.json` 标识。
+本版保留原结果表、四图和统计规则，仅更新报告文字与公开导航；版本变化由仓库提交历史记录，历史执行回执不回写。队友复验回执及课程 AI 声明格式待补；本报告不预写复验通过，也不采用另算区间替换预定主分析。
