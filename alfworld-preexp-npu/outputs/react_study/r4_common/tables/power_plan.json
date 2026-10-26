@@ -1,0 +1,14 @@
+{
+  "basis": "dev460 PR, 2 reps per arm; run-noise sd\u22480.15 dominates, task\u00d7arm sd 0\u20130.11",
+  "N_tasks_80pct_power": {
+    "gate_unc_vs_random_r3_d2pp": 350,
+    "topk_vs_random_r3_d2pp": 582,
+    "random_vs_none_r3_d2pp": 425,
+    "gate_unc_vs_random_r5_d2pp": 210
+  },
+  "decision": {
+    "phase5_dev": "460 tasks x 3 reps",
+    "phase7_fresh_test": "600 tasks x 3 reps (frozen list)",
+    "phase7_unseen134": "5 reps, called repeated evaluation"
+  }
+}

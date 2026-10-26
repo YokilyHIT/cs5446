@@ -1,0 +1,21 @@
+{
+  "frozen_at": "2026-10-21, after probe_4b results, before any inv_wmrepair run beyond 3-task smoke tests",
+  "question": "Can a frozen LLM world model (no rules) recover the value of the oracle precondition diagnosis + repair?",
+  "data": "dev460 x 2 reps, v2-list, gate = a_base not admissible; 4B planner (primary), 14B planner (secondary)",
+  "arms": {
+    "inv_wmrepair/wm4": "4B WM (= same model as the 4B planner: self-diagnosis)",
+    "inv_wmrepair/wm14": "Qwen3-14B WM (thinking off)",
+    "references": "none, inv_fail, inv_repair (oracle), inv_resample from probe_4b"
+  },
+  "primary_family_holm_4B": [
+    "wmrepair14-inv_fail:PR",
+    "wmrepair4-inv_fail:PR",
+    "inv_repair-wmrepair14:PR (remaining gap to oracle)"
+  ],
+  "secondary_family_holm_14B_planner": [
+    "p14b inv_repair-none:PR",
+    "p14b inv_wmrepair14-inv_fail:PR"
+  ],
+  "decision_rule": "A real-WM repair method is viable if wmrepair14 (or wmrepair4) beats inv_fail on PR (Holm<.05) by >= 2 pp; it then becomes the round-5 method candidate, to be compared against a rule-retrieval (RPMS-style) baseline and validated on the frozen fresh test set.",
+  "test": "paired task bootstrap 20k, two-sided, Holm within each family"
+}

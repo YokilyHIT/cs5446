@@ -1,0 +1,21 @@
+{
+  "frozen_at": "2026-10-19, before any Phase-3 result was inspected (only smoke rows existed)",
+  "data": "dev460 x 2 reps, protocol v2-list, gate_seed 2027, random 30% steps, NC when closed",
+  "arms": {
+    "none": "existing",
+    "R (RT)": "resample_pre T=0.7 seeded",
+    "R0": "resample0_pre (4B only, diagnostic)",
+    "W4": "random_pre_nc_p0.3 (existing; 4B WM)",
+    "W14": "random_pre --wm_role wm_alt (Qwen3-14B WM)",
+    "oracle_r30": "oracle_pre"
+  },
+  "primary_family_holm": [
+    "4B:W4-R:PR",
+    "4B:W14-R:PR",
+    "4B:oracle_r30-R:PR",
+    "14B:W4-R:PR",
+    "14B:W14-R:PR",
+    "14B:oracle_r30-R:PR"
+  ],
+  "test": "paired task bootstrap 20k (analyze_round3.boot_p), two-sided, Holm over the 6 primary contrasts; everything else exploratory"
+}

@@ -1,0 +1,170 @@
+{
+  "4B none": {
+    "n": 920,
+    "SR": 0.11739130434782609,
+    "inadmissible": 0.313338199978595,
+    "nothing_per_step": 0.31333819997859497,
+    "repeat_per_step": 0.5566092092842906,
+    "fail_loop_ending": 0.7352216748768473,
+    "funnel": {
+      "seen": 0.5076086956521739,
+      "picked": 0.42934782608695654,
+      "success": 0.11739130434782609,
+      "P(pick|seen)": 0.8458244111349036,
+      "P(success|picked)": 0.27341772151898736
+    },
+    "post_pick_fail_by_type": {
+      "look_at_obj_in_light": {
+        "picked": 51,
+        "fail_after_pick": 0.45098039215686275
+      },
+      "pick_and_place_simple": {
+        "picked": 64,
+        "fail_after_pick": 0.171875
+      },
+      "pick_clean_then_place_in_recep": {
+        "picked": 43,
+        "fail_after_pick": 0.7674418604651163
+      },
+      "pick_cool_then_place_in_recep": {
+        "picked": 22,
+        "fail_after_pick": 1.0
+      },
+      "pick_heat_then_place_in_recep": {
+        "picked": 76,
+        "fail_after_pick": 0.7763157894736842
+      },
+      "pick_two_obj_and_place": {
+        "picked": 139,
+        "fail_after_pick": 1.0
+      }
+    },
+    "heat_cool_clean": {
+      "attempts": 430,
+      "inadmissible_share": 0.8372093023255814,
+      "cells": {
+        "clean / away / NOT admissible / nothing happens": 112,
+        "heat / at appliance / NOT admissible / nothing happens": 89,
+        "cool / away / NOT admissible / nothing happens": 80,
+        "clean / at appliance / NOT admissible / nothing happens": 52,
+        "heat / at appliance / admissible / ok": 30,
+        "heat / away / NOT admissible / nothing happens": 23,
+        "cool / at appliance / admissible / ok": 21,
+        "clean / at appliance / admissible / ok": 19,
+        "cool / at appliance / NOT admissible / nothing happens": 4
+      }
+    }
+  },
+  "4B oracle_every": {
+    "n": 920,
+    "SR": 0.18043478260869567,
+    "inadmissible": 0.2573931064646776,
+    "nothing_per_step": 0.25739310646467767,
+    "repeat_per_step": 0.4603756415357524,
+    "fail_loop_ending": 0.5755968169761273,
+    "funnel": {
+      "seen": 0.5641304347826087,
+      "picked": 0.483695652173913,
+      "success": 0.18043478260869567,
+      "P(pick|seen)": 0.8574181117533719,
+      "P(success|picked)": 0.37303370786516854
+    },
+    "post_pick_fail_by_type": {
+      "look_at_obj_in_light": {
+        "picked": 63,
+        "fail_after_pick": 0.36507936507936506
+      },
+      "pick_and_place_simple": {
+        "picked": 75,
+        "fail_after_pick": 0.13333333333333333
+      },
+      "pick_clean_then_place_in_recep": {
+        "picked": 56,
+        "fail_after_pick": 0.6607142857142857
+      },
+      "pick_cool_then_place_in_recep": {
+        "picked": 27,
+        "fail_after_pick": 0.5555555555555556
+      },
+      "pick_heat_then_place_in_recep": {
+        "picked": 80,
+        "fail_after_pick": 0.65
+      },
+      "pick_two_obj_and_place": {
+        "picked": 144,
+        "fail_after_pick": 0.9861111111111112
+      }
+    },
+    "heat_cool_clean": {
+      "attempts": 297,
+      "inadmissible_share": 0.5757575757575758,
+      "cells": {
+        "clean / away / NOT admissible / nothing happens": 61,
+        "heat / at appliance / NOT admissible / nothing happens": 53,
+        "heat / at appliance / admissible / ok": 45,
+        "clean / at appliance / admissible / ok": 41,
+        "cool / at appliance / admissible / ok": 40,
+        "cool / away / NOT admissible / nothing happens": 25,
+        "heat / away / NOT admissible / nothing happens": 19,
+        "clean / at appliance / NOT admissible / nothing happens": 8,
+        "cool / at appliance / NOT admissible / nothing happens": 5
+      }
+    }
+  },
+  "14B none": {
+    "n": 920,
+    "SR": 0.5641304347826087,
+    "inadmissible": 0.17442837151838242,
+    "nothing_per_step": 0.17442837151838236,
+    "repeat_per_step": 0.2570168992978319,
+    "fail_loop_ending": 0.3690773067331671,
+    "funnel": {
+      "seen": 0.783695652173913,
+      "picked": 0.7369565217391304,
+      "success": 0.5641304347826087,
+      "P(pick|seen)": 0.9403606102635229,
+      "P(success|picked)": 0.7654867256637168
+    },
+    "post_pick_fail_by_type": {
+      "look_at_obj_in_light": {
+        "picked": 130,
+        "fail_after_pick": 0.18461538461538463
+      },
+      "pick_and_place_simple": {
+        "picked": 104,
+        "fail_after_pick": 0.009615384615384616
+      },
+      "pick_clean_then_place_in_recep": {
+        "picked": 86,
+        "fail_after_pick": 0.12790697674418605
+      },
+      "pick_cool_then_place_in_recep": {
+        "picked": 68,
+        "fail_after_pick": 0.27941176470588236
+      },
+      "pick_heat_then_place_in_recep": {
+        "picked": 111,
+        "fail_after_pick": 0.16216216216216217
+      },
+      "pick_two_obj_and_place": {
+        "picked": 179,
+        "fail_after_pick": 0.48044692737430167
+      }
+    },
+    "heat_cool_clean": {
+      "attempts": 483,
+      "inadmissible_share": 0.30434782608695654,
+      "cells": {
+        "heat / at appliance / admissible / ok": 128,
+        "cool / at appliance / admissible / ok": 105,
+        "clean / at appliance / admissible / ok": 103,
+        "cool / away / NOT admissible / nothing happens": 43,
+        "cool / at appliance / NOT admissible / nothing happens": 38,
+        "heat / at appliance / NOT admissible / nothing happens": 36,
+        "clean / at appliance / NOT admissible / nothing happens": 16,
+        "clean / away / NOT admissible / nothing happens": 11,
+        "heat / away / NOT admissible / nothing happens": 3
+      }
+    }
+  }
+}

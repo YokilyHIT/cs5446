@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import threading
 import time
 from pathlib import Path
@@ -18,6 +19,7 @@ from preexperiments.common.logging_utils import load_yaml_config
 from preexperiments.common.parallel import ordered_map
 from preexperiments.direction_b.pipeline import DirectionBPipeline
 from preexperiments.failure_selection._common import extract_task_type
+from preexperiments.react_study import agent as agent_mod
 from preexperiments.react_study.agent import ARMS, list_games, run_episode
 from preexperiments.react_study.common import MeteredLLM, stage_dir
 from preexperiments.react_study.protocol_v2 import PipelineV2
@@ -44,6 +46,11 @@ def select_games(games, n: int, seed: int, stratify: bool):
 
 
 def main(a: argparse.Namespace) -> None:
+    agent_mod.WM_ROLE = a.wm_role
+    if a.router:
+        from preexperiments.react_study.router import Router
+        agent_mod.ROUTER = Router(a.router)
+    agent_mod.ROUTE_RAND_P = (a.route_pR, a.route_pW)
     config = load_yaml_config(a.config)
     db_cfg = {**config.get("direction_b", {}), "reasoning_mode": "react"}
     hist_len = config["sampling"].get("history_length", 50)
@@ -73,7 +80,9 @@ def main(a: argparse.Namespace) -> None:
                "history_length": hist_len, "reasoning_mode": "react",
                "record_state": a.record_state, "protocol": a.protocol, "variant": a.variant,
                "second_call_when_closed": a.second_call_when_closed, "memory_mode": a.memory,
-               "memory_init": a.memory_init, "k_me": a.k_me}
+               "memory_init": a.memory_init, "k_me": a.k_me, "wm_role": a.wm_role, "router": a.router, "route_pR": a.route_pR, "route_pW": a.route_pW,
+               "env": {k: os.environ.get(k, "") for k in ("PREEXP_API_BASES", "PREEXP_PLANNER_MODEL",
+                       "PREEXP_PLANNER_BASES", "PREEXP_WM_ALT_MODEL", "PREEXP_WM_ALT_BASES")}}
     (d / f"{name}.config.json").write_text(json.dumps(run_cfg, indent=2))
     if a.write_games:
         (d / f"{a.prefix}games.txt").write_text("\n".join(games) + "\n")
@@ -148,6 +157,11 @@ def build_arg_parser():
     p.add_argument("--memory", default="off", choices=["off", "online"])
     p.add_argument("--memory_init", default="", help="seed the online bank from a previous dump")
     p.add_argument("--k_me", type=int, default=5)
+    p.add_argument("--router", default="", help="round 4: router model json for arm route")
+    p.add_argument("--route_pR", type=float, default=0.0, help="route_rand: P(R)")
+    p.add_argument("--route_pW", type=float, default=0.0, help="route_rand: P(W)")
+    p.add_argument("--wm_role", default="wm", choices=["wm", "wm_alt"],
+                   help="round 4: wm_alt routes WM calls to PREEXP_WM_ALT_* (e.g. Qwen3-14B)")
     return p
 
 

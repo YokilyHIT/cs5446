@@ -175,3 +175,16 @@ class PipelineV2(DirectionBPipeline):
         action, forced = parse_action_v2(resp.text, state["admissible_actions"])
         return action, forced, resp.text
 
+
+    def project_action(self, state: Dict[str, Any], raw_response: str):
+        """Admissibility projection (round 4 probe): keep the planner's own Thought, then re-decode
+        only the action under vLLM guided_choice over the admissible actions (+ check valid actions)."""
+        prompt = self._react_prompt(state, "")
+        m = list(_ACTION_RE.finditer(raw_response or ""))
+        thought = (raw_response[:m[-1].start()] if m else (raw_response or "")).rstrip()
+        prefill = (thought + "\n" if thought else "") + "Action: "
+        choices = list(state["admissible_actions"]) + [CHECK_VALID]
+        resp = self.llm.complete(prompt, seed=self.seed, temperature=self.temperature, top_p=self.top_p,
+                                 max_tokens=48, choices=choices, prefill=prefill)
+        a = resp.text.strip()
+        return (a if a in choices else choices[0]), prefill + resp.text

@@ -45,10 +45,21 @@ STAGES = {
     22: "dirC_interface",
     23: "dirE_larger_planner",
     24: "dirF_final_eval",
+    # round 4 (full research plan, started 2026-10-19)
+    30: "r4_common",
+    31: "p1_wm_capability",
+    32: "p2_branch_labels",
+    33: "p3_mechanism_matrix",
+    34: "p4_router",
+    35: "p5_dev_eval",
+    36: "p6_cross_planner",
+    37: "p7_final",
+    38: "probe_feasibility",
+    39: "failure_analysis",
 }
 SUBDIRS = ("raw", "tables", "figures", "logs")
 
-ROLES = ("planner_base", "planner_second", "wm")
+ROLES = ("planner_base", "planner_second", "wm", "wm_alt")
 
 
 def stage_dir(stage: int) -> Path:
@@ -145,8 +156,45 @@ class MeteredLLM:
                     c._client.chat.completions.create = create
                 self.planner_clients.append(c)
         self._rr_p = itertools.count()
+        # Round 4: optional alternative WM (e.g. Qwen3-14B) for role "wm_alt", configured by
+        # PREEXP_WM_ALT_BASES / PREEXP_WM_ALT_MODEL / PREEXP_WM_ALT_CHAT_KWARGS (same rules as planner).
+        self.wm_alt_clients = self._extra_clients(m, s, "PREEXP_WM_ALT")
+        self._rr_w = itertools.count()
+
+    @staticmethod
+    def _extra_clients(m, s, env_prefix):
+        pb = os.environ.get(f"{env_prefix}_BASES", "").strip()
+        if not pb:
+            return []
+        pm = os.environ[f"{env_prefix}_MODEL"]
+        kw = json.loads(os.environ.get(f"{env_prefix}_CHAT_KWARGS", "{}"))
+        out = []
+        for ep in [e for e in pb.split(",") if e.strip()]:
+            c = LLMClient(model=pm, api_base=ep.strip(), api_key=m.get("api_key", "EMPTY"),
+                          temperature=s["temperature"], top_p=s["top_p"],
+                          max_tokens=s["max_tokens_per_action"],
+                          request_timeout_s=m.get("request_timeout_s", 120),
+                          max_retries=m.get("max_retries", 5))
+            if kw:
+                orig = c._client.chat.completions.create
+
+                def create(*a, _orig=orig, _kw=kw, **k):
+                    k["extra_body"] = {**(k.get("extra_body") or {}), "chat_template_kwargs": _kw}
+                    return _orig(*a, **k)
+                c._client.chat.completions.create = create
+            out.append(c)
+        return out
 
     def _client(self) -> LLMClient:
+        if getattr(_TLS, "role", "") == "wm_alt":
+            if not self.wm_alt_clients:
+                raise RuntimeError("role wm_alt used but PREEXP_WM_ALT_BASES is not set")
+            c = getattr(_TLS, "wclient", None)
+            if c is None:
+                with self._lock:
+                    c = self.wm_alt_clients[next(self._rr_w) % len(self.wm_alt_clients)]
+                _TLS.wclient = c
+            return c
         if self.planner_clients and getattr(_TLS, "role", "").startswith("planner"):
             c = getattr(_TLS, "pclient", None)
             if c is None:

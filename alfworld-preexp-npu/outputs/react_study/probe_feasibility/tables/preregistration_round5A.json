@@ -1,0 +1,36 @@
+{
+  "frozen_at": "2026-10-21, before any stage-A run beyond 3-task smoke tests (plan: /home/ma-user/work/5446/react_study_round5_plan_20261021.md)",
+  "data": "dev460 x 2 reps, v2-list, gate_seed 2027, --record_state; gate = a_base not admissible (except post_wmrepair: previous executed action returned 'Nothing happens.')",
+  "new_arms": {
+    "inv_reflect": "preconditions.REFLECT_BLOCK",
+    "inv_sreflect": "preconditions.SREFLECT_BLOCK",
+    "inv_rules": "preconditions.rules_block (RULE_CARDS, per verb, state-independent)",
+    "inv_state": "preconditions.state_block (oracle tracked facts, no rules, no repair)",
+    "inv_wmpred": "WM next-observation prediction of the failing action (FORESIGHT_BLOCK)",
+    "post_wmrepair": "WM repair of the previous no-op action, shown in the next planner prompt (no admissible-list check)"
+  },
+  "best_WM_prespecified": "14B WM (wm_alt), from round-4 SR",
+  "primary_family_holm_4B_PR": [
+    "wmrepair_wm14-inv_reflect",
+    "wmrepair_wm14-inv_sreflect",
+    "wmrepair_wm14-inv_rules",
+    "wmrepair_wm14-inv_wmpred_wm14"
+  ],
+  "secondary_4B": [
+    "wmrepair_wm4-inv_sreflect",
+    "wmrepair_wm4-inv_wmpred_wm4",
+    "post_wmrepair_wm4-inv_fail",
+    "post_wmrepair_wm4-wmrepair_wm4"
+  ],
+  "secondary_family_holm_14B_PR": [
+    "inv_state-inv_fail",
+    "inv_repair-inv_state",
+    "inv_sreflect-inv_fail"
+  ],
+  "freeze_rule": {
+    "freeze inv_wmrepair": "comparison 1 significant (Holm<.05) AND comparisons 2,3 non-inferior (95% CI lower bound > -2 pp)",
+    "freeze inv_sreflect": "inv_sreflect >= inv_wmrepair (comparison 2 CI upper bound < 0, or point estimate <= 0 and n.s.)",
+    "no method claim": "inv_rules significantly better than both -> analysis paper (interface + capability dependence)"
+  },
+  "test": "paired task bootstrap 20k, two-sided, Holm within family"
+}

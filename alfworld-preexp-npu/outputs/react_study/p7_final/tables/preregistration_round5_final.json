@@ -1,0 +1,47 @@
+{
+  "frozen_at": "2026-10-21, after round-5 stage A, before ANY run on fresh_test600 or new unseen134 runs",
+  "method": {
+    "name": "failure-triggered WM repair (inv_wmrepair)",
+    "WM": "Qwen3-14B, thinking off (role wm_alt)",
+    "gate": "pre-execution: planner action not in the admissible list (and not 'check valid actions')",
+    "prompts": "preconditions.WM_REPAIR_PROMPT + preconditions.REPAIR_BLOCK",
+    "decoding": "T=0, top_p 0.5, seed 42 (direction_b config)"
+  },
+  "code_sha256": {
+    "agent.py": "abe26d7fe3e4021c246fb4258985beaa173d49648e566835b752b6f326dcd9f7",
+    "preconditions.py": "ca345b852f99bd7ab6d9786185cebea1852bfded71d12b083d1b7f90217da149",
+    "protocol_v2.py": "90edcccb55292b0909f8ac29896fe43736198a6a23b6188757fe7d3466427e8c",
+    "common.py": "597f7e48dad3fcfb6af884ce1aac9dd45b42a0e83337c5aaf79024f6681b146b",
+    "run_episodes.py": "176a773a07daba7dd62192fa802781b2c777f7953cfed63c704a9ccf2b17f4bc"
+  },
+  "fresh_test600_sha256_prefix": "c265b268",
+  "data": {
+    "fresh_test600": "600 never-run train-split tasks x 3 reps (unseen instances, same scene distribution)",
+    "unseen134": "eval_out_of_distribution x 5 reps (repeated evaluation)"
+  },
+  "arms_4B": [
+    "none",
+    "inv_fail",
+    "inv_reflect",
+    "inv_sreflect",
+    "inv_rules",
+    "wmrepair_wm14 (FROZEN)",
+    "wmrepair_wm4",
+    "inv_repair (oracle)"
+  ],
+  "arms_14B": [
+    "none",
+    "inv_fail",
+    "inv_reflect",
+    "inv_sreflect",
+    "inv_rules",
+    "wmrepair_wm14 (FROZEN)",
+    "inv_repair (oracle)"
+  ],
+  "hypotheses_4B_fresh600": {
+    "H1": "PR(frozen) > PR(inv_fail)",
+    "H3": "SR(frozen) > SR(none)",
+    "H2_noninferiority": "PR(frozen) - PR(inv_rules) 95% CI lower bound > -2 pp"
+  },
+  "test": "paired task bootstrap 20k on rep-averaged per-task values; H1,H3 two-sided, Holm over 2; H2 non-inferiority separately. Everything else (14B, unseen134, wm4, reflect/sreflect, oracle gap) is secondary/exploratory and reported in full."
+}

@@ -41,3 +41,20 @@ Third-party: AgentBoard code/data in `5446/third_party_dl/` (the prompt and test
 2. With a weak planner, the "selective intervention" SR gain mostly comes from perturbation / escaping loops; only the PR gain needs WM information.
 3. Gating can be split into "where" (planner uncertainty works, AUROC ≈ 0.75) and "whether it helps" (unsolved; confidence, outcome comparison and existing features all fail). gate_unc's cost advantage holds on both sets, but its advantage over a random gate does not pass the pre-registered test.
 4. 134 test tasks can only resolve differences of about 4 pp or more; dev results for C / A did not reproduce on unseen, and task-set heterogeneity is large.
+
+## Round 4 (2026-10-19 – 21, full research plan; `/home/ma-user/work/5446/react_study_full_research_plan_20261019.md`)
+| Directory | One-line conclusion |
+|---|---|
+| [r4_common/](r4_common/README.md) | Serving (4B NPU 0-3, 14B NPU 4-7), frozen data split (fresh_test600, label_pool, branch140), power plan; TextWorld env/disk leak fixed in `agent.py` |
+| [p1_wm_capability/](p1_wm_capability/tables/wm_capability.json) | Same state-action pairs: 14B WM token F1 +8 pp [4, 12] over 4B WM, effect/progress judgement not significantly better |
+| [p2_branch_labels/](p2_branch_labels/tables/p2_p2_4b.md) | Same-state 0/R/W labels (4B, 14B same states, 14B own states): g_I ~ 0 for every planner/WM, oracle included |
+| [p3_mechanism_matrix/](p3_mechanism_matrix/README.md) | Episode level, random 30%: W4/W14 - R n.s. for both planners; only 4B oracle - R +3.0 PR (Holm .005) |
+| [p4_router/](p4_router/README.md) | 374 new states: sign predictability did not replicate (AUROC 0.42); G1 failed, router line stopped |
+| [failure_analysis/](failure_analysis/tables/failure_analysis.md) | 4B: 31% inadmissible actions, 74% of failures end in loops, success after pick 0.27 (14B 0.77) |
+| [probe_feasibility/](probe_feasibility/README.md) | Failure-triggered repair: oracle diagnosis+repair 4B SR 11.7 -> 29.1; frozen-WM repair 23.9 / 26.5 (no rules) |
+
+## Round 5 (2026-10-21 – 23; `/home/ma-user/work/5446/react_study_round5_plan_20261021.md`)
+| Directory | One-line conclusion |
+|---|---|
+| [probe_feasibility/](probe_feasibility/README.md) (stage A) | Same WM and gate: repair interface +7 PR over next-observation prediction; not "reflect again"; separate diagnosis call beats in-context structured reflection; rule cards ~ WM repair on 4B, better on 14B. Freeze rule -> WM repair with 14B WM |
+| [p7_final/](p7_final/README.md) (stage B) | Frozen, never-run fresh_test600 x 3: 4B SR 20.9 -> 36.2 (H1 +4.2 PR vs failure notice, H3 +15.3 SR vs none, H2 non-inferior to rule cards; all supported), = oracle repair. 14B: +6.8 SR vs none but rule cards better. unseen134 x 5 agrees in direction |

@@ -1,0 +1,18 @@
+{
+  "frozen_at": "2026-10-21 11:30, before any probe run beyond 3-task smoke tests",
+  "question": "Does an environment-derived precondition diagnosis + repair (oracle upper bound of a 'repair-type' WM) add value beyond (a) a no-information resample, (b) a bare failure notice, (c) admissibility projection that needs no WM?",
+  "data": "4B planner, dev460 x 2 reps, protocol v2-list, gate = a_base not admissible (and not 'check valid actions'), NC otherwise",
+  "arms": {
+    "inv_resample": "T=0.7 same-prompt resample",
+    "inv_fail": "FAIL_BLOCK",
+    "inv_repair": "REPAIR_BLOCK (preconditions.diagnose)",
+    "inv_proj": "keep Thought, guided_choice over admissible"
+  },
+  "primary_family_holm": [
+    "inv_repair-inv_fail:PR",
+    "inv_repair-inv_proj:PR",
+    "inv_proj-none:PR"
+  ],
+  "decision_rule": "Repair-type foresight is worth building with a real WM only if inv_repair beats BOTH inv_fail and inv_proj on PR (Holm<.05) with a margin >= 2 pp.",
+  "test": "paired task bootstrap 20k (analyze_round3.boot_p), Holm over 3; others exploratory"
+}

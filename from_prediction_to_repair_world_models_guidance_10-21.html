@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Prediction to Repair: Studying How World Models Should Guide LLM Planning</title>
+<style>
+:root{
+  --bg:#f6f8fb;--card:#fff;--text:#18212f;--muted:#687385;--line:#dde3ea;
+  --blue:#315efb;--blue-soft:#eef3ff;--green:#138a61;--green-soft:#edf9f4;
+  --orange:#a96513;--orange-soft:#fff7e8;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.68}
+.page{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:250px minmax(0,1160px);gap:26px;padding:24px 22px 80px}
+.wrap{max-width:1160px;margin:0;padding:12px 0 0}
+.sidebar{position:sticky;top:18px;align-self:start;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 16px;box-shadow:0 8px 22px rgba(23,37,84,.05)}
+.sidebar h3{font-size:15px;margin:0 0 10px;color:#263247}
+.sidebar a{display:block;text-decoration:none;color:#4f5d73;font-size:13px;padding:7px 8px;border-radius:8px}
+.sidebar a:hover{background:var(--blue-soft);color:var(--blue)}
+.sidebar .mini{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5}
+.evidence{border-left:5px solid #7c3aed;background:#f5f0ff;border-radius:12px;padding:15px 17px;margin:14px 0}
+.evidence strong{color:#5b21b6}
+.done{color:#0f766e;font-weight:750}
+.num{color:#b45309;font-weight:800}
+.file{color:#5b21b6;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;word-break:break-word}
+.legend{display:grid;grid-template-columns:1fr;gap:7px;margin-top:12px;font-size:12px}
+.legend span{display:block;padding:7px 8px;border-radius:8px}
+.legend .l1{background:#edf9f4;color:#0f766e}
+.legend .l2{background:#fff7e8;color:#a96513}
+.legend .l3{background:#f5f0ff;color:#5b21b6}
+.hero{background:linear-gradient(135deg,#13254d,#203d86 55%,#315efb);color:#fff;border-radius:22px;padding:46px 48px;box-shadow:0 20px 48px rgba(25,48,108,.18)}
+.hero h1{margin:0;max-width:920px;font-size:38px;line-height:1.18;letter-spacing:-.02em}
+.hero p{margin:14px 0 0;color:#e7edff;font-size:18px;max-width:860px}
+.chip{display:inline-block;padding:7px 11px;margin:14px 7px 0 0;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);border-radius:999px;font-size:13px}
+h2{font-size:28px;margin:38px 0 14px}
+h3{font-size:20px;margin:24px 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin:18px 0;box-shadow:0 8px 22px rgba(23,37,84,.045)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.callout{background:var(--blue-soft);border-left:5px solid var(--blue);border-radius:12px;padding:17px 19px;margin:14px 0}
+.finding{background:var(--green-soft);border-left:5px solid var(--green);border-radius:12px;padding:17px 19px;margin:14px 0}
+.warning{background:var(--orange-soft);border-left:5px solid var(--orange);border-radius:12px;padding:17px 19px;margin:14px 0}
+.eq{font-family:"Times New Roman",serif;text-align:center;font-size:19px;background:#fafbfd;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:11px 0}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+th{background:#f2f5f9}
+.flow{display:flex;flex-direction:column;gap:10px;align-items:center;max-width:850px;margin:22px auto 4px}
+.node{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;text-align:center;padding:15px 18px;font-weight:650}
+.node.blue{background:var(--blue-soft);border-color:#cbd6ff}
+.node.green{background:var(--green-soft);border-color:#bee7d7}
+.arrow{font-size:23px;color:#7b8596}
+.section-label{color:var(--blue);font-weight:800;margin-right:8px}
+.footer{text-align:center;color:var(--muted);margin-top:46px;font-size:13px}
+@media(max-width:980px){.page{grid-template-columns:1fr;padding:20px 14px 60px}.sidebar{position:relative;top:auto}.grid{grid-template-columns:1fr}.hero{padding:30px 24px}.hero h1{font-size:30px}.wrap{padding:0}}
+</style>
+</head>
+<body>
+<div class="page">
+<aside class="sidebar">
+  <h3>Report Map</h3>
+  <a href="#core">Core Story</a>
+  <a href="#rq">Research Questions</a>
+  <a href="#when">Study 1 — WHEN</a>
+  <a href="#failure">Failure Analysis</a>
+  <a href="#what">Study 2 — WHAT</a>
+  <a href="#rof">Actionable Guidance</a>
+  <a href="#how">Study 3 — HOW</a>
+  <a href="#next">Frozen Evaluation &amp; Open Questions</a>
+  <a href="#claim">Contribution Framing</a>
+  <div class="legend">
+    <span class="l1">Green = completed finding</span>
+    <span class="l2">Orange = key number / caution</span>
+    <span class="l3">Purple = evidence file</span>
+  </div>
+  <div class="mini">Use the colored evidence panels to keep every claim tied to a completed experiment.</div>
+</aside>
+<div class="wrap">
+
+<section class="hero">
+  <h1>From Prediction to Repair: Studying How World Models Should Guide LLM Planning</h1>
+  <p>A project report structure centered on one question: <strong>how should world models guide an LLM planner?</strong></p>
+  <span class="chip">Updated 2026-10-23 &middot; frozen evaluation complete</span><span class="chip">ALFWorld</span><span class="chip">World-Model Guidance</span><span class="chip">Selective Predictive Foresight</span><span class="chip">Failure Diagnosis</span><span class="chip">Actionable Guidance</span>
+</section>
+
+<h2 id="core"><span class="section-label">0.</span>Core Story</h2>
+<section class="card">
+  <div class="flow">
+    <div class="node blue">Main Question: How should world models guide an LLM planner?</div>
+    <div class="arrow">↓</div>
+    <div class="node">Start from a common interface: predictive guidance via next-observation foresight.</div>
+    <div class="arrow">↓</div>
+    <div class="node"><strong>WHEN</strong> — When is predictive guidance useful, and can it be selectively invoked?</div>
+    <div class="arrow">↓</div>
+    <div class="node">Finding: Predictive guidance has limited and unstable marginal value; learned routing is not reliably better than random.</div>
+    <div class="arrow">↓</div>
+    <div class="node"><strong>WHAT</strong> — What information does the planner actually need from the world model?</div>
+    <div class="arrow">↓</div>
+    <div class="node green">Finding: Action-feasibility diagnosis and repair guidance are much more useful than raw future observation.</div>
+    <div class="arrow">↓</div>
+    <div class="node"><strong>HOW</strong> — How can a frozen world model produce this actionable guidance without explicit rules?</div>
+    <div class="arrow">↓</div>
+    <div class="node green">Frozen evaluation: repair guidance benefits the 4B planner; explicit rules remain competitive for the 14B planner.</div>
+  </div>
+  <div class="callout"><strong>Key framing:</strong> the project follows a <strong>WHEN → WHAT → HOW</strong> progression. It starts from conventional predictive guidance, tests when it helps, identifies what information the planner actually needs, and finally studies how a frozen world model can produce that actionable guidance.</div>
+</section>
+
+<h2 id="rq"><span class="section-label">1.</span>Research Questions</h2>
+<section class="card">
+  <div class="eq">World-Model Guidance → Predictive Guidance → Missing Information → Actionable Guidance</div>
+  <div class="grid">
+    <div class="card"><h3>RQ1 — WHEN</h3><p>When is conventional predictive world-model guidance useful, and can it be selectively invoked?</p></div>
+    <div class="card"><h3>RQ2 — WHAT</h3><p>What information makes world-model guidance useful to the planner?</p></div>
+    <div class="card"><h3>RQ3 — HOW</h3><p>How can a frozen world model generate actionable guidance without explicit environment rules?</p></div>
+    <div class="card"><h3>Secondary Question</h3><p>How does planner capability change the value of diagnostic foresight?</p></div>
+  </div>
+</section>
+
+<h2><span class="section-label">2.</span>Motivation</h2>
+<section class="card">
+  <p>LLM agents often fail in long-horizon environments because they choose infeasible actions, miss action preconditions, lose track of state, or repeat failed behavior. A natural solution is to use a world model to predict future outcomes.</p>
+  <p>A common way to expose world-model knowledge is <strong>predictive guidance</strong>: predict the next observation or future state and provide it to the planner. We begin from this standard interface before considering other forms of guidance.</p>
+  <p>However, future prediction only helps if the planner can convert it into a better decision.</p>
+  <div class="eq">Prediction Accuracy ≠ Decision Utility</div>
+  <p>The project therefore studies not only whether foresight is accurate, but whether its information is useful for action selection.</p>
+</section>
+
+<div class="evidence">
+  <strong>Completed experiment — Protocol calibration</strong><br>
+  On <span class="done">pilot102 only</span>, v1 → v2-list raises SR from <span class="num">16.7%</span> to <span class="num">26.5%</span> and PR from <span class="num">36.0%</span> to <span class="num">45.8%</span>.<br>
+  <span class="file">step0_protocol_v2_measurement/tables/pilot102_protocol_comparison.json</span><br>
+  <span class="file">step0_protocol_v2_measurement/README.md</span><br>
+  <span class="num">Scope note:</span> these numbers are pilot102-specific and must not be mixed with dev600, dev460, or unseen134 baselines.
+</div>
+<h2 id="when"><span class="section-label">3.</span>Study 1 — WHEN: When Is Predictive Guidance Useful?</h2>
+<section class="card">
+  <h3>Starting Point</h3>
+  <p>We first evaluate the standard predictive interface: next-observation foresight. We test both its overall value and whether selective invocation can improve its cost-effectiveness.</p>
+  <p>The initial hypothesis is that predictive guidance may be useful only in selected states. If so, a router should identify those states and allocate it selectively.</p>
+  <div class="eq">state → router → use predictive foresight / do not use predictive foresight</div>
+
+  <h3>Experiments</h3>
+  <ul>
+    <li>None vs Always vs Selective</li>
+    <li>Selective vs Random 30%</li>
+    <li>With vs Without Episodic Memory</li>
+    <li>Confidence, rule-based, and learned gates</li>
+    <li>State-level intervention labels and router prediction</li>
+  </ul>
+
+  <h3>Key Results</h3>
+  <table>
+    <tr><th>Result</th><th>Evidence</th></tr>
+    <tr><td>Selective predictive foresight gives a small gain over none.</td><td>On unseen134: Selective + memory gives +3.9 pp SR vs none.</td></tr>
+    <tr><td>Random routing performs similarly.</td><td>Random 30% gives +2.8 pp; Selective + memory vs random is only +0.6 pp.</td></tr>
+    <tr><td>Memory does not give stable task-level gains.</td><td>Prediction matching improves, but SR does not improve reliably.</td></tr>
+    <tr><td>Initial state-level predictability does not replicate.</td><td>AUROC drops from 0.70–0.74 on 127 states to about 0.42–0.53 after expansion.</td></tr>
+  </table>
+
+  <div class="finding"><strong>Finding 1:</strong> conventional predictive guidance has limited and unstable marginal value. Selective invocation does not reliably outperform matched random selection.</div>
+<div class="evidence">
+  <strong>Completed experiment — Selective foresight and routing</strong><br>
+  <span class="done">unseen134:</span> Selective + memory gives <span class="num">+3.9 pp SR</span> vs none; Random 30% gives <span class="num">+2.8 pp</span>. Selective + memory vs random is only <span class="num">+0.6 pp</span>.<br>
+  <span class="done">State-level routing:</span> sign AUROC falls from <span class="num">0.70–0.74</span> on the initial 127 states to about <span class="num">0.42–0.53</span> after expansion.<br>
+  <span class="file">step4_unseen_test/tables/summary_unseen134_ref_random_pre.md</span><br>
+  <span class="file">p4_router/README.md</span><br>
+  <span class="file">p2_branch_labels/tables/p2_4b_pooled.md</span>
+</div>
+</section>
+
+<h2><span class="section-label">4.</span>Why Predictive Guidance Is Not Enough</h2>
+<section class="card">
+  <p>The routing results suggest a deeper issue: the main limitation may not be when predictive guidance is invoked, but whether next-observation prediction is the information the planner actually needs.</p>
+  <p>State-level intervention results support this interpretation: the incremental benefit of W4 or W14 over resampling is close to zero.</p>
+  <div class="callout"><strong>Project transition:</strong> after testing the standard predictive interface, we ask a broader question: <em>what information should the world model expose to the planner?</em></div>
+</section>
+
+<h2 id="failure"><span class="section-label">5.</span>Failure Analysis — What Does the Planner Actually Miss?</h2>
+<section class="card">
+  <table>
+    <tr><th>Failure Signal</th><th>4B Planner</th><th>14B Planner</th></tr>
+    <tr><td>Invalid actions</td><td>31.3%</td><td>17.4%</td></tr>
+    <tr><td>Failed episodes ending in loops</td><td>74%</td><td>37%</td></tr>
+    <tr><td>Success after object pickup</td><td>0.27</td><td>0.77</td></tr>
+    <tr><td>Invalid heat/cool/clean actions</td><td>84%</td><td>Lower than 4B</td></tr>
+  </table>
+  <div class="finding"><strong>Finding 2:</strong> a major bottleneck is not long-horizon prediction itself, but local action feasibility and missing preconditions.</div>
+<div class="evidence">
+  <strong>Completed experiment — Failure analysis</strong><br>
+  <span class="done">4B:</span> <span class="num">31.3%</span> invalid actions; <span class="num">74%</span> of failed episodes end in loops; post-pickup success is <span class="num">0.27</span>; heat/cool/clean actions are <span class="num">84%</span> invalid.<br>
+  <span class="done">14B:</span> <span class="num">17.4%</span> invalid actions and <span class="num">37%</span> loop-ending failures.<br>
+  <span class="file">failure_analysis/tables/failure_analysis.md</span><br>
+  <span class="file">preexperiments/react_study/failure_analysis.py</span>
+</div>
+  <p>This suggests that the planner may need causal and procedural guidance, not just a predicted next observation.</p>
+</section>
+
+<h2 id="what"><span class="section-label">6.</span>Study 2 — WHAT: What Information Does the Planner Need?</h2>
+<section class="card">
+  <p>The feasibility probe is treated as a <strong>world-model guidance decomposition study</strong>. The planner receives different forms of guidance while the environment and planner stay fixed.</p>
+  <table>
+    <tr><th>Information Interface</th><th>Meaning</th><th>SR</th><th>PR</th></tr>
+    <tr><td>None</td><td>No extra information</td><td>11.7%</td><td>32.8%</td></tr>
+    <tr><td>Oracle next observation</td><td>What will happen next?</td><td>18.0%</td><td>38.7%</td></tr>
+    <tr><td>Failure only</td><td>This action is invalid.</td><td>18.3%</td><td>36.7%</td></tr>
+    <tr><td>Legal projection</td><td>Restrict action to legal choices.</td><td>14.2%</td><td>36.2%</td></tr>
+    <tr><td><strong>Oracle repair</strong></td><td><strong>Why did it fail, and what should be done first?</strong></td><td><strong>29.1%</strong></td><td><strong>41.0%</strong></td></tr>
+  </table>
+  <div class="finding"><strong>Finding 3:</strong> guidance content matters more than raw prediction accuracy. Correct future observation is much less useful than action-feasibility diagnosis and repair guidance.</div>
+<div class="evidence">
+  <strong>Completed experiment — Foresight information probe</strong><br>
+  On <span class="done">dev460 × 2</span>, oracle next-observation foresight reaches <span class="num">18.0% SR</span>, while oracle repair reaches <span class="num">29.1% SR</span> with fewer tokens per task.<br>
+  Failure-only reaches <span class="num">18.3% SR</span>; legal projection reaches <span class="num">14.2% SR</span>.<br>
+  <span class="file">probe_feasibility/tables/probe_4b.md</span><br>
+  <span class="file">probe_feasibility/README.md</span>
+</div>
+  <div class="eq">Knowing what happens &lt; Knowing why it fails + What to do first</div>
+</section>
+
+<h2 id="rof"><span class="section-label">7.</span>Designing Actionable World-Model Guidance</h2>
+<section class="card">
+  <p>Based on Study 2, we redesign the world-model interface from raw prediction to decision-relevant diagnosis and repair.</p>
+  <h3>Predictive Guidance</h3>
+  <div class="eq">F<sub>pred</sub>(h<sub>t</sub>, a<sub>t</sub>) → predicted next observation</div>
+  <p>Question: <strong>What will happen?</strong></p>
+
+  <h3>Actionable Guidance</h3><p><strong>Actual frozen trigger:</strong> before execution, check whether the proposed action is absent from the environment-provided admissible-action list (excluding the check-valid-actions command). Only then ask Qwen3-14B, thinking off, for diagnosis and repair guidance and let the planner revise its action. No hand-written rule cards are supplied to this arm, but it does rely on environment-provided legality information.</p>
+  <div class="eq">F<sub>repair</sub>(h<sub>t</sub>, a<sub>t</sub>, invalid(a<sub>t</sub>)) → {failure cause, missing precondition, first repair action}</div>
+  <p>Questions: <strong>Why is the proposed action infeasible?</strong> <strong>What condition is missing?</strong> <strong>What should be done first?</strong></p>
+  <div class="callout">The world model remains the source of environment knowledge. The change is the <strong>guidance interface</strong>: from outcome prediction to actionable diagnosis and repair.</div>
+</section>
+
+<h2 id="how"><span class="section-label">8.</span>Study 3 — HOW: Can a Frozen World Model Produce Actionable Guidance?</h2>
+<section class="card">
+  <p>The final question is whether the useful guidance identified in Study 2 can be produced by a frozen model without hand-written rule cards. The table below is the <strong>development evidence (dev460 &times; 2)</strong> that motivated method selection; the frozen evaluation in Section 10 supplies the main confirmatory evidence.</p>
+  <table>
+    <tr><th>Planner</th><th>Method</th><th>SR</th><th>PR</th></tr>
+    <tr><td>4B</td><td>None</td><td>11.7%</td><td>32.8%</td></tr>
+    <tr><td>4B</td><td>Failure only</td><td>18.3%</td><td>36.7%</td></tr>
+    <tr><td>4B</td><td><strong>4B WM repair</strong></td><td><strong>23.9%</strong></td><td><strong>43.5%</strong></td></tr>
+    <tr><td>4B</td><td><strong>14B WM repair</strong></td><td><strong>26.5%</strong></td><td><strong>42.2%</strong></td></tr>
+    <tr><td>4B</td><td>Oracle repair</td><td>29.1%</td><td>41.0%</td></tr>
+    <tr><td>14B</td><td>None</td><td>56.4%</td><td>68.9%</td></tr>
+    <tr><td>14B</td><td>Failure only</td><td>63.9%</td><td>73.3%</td></tr>
+    <tr><td>14B</td><td>14B WM repair</td><td>64.9%</td><td>74.1%</td></tr>
+    <tr><td>14B</td><td>Oracle repair</td><td>69.5%</td><td>76.7%</td></tr>
+  </table>
+  <div class="finding"><strong>Finding 4:</strong> on the 4B planner, a frozen world model can recover much of the oracle repair benefit without explicit rules.</div>
+<div class="evidence">
+  <strong>Completed experiment — Real WM repair</strong><br>
+  <span class="done">4B planner:</span> none <span class="num">11.7%</span> SR → 4B WM repair <span class="num">23.9%</span> → 14B WM repair <span class="num">26.5%</span>; oracle repair <span class="num">29.1%</span>.<br>
+  Relative to failure-only, PR improves by about <span class="num">+5.5 / +6.8 pp</span> with Holm-corrected significance.<br>
+  <span class="file">probe_feasibility/tables/wmrepair.md</span><br>
+  <span class="file">probe_feasibility/tables/preregistration_wmrepair.json</span>
+</div>
+  <div class="warning"><strong>Development-set note:</strong> these WM-repair results are from dev460 × 2. Final claims should rely on the frozen new test set.</div>
+</section>
+
+<h2><span class="section-label">9.</span>Capability-Dependent Behavior</h2>
+<section class="card">
+<p>The final evaluation sharpens the capability question: does diagnostic guidance contribute knowledge beyond what the planner can already use?</p>
+<div class="grid">
+<div class="card"><h3>4B Planner: substantial additional value</h3><p>On fresh600, failure-only reaches 28.3% SR; frozen 14B WM repair reaches <strong>36.2%</strong>. It also exceeds generic reflection (28.6%), structured reflection (23.7%), and rule cards (33.3%). A 4B WM reaches only 29.7%.</p></div>
+<div class="card"><h3>14B Planner: explicit rules remain strong</h3><p>On fresh600, failure-only reaches 63.9% SR and WM repair 65.9%; rule cards reach <strong>68.8%</strong> and oracle repair 69.5%. WM repair is not a universally superior guidance source.</p></div>
+</div>
+<div class="finding"><strong>Finding 5:</strong> diagnostic repair has greater incremental value for the weaker planner in these experiments. For the stronger planner, precise rule cards outperform the frozen WM on fresh600.</div>
+<div class="warning"><strong>Interpretation, not an identified mechanism:</strong> knowledge overlap between the 14B planner and WM could explain the smaller gain. The earlier state-tracking explanation remains a hypothesis: the oracle gap does not isolate state observability from rule knowledge, diagnosis quality, or action choice. These are secondary comparisons, not a pre-registered statistical interaction test.</div>
+</section>
+
+<h2 id="next"><span class="section-label">10.</span>Frozen Evaluation: Does the Repair Story Hold?</h2>
+<section class="card">
+<h3>10.1 From development to a frozen test</h3>
+<p>After Stage A, the method, prompts, decoding, code hashes, and test-set identifier were frozen on 2026-10-21. The selected method is <strong>inv_wmrepair with Qwen3-14B WM, thinking off</strong>. Fresh600 contains 600 previously unrun train-split task instances, each evaluated three times. It tests new instances in the same scene distribution, not a new environment distribution. Unseen134 is a separate out-of-distribution split evaluated five times, but has been used in earlier rounds and is treated as secondary repeated evaluation.</p>
+<p>SR measures full-task success; PR measures subgoal progress. Inference averages repetitions within each task, then uses 20,000 paired task-bootstrap samples. Thus fresh600 has 600 task units, not 1,800 independent tasks. All differences below are percentage points (pp), with 95% confidence intervals.</p>
+<h3>10.2 Fresh600: the main evidence</h3>
+<table>
+<tr><th>Guidance arm</th><th>4B SR</th><th>4B PR</th><th>14B SR</th><th>14B PR</th><th>4B tokens/task</th></tr>
+<tr><td>None</td><td>20.9%</td><td>39.4%</td><td>59.1%</td><td>70.3%</td><td>37.6k</td></tr>
+<tr><td>Failure only</td><td>28.3%</td><td>44.8%</td><td>63.9%</td><td>72.8%</td><td>46.9k</td></tr>
+<tr><td>Generic reflection</td><td>28.6%</td><td>45.9%</td><td>64.9%</td><td>73.5%</td><td>47.5k</td></tr>
+<tr><td>Structured reflection</td><td>23.7%</td><td>42.8%</td><td>65.4%</td><td>74.0%</td><td>50.1k</td></tr>
+<tr><td>Hand-written rule cards</td><td>33.3%</td><td>46.8%</td><td><strong>68.8%</strong></td><td><strong>76.0%</strong></td><td>44.4k</td></tr>
+<tr><td>4B WM repair</td><td>29.7%</td><td>46.6%</td><td>&mdash;</td><td>&mdash;</td><td>53.0k</td></tr>
+<tr><td><strong>14B WM repair (frozen)</strong></td><td><strong>36.2%</strong></td><td><strong>49.0%</strong></td><td>65.9%</td><td>74.3%</td><td>47.8k</td></tr>
+<tr><td>Oracle repair</td><td>36.7%</td><td>47.5%</td><td>69.5%</td><td>76.6%</td><td>42.5k</td></tr>
+</table>
+<table>
+<tr><th>Pre-registered claim: 4B / fresh600</th><th>Estimate and 95% CI</th><th>Conclusion</th></tr>
+<tr><td>H1: PR gain over failure only</td><td>+4.2 [2.6, 5.7]</td><td>Supported; Holm-adjusted p &lt; 0.001</td></tr>
+<tr><td>H3: SR gain over none</td><td>+15.3 [12.7, 17.8]</td><td>Supported; Holm-adjusted p &lt; 0.001</td></tr>
+<tr><td>H2: PR non-inferiority to rule cards</td><td>+2.2 [0.5, 3.9]</td><td>Supported: lower bound exceeds the -2 pp margin</td></tr>
+</table>
+<p>H1 and H3 are Holm-corrected together; H2 is a separate pre-registered non-inferiority assessment. All other contrasts are secondary and uncorrected. Printed p=0.000 in the source tables is rounding, not a literal zero probability.</p>
+<h3>10.3 What the controls add to the story</h3>
+<ul>
+<li><strong>Failure detection already helps.</strong> Failure-only raises 4B SR by 7.4 pp over none. WM repair adds a further 7.9 pp [5.7, 10.1]. The total gain cannot all be attributed to diagnosis.</li>
+<li><strong>Extra reflection alone is insufficient.</strong> Generic reflection is close to failure-only; structured reflection is worse in this configuration. WM repair exceeds them by 7.6 and 12.6 pp SR respectively. This constrains the &ldquo;just think again&rdquo; explanation without proving that all reflection methods are ineffective.</li>
+<li><strong>Diagnostic model capability matters.</strong> The 4B WM trails the 14B WM by 6.6 pp SR; its gain over failure-only is not significant. A separate diagnostic role alone does not explain the effect, and model capability is not held constant in this comparison.</li>
+<li><strong>Rule cards are a substantive comparator.</strong> Frozen repair exceeds them by 2.9 pp SR [0.4, 5.4] for 4B, an exploratory superiority result. For 14B, it trails rule cards by 2.9 pp [-5.1, -0.8]. These are hand-written cards, not a reproduction of a full external rule-retrieval system.</li>
+<li><strong>Near the oracle comparator, not proven equivalent.</strong> For 4B, oracle minus frozen repair is +0.4 pp SR [-1.8, 2.7]. An undetected difference is not an equivalence test, and oracle diagnosis is not an optimal-policy ceiling.</li>
+</ul>
+<h3>10.4 Unseen134: supportive, secondary evidence</h3>
+<table>
+<tr><th>Arm</th><th>4B SR / PR</th><th>14B SR / PR</th></tr>
+<tr><td>None</td><td>25.4% / 41.0%</td><td>67.6% / 76.3%</td></tr>
+<tr><td>Failure only</td><td>34.2% / 46.7%</td><td>74.0% / 81.2%</td></tr>
+<tr><td>Rule cards</td><td>34.9% / 47.6%</td><td>75.1% / 82.8%</td></tr>
+<tr><td>Frozen WM repair</td><td><strong>38.5% / 48.8%</strong></td><td>75.5% / 81.2%</td></tr>
+<tr><td>Oracle repair</td><td>38.4% / 48.3%</td><td>79.0% / 83.6%</td></tr>
+</table>
+<p>For 4B, frozen repair gains 13.1 pp SR [8.7, 17.8] over none and 4.3 pp [0.7, 8.2] over failure-only. However, PR gains over failure-only (+2.1 [-0.4, 4.6]) and rules (+1.1 [-1.2, 3.5]) are not significant. For 14B, frozen repair is not clearly separated from failure-only or rule cards. The direction supports the main story; not every contrast replicates conclusively.</p>
+<h3>10.5 Cost and scope</h3>
+<p>On fresh600 with a 4B planner, frozen repair uses 47.8k tokens/task: about 27% above none, 2% above failure-only, and 8% above rule cards. Tokens aggregate planner and WM inputs/outputs; mixed model sizes mean this is not a latency, monetary-cost, or compute-matched comparison. A 14B planner alone achieves 59.1% SR with 27.5k tokens, so these results do not establish 4B-plus-WM as the best deployment configuration.</p>
+<div class="warning"><strong>Boundaries:</strong> the method depends on an admissible-action gate. Fresh600 does not directly repeat all predictive-interface arms from Study 2. The prediction-to-repair argument combines development interventions with frozen validation of the selected repair method; it is not a fresh600 head-to-head result against every prediction baseline. Absolute dev/test rates should not be compared as treatment effects.</div>
+<div class="evidence"><strong>Completed frozen-evaluation evidence</strong><br>
+<a class="file" href="alfworld-preexp-npu/outputs/react_study/p7_final/tables/preregistration_round5_final.json">Pre-registration and analysis plan</a><br>
+<a class="file" href="alfworld-preexp-npu/outputs/react_study/p7_final/tables/final_fresh600.md">Fresh600: full results and paired contrasts</a><br>
+<a class="file" href="alfworld-preexp-npu/outputs/react_study/p7_final/tables/final_unseen134.md">Unseen134: full results and paired contrasts</a><br>
+<a class="file" href="alfworld-preexp-npu/preexperiments/react_study/analyze_final.py">Analysis implementation</a>
+<p>The distributed archive contains aggregate results, not the complete episode-level evaluation logs; the analysis here interprets those results rather than independently recomputing them.</p></div>
+<h3>10.6 Remaining experiments</h3>
+<p>Reflection controls, rule-card controls, and frozen evaluation are now complete. Open questions are: separately ablate cause, missing precondition, and first repair action; test counterfactual feasibility guidance; compare state-information interventions for the stronger planner; evaluate learned or post-execution triggers without an admissible-action gate; and compare models under matched compute or latency. These remain proposals, not findings of p7_final.</p>
+</section>
+
+<h2><span class="section-label">11.</span>Recommended Method Comparison</h2>
+<section class="card">
+<table>
+<tr><th>Method</th><th>Trigger</th><th>Information Form</th><th>Knowledge Source</th></tr>
+<tr><td>None</td><td>—</td><td>None</td><td>—</td></tr>
+<tr><td>Failure only</td><td>Pre-execution invalid-action gate</td><td>Binary failure signal</td><td>Environment</td></tr>
+<tr><td>Generic reflection</td><td>Pre-execution invalid-action gate</td><td>Unstructured reasoning</td><td>Planner</td></tr>
+<tr><td>Structured reflection</td><td>Pre-execution invalid-action gate</td><td>Precondition + repair</td><td>Planner</td></tr>
+<tr><td>Hand-written rule cards</td><td>Pre-execution invalid-action gate</td><td>Explicit action rules</td><td>Rule base</td></tr>
+<tr><td><strong>Actionable Guidance</strong></td><td>Pre-execution invalid-action gate</td><td>Cause + precondition + repair</td><td>Frozen WM</td></tr>
+<tr><td>Oracle repair</td><td>Pre-execution invalid-action gate</td><td>True cause + true repair</td><td>True state + rules</td></tr>
+</table>
+</section>
+
+<h2 id="claim"><span class="section-label">12.</span>Contribution Framing</h2>
+<section class="card">
+  <h3>Weak Claim</h3><p>We use a world model to repair failed actions.</p>
+  <h3>Better Claim</h3><p>We use a pre-execution invalid-action signal to trigger targeted frozen-world-model diagnosis and repair.</p>
+  <h3>Strongest Conceptual Claim</h3>
+  <div class="callout"><strong>Our experiments motivate a shift from selecting when to predict toward designing decision-relevant diagnostic guidance; frozen evaluation confirms its value for a weaker planner under an admissible-action gate.</strong></div>
+  <p>In this project, raw outcome prediction is weak, while decision-relevant abstractions such as missing preconditions and first repair actions are substantially more useful.</p>
+</section>
+
+<h2><span class="section-label">13.</span>Recommended Report Structure</h2>
+<section class="card">
+  <ol>
+    <li><strong>Introduction</strong> — How should world models guide an LLM planner?</li>
+    <li><strong>Related Work</strong> — World models, selective planning, reflection, rule-based repair.</li>
+    <li><strong>Experimental Setup</strong> — ALFWorld, planners, world models, metrics, task splits.</li>
+    <li><strong>Study 1: WHEN</strong> — Selective foresight, random routing, memory, learned router.</li>
+    <li><strong>Failure Analysis</strong> — Invalid actions, loops, precondition failures.</li>
+    <li><strong>Study 2: WHAT</strong> — Compare prediction, failure, feasibility, and repair information.</li>
+    <li><strong>Actionable Guidance</strong> — Method definition.</li>
+    <li><strong>Study 3: HOW</strong> — Frozen WM repair, reflection baselines, rule retrieval.</li>
+    <li><strong>Capability Analysis</strong> — 4B vs 14B planner behavior.</li>
+    <li><strong>Final Frozen Evaluation (completed)</strong> — New test set.</li>
+    <li><strong>Discussion</strong> — Decision utility, information abstraction, planner capability.</li>
+    <li><strong>Conclusion</strong> — From predictive guidance to actionable repair.</li>
+  </ol>
+</section>
+
+<h2><span class="section-label">14.</span>Suggested Abstract Logic</h2>
+<section class="card">
+  <ol>
+    <li>World models are commonly used to provide predictive guidance about future outcomes to LLM agents.</li>
+    <li>We first test whether its value can be improved by learning when to invoke it.</li>
+    <li>Selective routing gives only weak gains and does not reliably outperform random selection.</li>
+    <li>Failure analysis shows that many errors come from infeasible actions and missing preconditions.</li>
+    <li>Controlled interventions show that true next observations are much less useful than explicit failure diagnosis and repair guidance.</li>
+    <li>We therefore study repair-oriented foresight, where an invalid proposed action triggers a frozen world model to diagnose missing preconditions and suggest a first repair action before execution.</li>
+    <li>In pre-registered fresh600 evaluation, frozen 14B WM repair raises 4B planner SR from 20.9% to 36.2%, improves PR over failure-only by 4.2 pp, and meets PR non-inferiority to rule cards. Its observed SR is close to the oracle-diagnosis comparator, without establishing equivalence.</li>
+    <li>Benefits depend on planner capability: rule cards outperform WM repair for the 14B planner on fresh600. Repeated unseen134 evaluation supports the 4B trend, with uncertainty in PR contrasts. The results support targeted diagnostic guidance within this protocol, rather than a universal advantage of WM repair.</li>
+  </ol>
+</section>
+
+<h2><span class="section-label">15.</span>Final Message</h2>
+<section class="card">
+  <div class="finding"><strong>Recommended takeaway:</strong><br><br>World-model guidance should not be reduced to future-state prediction. Its value depends on whether the information exposed to the planner is decision-relevant. Development probes favor diagnosis and repair over raw next-observation prediction. Frozen evaluation confirms that a strong diagnostic WM improves a weaker planner beyond failure reminders; explicit rule cards remain stronger for the 14B planner on fresh600. This conclusion is conditional on the tested models, tasks, and pre-execution legality gate.</div>
+  <div class="callout"><strong>One-line conclusion:</strong><br>Effective world-model guidance is not only about predicting the future; it is about exposing the right world knowledge for the planner's next decision.</div>
+</section>
+
+<div class="footer">CS5446 Project Report &middot; Frozen evaluation integrated 2026-10-23 &middot; Original plan · 2026-10-21</div>
+</div>
+</div>
+</body>
+</html>

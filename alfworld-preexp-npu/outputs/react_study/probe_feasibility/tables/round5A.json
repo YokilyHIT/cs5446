@@ -1,0 +1,467 @@
+{
+  "families": {
+    "4B primary (Holm over 4):wmrepair_wm14-inv_reflect:PR": [
+      0.04365942028985507,
+      0.02327898550724638,
+      0.06440217391304348,
+      5e-05,
+      0.0002
+    ],
+    "4B primary (Holm over 4):wmrepair_wm14-inv_reflect:SR": [
+      0.0782608695652174,
+      0.051086956521739134,
+      0.10652173913043478,
+      5e-05
+    ],
+    "4B primary (Holm over 4):wmrepair_wm14-inv_sreflect:PR": [
+      0.051086956521739134,
+      0.02943840579710145,
+      0.07309782608695652,
+      5e-05,
+      0.0002
+    ],
+    "4B primary (Holm over 4):wmrepair_wm14-inv_sreflect:SR": [
+      0.09239130434782608,
+      0.06304347826086956,
+      0.12173913043478261,
+      5e-05
+    ],
+    "4B primary (Holm over 4):wmrepair_wm14-inv_rules:PR": [
+      0.012681159420289852,
+      -0.00878623188405797,
+      0.034601449275362316,
+      0.2506,
+      0.2506
+    ],
+    "4B primary (Holm over 4):wmrepair_wm14-inv_rules:SR": [
+      0.0010869565217391304,
+      -0.030434782608695653,
+      0.03260869565217391,
+      0.966
+    ],
+    "4B primary (Holm over 4):wmrepair_wm14-inv_wmpred_wm14:PR": [
+      0.07056159420289854,
+      0.05081295289855072,
+      0.09103260869565218,
+      5e-05,
+      0.0002
+    ],
+    "4B primary (Holm over 4):wmrepair_wm14-inv_wmpred_wm14:SR": [
+      0.11195652173913044,
+      0.08478260869565217,
+      0.14021739130434782,
+      5e-05
+    ],
+    "4B secondary (Holm over 4):wmrepair_wm4-inv_sreflect:PR": [
+      0.06440217391304348,
+      0.04230072463768116,
+      0.08677536231884057,
+      5e-05,
+      0.0002
+    ],
+    "4B secondary (Holm over 4):wmrepair_wm4-inv_sreflect:SR": [
+      0.06630434782608696,
+      0.03804347826086957,
+      0.09456521739130434,
+      5e-05
+    ],
+    "4B secondary (Holm over 4):wmrepair_wm4-inv_wmpred_wm4:PR": [
+      0.07617753623188407,
+      0.0536231884057971,
+      0.0993659420289855,
+      5e-05,
+      0.0002
+    ],
+    "4B secondary (Holm over 4):wmrepair_wm4-inv_wmpred_wm4:SR": [
+      0.08478260869565217,
+      0.057608695652173914,
+      0.11304347826086956,
+      5e-05
+    ],
+    "4B secondary (Holm over 4):post_wmrepair_wm4-inv_fail:PR": [
+      0.029619565217391303,
+      0.007971014492753621,
+      0.05235507246376812,
+      0.0058,
+      0.0058
+    ],
+    "4B secondary (Holm over 4):post_wmrepair_wm4-inv_fail:SR": [
+      0.011956521739130435,
+      -0.013043478260869565,
+      0.03804347826086957,
+      0.3811
+    ],
+    "4B secondary (Holm over 4):post_wmrepair_wm4-wmrepair_wm4:PR": [
+      -0.038224637681159426,
+      -0.05806159420289854,
+      -0.019021739130434784,
+      5e-05,
+      0.0002
+    ],
+    "4B secondary (Holm over 4):post_wmrepair_wm4-wmrepair_wm4:SR": [
+      -0.04456521739130435,
+      -0.07065217391304347,
+      -0.01956521739130435,
+      0.0006
+    ],
+    "14B secondary (Holm over 3):inv_state-inv_fail:PR": [
+      0.002626811594202898,
+      -0.01594202898550725,
+      0.0213768115942029,
+      0.7791,
+      0.7791
+    ],
+    "14B secondary (Holm over 3):inv_state-inv_fail:SR": [
+      0.013043478260869565,
+      -0.014130434782608696,
+      0.04021739130434782,
+      0.3688
+    ],
+    "14B secondary (Holm over 3):inv_repair-inv_state:PR": [
+      0.031159420289855074,
+      0.012681159420289854,
+      0.050271739130434784,
+      0.0012,
+      0.0036
+    ],
+    "14B secondary (Holm over 3):inv_repair-inv_state:SR": [
+      0.042391304347826085,
+      0.016304347826086956,
+      0.06956521739130435,
+      0.0024
+    ],
+    "14B secondary (Holm over 3):inv_sreflect-inv_fail:PR": [
+      -0.012771739130434783,
+      -0.030434782608695653,
+      0.005163043478260869,
+      0.1558,
+      0.3116
+    ],
+    "14B secondary (Holm over 3):inv_sreflect-inv_fail:SR": [
+      -0.025,
+      -0.05217391304347826,
+      0.002173913043478261,
+      0.0786
+    ],
+    "aux:inv_sreflect-inv_rules:PR": [
+      -0.03840579710144928,
+      -0.059510869565217395,
+      -0.017028985507246377,
+      0.0003
+    ]
+  },
+  "diagnosis": {
+    "4B:wmrepair_wm4": {
+      "n_gate_steps": 400,
+      "repair_given": 0.725,
+      "oracle_repair_exists": 0.4425,
+      "agree_with_oracle_when_it_exists": 0.1694915254237288,
+      "oracle_reason_categories": [
+        [
+          "you are not at the X",
+          159
+        ],
+        [
+          "you are already at the X",
+          98
+        ],
+        [
+          "you are already holding the X; you can c",
+          63
+        ],
+        [
+          "there is no X in this room",
+          13
+        ],
+        [
+          "this placement is not possible here",
+          13
+        ],
+        [
+          "you are not holding the X",
+          12
+        ]
+      ]
+    },
+    "4B:wmrepair_wm14": {
+      "n_gate_steps": 400,
+      "repair_given": 0.6925,
+      "oracle_repair_exists": 0.475,
+      "agree_with_oracle_when_it_exists": 0.33157894736842103,
+      "oracle_reason_categories": [
+        [
+          "you are not at the X",
+          151
+        ],
+        [
+          "you are already at the X",
+          106
+        ],
+        [
+          "you are already holding the X; you can c",
+          61
+        ],
+        [
+          "there is no X in this room",
+          12
+        ],
+        [
+          "the X cannot be heated with the X right ",
+          9
+        ],
+        [
+          "you are not at the X from X",
+          9
+        ]
+      ]
+    },
+    "4B:post_wmrepair_wm4": {
+      "n_gate_steps": 400,
+      "repair_given": 0.735,
+      "oracle_repair_exists": 0.46,
+      "agree_with_oracle_when_it_exists": 0.15217391304347827,
+      "oracle_reason_categories": [
+        [
+          "you are not at the X",
+          181
+        ],
+        [
+          "you are already at the X",
+          115
+        ],
+        [
+          "you are already holding the X; you can c",
+          32
+        ],
+        [
+          "there is no X in this room",
+          16
+        ],
+        [
+          "you are not holding the X",
+          9
+        ],
+        [
+          "this placement is not possible here",
+          6
+        ]
+      ]
+    },
+    "4B:inv_sreflect": {
+      "n_gate_steps": 400,
+      "repair_given": 0.02,
+      "oracle_repair_exists": 0.49,
+      "agree_with_oracle_when_it_exists": 0.0,
+      "oracle_reason_categories": [
+        [
+          "you are not at the X",
+          135
+        ],
+        [
+          "you are already holding the X; you can c",
+          92
+        ],
+        [
+          "you are already at the X",
+          80
+        ],
+        [
+          "there is no X in this room",
+          15
+        ],
+        [
+          "you are not holding the X",
+          12
+        ],
+        [
+          "the X cannot be heated with the X right ",
+          11
+        ]
+      ]
+    },
+    "14B:wmrepair_wm14": {
+      "n_gate_steps": 400,
+      "repair_given": 0.615,
+      "oracle_repair_exists": 0.39,
+      "agree_with_oracle_when_it_exists": 0.19230769230769232,
+      "oracle_reason_categories": [
+        [
+          "you are not at the X",
+          101
+        ],
+        [
+          "you are already holding the X; you can c",
+          97
+        ],
+        [
+          "there is no X in this room",
+          56
+        ],
+        [
+          "you are already at the X",
+          54
+        ],
+        [
+          "you must be holding the X to heat it",
+          29
+        ],
+        [
+          "this placement is not possible here",
+          18
+        ]
+      ]
+    },
+    "14B:inv_sreflect": {
+      "n_gate_steps": 400,
+      "repair_given": 0.0025,
+      "oracle_repair_exists": 0.52,
+      "agree_with_oracle_when_it_exists": 0.0,
+      "oracle_reason_categories": [
+        [
+          "you are not at the X",
+          123
+        ],
+        [
+          "you are already holding the X; you can c",
+          115
+        ],
+        [
+          "you are already at the X",
+          49
+        ],
+        [
+          "there is no X in this room",
+          46
+        ],
+        [
+          "this placement is not possible here",
+          16
+        ],
+        [
+          "you must be holding the X to heat it",
+          15
+        ]
+      ]
+    }
+  },
+  "4B": {
+    "none": {
+      "SR": 0.11739130434782609,
+      "PR": 0.3282608695652174,
+      "tokens": 39965.315217391304
+    },
+    "inv_resample": {
+      "SR": 0.14891304347826087,
+      "PR": 0.34990942028985506,
+      "tokens": 52894.18369565217
+    },
+    "inv_proj": {
+      "SR": 0.1423913043478261,
+      "PR": 0.362409420289855,
+      "tokens": 54487.67717391304
+    },
+    "inv_fail": {
+      "SR": 0.1826086956521739,
+      "PR": 0.3673007246376811,
+      "tokens": 51873.32608695652
+    },
+    "inv_reflect": {
+      "SR": 0.18695652173913044,
+      "PR": 0.37817028985507245,
+      "tokens": 51960.07608695652
+    },
+    "inv_sreflect": {
+      "SR": 0.17282608695652174,
+      "PR": 0.37074275362318837,
+      "tokens": 53425.14347826087
+    },
+    "inv_rules": {
+      "SR": 0.26413043478260867,
+      "PR": 0.4091485507246376,
+      "tokens": 48723.12826086956
+    },
+    "inv_state": {
+      "SR": 0.20978260869565218,
+      "PR": 0.38224637681159424,
+      "tokens": 50853.532608695656
+    },
+    "inv_wmpred_wm4": {
+      "SR": 0.15434782608695652,
+      "PR": 0.35896739130434785,
+      "tokens": 58568.06739130435
+    },
+    "inv_wmpred_wm14": {
+      "SR": 0.1532608695652174,
+      "PR": 0.35126811594202895,
+      "tokens": 57502.19782608696
+    },
+    "wmrepair_wm4": {
+      "SR": 0.2391304347826087,
+      "PR": 0.4351449275362319,
+      "tokens": 56441.05217391304
+    },
+    "wmrepair_wm14": {
+      "SR": 0.26521739130434785,
+      "PR": 0.42182971014492754,
+      "tokens": 54110.39673913043
+    },
+    "post_wmrepair_wm4": {
+      "SR": 0.19456521739130433,
+      "PR": 0.39692028985507244,
+      "tokens": 44536.02391304348
+    },
+    "inv_repair": {
+      "SR": 0.29130434782608694,
+      "PR": 0.4095108695652174,
+      "tokens": 46509.59130434783
+    }
+  },
+  "14B": {
+    "none": {
+      "SR": 0.5641304347826087,
+      "PR": 0.6889492753623189,
+      "tokens": 29077.683695652173
+    },
+    "inv_fail": {
+      "SR": 0.6391304347826087,
+      "PR": 0.7327898550724637,
+      "tokens": 34266.66086956522
+    },
+    "inv_reflect": {
+      "SR": 0.6239130434782608,
+      "PR": 0.7190217391304348,
+      "tokens": 34394.02391304348
+    },
+    "inv_sreflect": {
+      "SR": 0.6141304347826086,
+      "PR": 0.7200181159420289,
+      "tokens": 34632.77934782609
+    },
+    "inv_rules": {
+      "SR": 0.6695652173913044,
+      "PR": 0.7497282608695652,
+      "tokens": 31903.058695652173
+    },
+    "inv_state": {
+      "SR": 0.6521739130434783,
+      "PR": 0.7354166666666666,
+      "tokens": 32925.09347826087
+    },
+    "inv_wmpred_wm14": {
+      "SR": 0.6119565217391304,
+      "PR": 0.7269021739130435,
+      "tokens": 36711.559782608696
+    },
+    "wmrepair_wm14": {
+      "SR": 0.6489130434782608,
+      "PR": 0.741123188405797,
+      "tokens": 36337.169565217395
+    },
+    "inv_repair": {
+      "SR": 0.6945652173913044,
+      "PR": 0.7665760869565217,
+      "tokens": 31045.944565217393
+    }
+  },
+  "freeze_verdict": "freeze inv_wmrepair (14B WM)"
+}

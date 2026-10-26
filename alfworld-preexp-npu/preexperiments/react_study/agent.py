@@ -43,10 +43,80 @@ from preexperiments.react_study.protocol_v2 import CHECK_VALID, history_v2, init
 
 import threading
 
+
+def _patch_fast_downward():
+    """fast_downward.load_lib() copies the 34 MB libdownward.so into $TMPDIR for every TextWorld env
+    and never unloads it, so each deleted copy stays mapped (and occupies disk) until the process
+    exits; branch continuations / oracle shadow envs create thousands of envs per process, which
+    filled the data disk on 2026-10-19. Copies are now pooled: each env gets a proxy to a private
+    loaded copy, and when the proxy is garbage collected the copy goes back to the pool (no dlclose,
+    which made the process segfault at exit). Every PddlEnv reset calls load_sas, which resets the
+    library state, and no textworld destructor calls into the library, so reuse is safe. The number
+    of copies equals the peak number of simultaneously alive envs."""
+    import gc
+    import weakref
+    try:
+        import fast_downward
+    except ImportError:
+        return
+    if getattr(fast_downward, "_r4_patched", False):
+        return
+    orig = fast_downward.load_lib
+    pool, lock, n = [], threading.Lock(), [0]
+
+    class _LibProxy:
+        __slots__ = ("_lib", "__weakref__")
+
+        def __init__(self, lib):
+            object.__setattr__(self, "_lib", lib)
+
+        def __getattr__(self, k):
+            return getattr(self._lib, k)
+
+    def load_lib():
+        with lock:
+            n[0] += 1
+            lib = pool.pop() if pool else None
+        if n[0] % 50 == 0:  # TextWorld envs sit in reference cycles; collect them regularly
+            gc.collect()
+        if lib is None:
+            lib = orig()
+        proxy = _LibProxy(lib)
+
+        def release(lib=lib):
+            with lock:
+                pool.append(lib)
+        weakref.finalize(proxy, release).atexit = False
+        return proxy
+    fast_downward.load_lib = load_lib
+    fast_downward._r4_patched = True
+
+
+_patch_fast_downward()
+
 ARMS = ("none", "rethink", "always", "selective", "random_post", "random_pre", "oracle", "loop_hint",
         "gate_stuck", "gate_learned",
         # round 3 (directions A-E)
-        "none_resample", "explore_stuck", "fore_topk", "fore_surprise", "gate_unc", "unc_topk")
+        "none_resample", "explore_stuck", "fore_topk", "fore_surprise", "gate_unc", "unc_topk",
+        # round 4: random-gated (u < p, NC when closed) no-information resample / oracle foresight
+        "resample_pre", "resample0_pre", "oracle_pre",
+        # round 4 router (Phase 5): learned keep/R/W choice, and its matched-proportion random control
+        "route", "route_rand",
+        # round 4 probes (only when a_base is NOT admissible): no-info resample, failure notice,
+        # oracle precondition diagnosis + repair, admissibility projection (constrained re-decoding)
+        "inv_resample", "inv_fail", "inv_repair", "inv_proj",
+        # round 4 method candidate: the frozen WM (role WM_ROLE) infers reason + repair, no rules
+        "inv_wmrepair",
+        # round 5 stage A: generic / structured self-reflection, rule cards, oracle state facts,
+        # WM next-observation prediction on the failure gate, post-execution-failure WM repair
+        "inv_reflect", "inv_sreflect", "inv_rules", "inv_state", "inv_wmpred", "post_wmrepair")
+
+# Round 4: role used for every WM call ("wm" -> PREEXP_API_BASES model, "wm_alt" -> PREEXP_WM_ALT_*).
+# Set once per process (run_episodes --wm_role / branch_r4).
+WM_ROLE = "wm"
+RT_TEMPERATURE = 0.7
+ROUTER = None          # router.Router, loaded by run_episodes --router
+ROUTE_RAND_P = (0.0, 0.0)  # (p_R, p_W) for route_rand
 
 # fore_topk (direction C): several candidate actions, each with its predicted outcome.
 TOPK_BLOCK_HEAD = """
@@ -104,12 +174,18 @@ def list_games(split: str) -> List[str]:
 
 
 def make_env(split: str, gamefile: str):
+    import textworld.gym as twg
     w = _wrapper(split)
     with _ENV_LOCK:
         w.game_files = [gamefile]
         if hasattr(w, "num_games"):
             w.num_games = 1
+        before = set(twg.registry)
         env = w.init_env(batch_size=1)
+        # init_env registers a new gym id per call and the registry entry's wrapper objects keep the
+        # whole env chain (and its libdownward copy) alive forever; the env exists now, so drop it.
+        for k in set(twg.registry) - before:
+            del twg.registry[k]
         obs, info = env.reset()
     return env, obs[0], info
 
@@ -158,8 +234,16 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
     """One decision under `arm`. Pure w.r.t. the env (does not step it);
     `gt_fn(a)` (oracle arm only) returns the true next observation of `a`
     from a shadow env."""
+    post_block = None
+    if arm == "post_wmrepair" and recent and recent[-1][0] != CHECK_VALID and "Nothing happens" in recent[-1][1]:
+        # post-execution trigger: the previous action was executed and had no effect; diagnose it now
+        # (the state is unchanged by a no-op) and show the diagnosis in this step's planner prompt
+        from preexperiments.react_study.preconditions import wm_repair_block
+        set_role(WM_ROLE)
+        post_block, d = wm_repair_block(pipe, state, recent[-1][0])
+        post_d = d
     set_role("planner_base")
-    a_base, forced, _tok, diag = pipe._dispatch_choose(state, "")
+    a_base, forced, _tok, diag = pipe._dispatch_choose(state, post_block or "")
     rec: Dict[str, Any] = {
         "baseline_action": a_base, "base_forced": bool(forced), "base_raw": diag["raw_response"],
         "action": a_base, "action_forced": bool(forced),
@@ -168,6 +252,12 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
         "second_action": None, "second_raw": None,
     }
     if arm == "none":
+        return rec
+    if arm == "post_wmrepair":
+        rec["gate_open"] = post_block is not None
+        if post_block is not None:
+            rec.update(wm_called=True, diag_reason=post_d["reason"], diag_repair=post_d["repair"], wm_raw=post_d["raw"],
+                       post_failed_action=recent[-1][0])
         return rec
 
     if arm == "none_resample":  # A: identical-prompt second call, no information
@@ -230,7 +320,7 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
             a_k, _f, _r = pipe.sample_action(state, "", 0.7, _seed(task_id, step, 10 + k))
             if a_k not in cands:
                 cands.append(a_k)
-        set_role("wm")
+        set_role(WM_ROLE)
         preds = []
         for a_k in cands:
             pr = pipe.predict(state, a_k, memory_block=memory.render(a_k) if memory is not None else "")
@@ -250,6 +340,104 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
         if not g:
             return _closed(pipe, state, rec, second_call_when_closed)
 
+    if arm.startswith("inv_"):  # round 4 probes: intervene only when a_base would not execute
+        adm = state["admissible_actions"]
+        rec["gate_open"] = a_base not in adm and a_base != CHECK_VALID
+        if not rec["gate_open"]:
+            return rec
+        set_role("planner_second")
+        if arm == "inv_resample":
+            a2, f2, raw = pipe.sample_action(state, "", RT_TEMPERATURE, _seed(task_id, step, 1))
+            rec.update(resampled=True)
+        elif arm == "inv_proj":
+            a2, raw = pipe.project_action(state, diag["raw_response"])
+            f2 = False
+        else:
+            from preexperiments.react_study import preconditions as PC
+            from preexperiments.react_study.preconditions import FAIL_BLOCK, repair_block, wm_repair_block
+            if arm == "inv_fail":
+                block = FAIL_BLOCK.format(base_action=a_base)
+            elif arm == "inv_reflect":
+                block = PC.REFLECT_BLOCK.format(base_action=a_base)
+            elif arm == "inv_sreflect":
+                block = PC.SREFLECT_BLOCK.format(base_action=a_base)
+            elif arm == "inv_rules":
+                block = PC.rules_block(a_base)
+            elif arm == "inv_state":
+                block = PC.state_block(a_base, recent or [])
+            elif arm == "inv_wmpred":
+                set_role(WM_ROLE)
+                pred = pipe.predict(state, a_base)
+                rec.update(wm_called=True, wm_prediction=pred["wm_prediction"])
+                set_role("planner_second")
+                block = FORESIGHT_BLOCK.format(base_action=a_base, prediction=pred["wm_prediction"] or "(no prediction)")
+            elif arm == "inv_wmrepair":
+                set_role(WM_ROLE)
+                block, d = wm_repair_block(pipe, state, a_base)
+                rec.update(wm_called=True, diag_reason=d["reason"], diag_repair=d["repair"], wm_raw=d["raw"])
+                set_role("planner_second")
+            else:
+                block, d = repair_block(a_base, recent or [], adm)
+                rec.update(diag_reason=d["reason"], diag_repair=d["repair"])
+            a2, f2, _t, d2 = pipe._dispatch_choose(state, block)
+            raw = d2["raw_response"]
+        rec.update(action=a2, action_forced=bool(f2), second_action=a2, second_raw=raw)
+        return rec
+
+    if arm in ("route", "route_rand"):  # round 4 router: choose keep / R / W before any WM call
+        if arm == "route":
+            from preexperiments.react_study.router import feat_vector, online_fdict
+            f = online_fdict(recent or [], a_base, state["admissible_actions"], step, bool(forced))
+            rt = None
+            if ROUTER.m.get("two_stage"):
+                set_role("planner_second")
+                rt, rt_f, rt_raw = pipe.sample_action(state, "", RT_TEMPERATURE, _seed(task_id, step, 1))
+            x = feat_vector(f, diag.get("action_lp"), a_base, a_base in state["admissible_actions"], rt=rt)
+            choice, sR, sW = ROUTER.choose(x)
+            rec.update(route_sR=sR, route_sW=sW, base_action_lp=diag.get("action_lp"))
+        else:
+            pR, pW = ROUTE_RAND_P
+            choice = "W" if u < pW else ("R" if u < pW + pR else "0")
+            rt = None
+        rec.update(route_choice=choice, gate_open=choice != "0")
+        if choice == "0":
+            return rec
+        if choice == "R":
+            if rt is None:
+                set_role("planner_second")
+                rt, rt_f, rt_raw = pipe.sample_action(state, "", RT_TEMPERATURE, _seed(task_id, step, 1))
+            rec.update(action=rt, action_forced=bool(rt_f), second_action=rt, second_raw=rt_raw, resampled=True)
+            return rec
+        set_role(WM_ROLE)
+        pred = pipe.predict(state, a_base)
+        rec.update(wm_called=True, wm_prediction=pred["wm_prediction"])
+        if not pred["wm_prediction"]:
+            return rec
+        set_role("planner_second")
+        a2, f2, _t, d2 = pipe._dispatch_choose(state, FORESIGHT_BLOCK.format(base_action=a_base, prediction=pred["wm_prediction"]))
+        rec.update(action=a2, action_forced=bool(f2), second_action=a2, second_raw=d2["raw_response"], foresight_used=True)
+        return rec
+
+    if arm in ("resample_pre", "resample0_pre", "oracle_pre"):  # round 4 random-gated mechanism arms
+        rec["gate_open"] = bool(u < p_gate)
+        if not rec["gate_open"]:
+            return rec  # NC: execute a_base
+        set_role("planner_second")
+        if arm == "resample_pre":  # RT: same prompt, T=0.7, seeded
+            a2, f2, raw = pipe.sample_action(state, "", RT_TEMPERATURE, _seed(task_id, step, 1))
+            rec.update(resampled=True)
+        elif arm == "resample0_pre":  # R0: same prompt, same decoding (serving nondeterminism only)
+            a2, f2, _t, d2 = pipe._dispatch_choose(state, "")
+            raw = d2["raw_response"]
+            rec.update(resampled=True)
+        else:
+            gt = gt_fn(a_base)
+            rec.update(wm_prediction=gt, oracle=True, foresight_used=True)
+            a2, f2, _t, d2 = pipe._dispatch_choose(state, FORESIGHT_BLOCK.format(base_action=a_base, prediction=gt))
+            raw = d2["raw_response"]
+        rec.update(action=a2, action_forced=bool(f2), second_action=a2, second_raw=raw)
+        return rec
+
     if arm == "random_pre" and not (u < p_gate):
         return _closed(pipe, state, rec, second_call_when_closed)  # closed before any WM call
     if arm in ("gate_stuck", "gate_learned"):  # step 3 pre-call gates (agent-visible features only)
@@ -260,7 +448,7 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
         if not g:
             return _closed(pipe, state, rec, second_call_when_closed)
 
-    set_role("wm")
+    set_role(WM_ROLE)
     block = memory.render(a_base) if memory is not None else ""
     pred = pipe.predict(state, a_base, memory_block=block)
     rec["wm_memory_hits"] = block.count("Transition ") if block else 0
@@ -346,7 +534,7 @@ def run_policy(pipe: DirectionBPipeline, env, obs: str, info: Dict[str, Any], *,
             rec = {"action": first_action, "injected": True}
         else:
             prefix = [a for a, _ in history]
-            gt_fn = (lambda a, _p=prefix: gt_fn_inc(a, _p)) if arm == "oracle" else None
+            gt_fn = (lambda a, _p=prefix: gt_fn_inc(a, _p)) if arm in ("oracle", "oracle_pre") else None
             rec = decide(pipe, state, arm, task_id=task_id, step=step,
                          tau=tau, p_gate=p_gate, gate_seed=gate_seed,
                          second_call_when_closed=second_call_when_closed,
@@ -393,6 +581,10 @@ def run_episode(pipe: DirectionBPipeline, *, split: str, gamefile: str, arm: str
         "n_wm_calls": sum(s.get("wm_called", False) for s in steps),
         "n_foresight_used": sum(s.get("foresight_used", False) for s in steps),
         "n_rethink_used": sum(s.get("rethink_used", False) for s in steps),
+        "n_resampled": sum(s.get("resampled", False) for s in steps),
+        "n_gate_open": sum(bool(s.get("gate_open")) for s in steps),
+        "n_route_R": sum(s.get("route_choice") == "R" for s in steps),
+        "n_route_W": sum(s.get("route_choice") == "W" for s in steps),
         "n_action_changed": sum(1 for s in steps if s.get("second_action") is not None
                                 and s["second_action"] != s["baseline_action"]),
         "legal_action_rate": (sum(s["action_admissible"] for s in steps) / n) if n else None,
