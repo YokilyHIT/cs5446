@@ -1,0 +1,43 @@
+{
+  "n_train_pool": 30723,
+  "n_val": 300,
+  "iterations": [
+    {
+      "iter": 1,
+      "train_acc_before": 0.73,
+      "n_wrong": 162,
+      "n_candidates": 50,
+      "n_rules_after_prune": 10,
+      "val_acc": 0.7966666666666666,
+      "rules": [
+        "An action succeeds if the required conditions are met, such as object presence, accessibility, and correct inventory status.",
+        "Taking an object succeeds if it is present on the surface, not already held, and the location is accessible.",
+        "Placing an object in a container succeeds if the container is open and the object is being held.",
+        "Moving to a location succeeds if it exists, is accessible, and the agent is not already there.",
+        "Examining an object or location always succeeds and provides descriptive information.",
+        "Moving an object to a location or container fails if the object is not held or the destination is inaccessible.",
+        "Using a device (e.g., heating, cooling) succeeds only if the device is open and the object is in inventory.",
+        "Actions that require being in a specific location fail if the agent is not present there.",
+        "Attempting to perform an action on an object not in inventory or not present in the environment fails.",
+        "Opening a container succeeds only if it is closed and exists in the environment."
+      ]
+    },
+    {
+      "iter": 2,
+      "train_acc_before": 0.7783333333333333,
+      "n_wrong": 133,
+      "n_candidates": 55,
+      "n_rules_after_prune": 6,
+      "val_acc": 0.7933333333333333,
+      "rules": [
+        "An action succeeds if the required conditions are met, such as object presence, accessibility, and correct inventory status.",
+        "Taking an object succeeds if it is present, not already held, and the location is accessible.",
+        "Moving to a location succeeds if it exists, is accessible, and the agent is not already there.",
+        "Examining an object or location always succeeds and provides descriptive information.",
+        "Actions fail if the object is not in inventory, not present, or not accessible in the current location.",
+        "Opening a container succeeds only if it is closed and the agent is at its location."
+      ]
+    }
+  ],
+  "val_acc_no_rules": 0.68
+}

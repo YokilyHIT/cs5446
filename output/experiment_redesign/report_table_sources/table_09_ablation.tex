@@ -1,0 +1,13 @@
+\begin{table}[tbp]
+\caption{Interface ablations with the planner, WM and failure trigger held fixed. Repeats denotes repeated occurrences of the same failure per episode.}
+\label{tab:ablation}\centering
+\begin{tabular}{lrrr}\toprule
+Information supplied & SR (\%) & PR (\%) & Repeats\\\midrule
+Failure notice only & 28.3 & 44.8 & 4.16\\
+Next-observation prediction & 24.1 & 42.4 & 5.15\\
+Prediction with repair inputs & 29.2 & 44.9 & 3.87\\
+Cause only & 29.7 & 45.6 & 4.24\\
+First step only & 32.2 & 47.0 & 3.76\\
+\textbf{Cause and first step} & \textbf{36.2} & \textbf{49.0} & \textbf{3.14}\\\bottomrule
+\end{tabular}
+\end{table}

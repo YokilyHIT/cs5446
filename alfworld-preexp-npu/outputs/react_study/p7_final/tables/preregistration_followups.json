@@ -1,0 +1,20 @@
+{
+  "frozen_at": "2026-10-23, before any run of these arms beyond 3-task smoke tests",
+  "motivation": "fresh600 logs of the frozen method: the 4B planner adopts the WM's repair action in only 42% of gate steps (oracle arm 60%); the same failed action is still proposed ~3.1 times per episode (none 6.4)",
+  "arms": {
+    "inv_wmrepair_exec": "frozen method, but an admissible repair action is executed directly (no planner re-decision); no repair -> frozen behaviour",
+    "inv_wmrepair_mem": "frozen method + episode memory of the last 5 diagnosed failures (action + WM reason) shown in every later planner prompt, base call included"
+  },
+  "planner": "4B; WM = Qwen3-14B (wm_alt); gate as frozen method",
+  "runs": "dev460 x 2 and fresh600 x 3",
+  "primary_fresh600_holm_PR": {
+    "E1": "inv_wmrepair_exec - wmrepair_wm14",
+    "E2": "inv_wmrepair_mem - wmrepair_wm14"
+  },
+  "secondary": [
+    "SR versions",
+    "repeated-same-failure per episode and adoption rates per arm",
+    "dev460 contrasts against wmrepair_wm14"
+  ],
+  "test": "paired task bootstrap 20k on rep-averaged per-task values, two-sided, Holm over E1,E2"
+}

@@ -1,0 +1,67 @@
+{
+  "planner": "p4b",
+  "n_pairs": 35,
+  "n_success_batches": 21,
+  "insights": [
+    {
+      "text": "If an action fails, examine the environment to identify the correct object or location, ensure the object is in your inventory, and navigate to the target location before attempting the action again. Also, confirm the target location is open and accessible.",
+      "importance": 40
+    },
+    {
+      "text": "Ensure the object is in your inventory, navigate to the target location first, and confirm it is accessible and open before attempting to move it. If the action fails, recheck the object's presence in inventory and the accessibility of the target location, and consider that the object may be in a different container or location.",
+      "importance": 18
+    },
+    {
+      "text": "Ensure the object is in your inventory, navigate to the target location first, and then attempt to move it.",
+      "importance": 13
+    },
+    {
+      "text": "Ensure the object is in your inventory, navigate to the target location first, and then attempt the move again if the object is ready for placement and the location is accessible. If the move fails, recheck the object's presence in inventory and the accessibility of the target location, and consider that the object may need to be heated, cooled, or otherwise prepared first.",
+      "importance": 12
+    },
+    {
+      "text": "Ensure the object is in your inventory and you are at the target location before attempting to move it. If the action fails, recheck the object's presence in inventory and the accessibility of the target location, and navigate to the target location first if necessary, as being at the correct location is often required for successful interaction.",
+      "importance": 11
+    },
+    {
+      "text": "If heating an object fails, check if the heating tool (e.g., microwave or stoveburner) is open and functional, ensure the object is in your inventory, and confirm you are at the correct location to use the tool. If the tool is not suitable, try an alternative heating method.",
+      "importance": 9
+    },
+    {
+      "text": "Using tools like the desklamp may be necessary to properly examine objects that are not visible under normal lighting conditions or to achieve the desired interaction, and ensure you are at the correct location before using the tool.",
+      "importance": 7
+    },
+    {
+      "text": "Ensure the object is clean or in a usable state before attempting to move it to a new location, as some environments require objects to meet specific conditions for placement. If the object is not clean, locate the appropriate cleaning tool (e.g., sinkbasin) and perform the cleaning action first.",
+      "importance": 7
+    },
+    {
+      "text": "If cleaning an object fails, ensure you are at the correct location (e.g., sink) with the appropriate tool (e.g., sinkbasin), confirm the object is in your inventory, and verify that the tool is functional and accessible.",
+      "importance": 7
+    },
+    {
+      "text": "If an action fails, examine the environment and consider that the object might be in a different location or require being picked up first.",
+      "importance": 6
+    },
+    {
+      "text": "If moving an object to a location fails, first check that the object is in your inventory, navigate to the target location, ensure it is open and accessible, and then attempt the move again.",
+      "importance": 6
+    },
+    {
+      "text": "If moving an object to a location fails, navigate to the target location first, confirm it is accessible, and then attempt the move again.",
+      "importance": 5
+    },
+    {
+      "text": "Clean objects in the appropriate location (e.g., sinkbasin) before attempting to place them, as cleanliness may be a prerequisite for successful placement.",
+      "importance": 4
+    },
+    {
+      "text": "Ensure the object you want to examine is either in your inventory or within the current location's visible objects, and navigate to the correct location first.",
+      "importance": 3
+    },
+    {
+      "text": "If an object cannot be moved directly, check if it needs to be cleaned, heated, or otherwise prepared first, and ensure the preparation is completed before attempting to move it.",
+      "importance": 3
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "table": 2,
+    "label": "tab:protocol",
+    "source": "report.tex",
+    "start_line": 96,
+    "end_line": 111,
+    "file": "table_02_protocol.tex"
+  },
+  {
+    "table": 6,
+    "label": "tab:development",
+    "source": "report.tex",
+    "start_line": 224,
+    "end_line": 238,
+    "file": "table_06_development.tex"
+  },
+  {
+    "table": 7,
+    "label": "tab:main",
+    "source": "report.tex",
+    "start_line": 245,
+    "end_line": 258,
+    "file": "table_07_main.tex"
+  },
+  {
+    "table": 8,
+    "label": "tab:hypotheses",
+    "source": "report.tex",
+    "start_line": 262,
+    "end_line": 271,
+    "file": "table_08_hypotheses.tex"
+  },
+  {
+    "table": 9,
+    "label": "tab:ablation",
+    "source": "report.tex",
+    "start_line": 280,
+    "end_line": 292,
+    "file": "table_09_ablation.tex"
+  },
+  {
+    "table": 10,
+    "label": "tab:tasks",
+    "source": "report.tex",
+    "start_line": 297,
+    "end_line": 309,
+    "file": "table_10_tasks.tex"
+  },
+  {
+    "table": 11,
+    "label": "tab:funnel",
+    "source": "report.tex",
+    "start_line": 316,
+    "end_line": 327,
+    "file": "table_11_funnel.tex"
+  },
+  {
+    "table": 12,
+    "label": "tab:followups",
+    "source": "report.tex",
+    "start_line": 336,
+    "end_line": 345,
+    "file": "table_12_followups.tex"
+  },
+  {
+    "table": 13,
+    "label": "tab:baselines",
+    "source": "report.tex",
+    "start_line": 352,
+    "end_line": 366,
+    "file": "table_13_baselines.tex"
+  }
+]

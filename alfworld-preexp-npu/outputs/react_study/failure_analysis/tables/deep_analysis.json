@@ -1,0 +1,630 @@
+{
+  "4B": {
+    "sr_by_task_type": {
+      "none": {
+        "look_at_obj_in_light": 0.2733333333333333,
+        "pick_and_place_simple": 0.44666666666666666,
+        "pick_clean_then_place_in_recep": 0.19,
+        "pick_cool_then_place_in_recep": 0.06666666666666667,
+        "pick_heat_then_place_in_recep": 0.27,
+        "pick_two_obj_and_place": 0.01
+      },
+      "inv_fail": {
+        "look_at_obj_in_light": 0.36,
+        "pick_and_place_simple": 0.5466666666666666,
+        "pick_clean_then_place_in_recep": 0.2733333333333333,
+        "pick_cool_then_place_in_recep": 0.14333333333333334,
+        "pick_heat_then_place_in_recep": 0.3233333333333333,
+        "pick_two_obj_and_place": 0.05333333333333334
+      },
+      "inv_rules": {
+        "look_at_obj_in_light": 0.33,
+        "pick_and_place_simple": 0.56,
+        "pick_clean_then_place_in_recep": 0.27,
+        "pick_cool_then_place_in_recep": 0.13333333333333333,
+        "pick_heat_then_place_in_recep": 0.4666666666666667,
+        "pick_two_obj_and_place": 0.24
+      },
+      "wmrepair_wm14": {
+        "look_at_obj_in_light": 0.4633333333333333,
+        "pick_and_place_simple": 0.6166666666666667,
+        "pick_clean_then_place_in_recep": 0.3466666666666667,
+        "pick_cool_then_place_in_recep": 0.21666666666666667,
+        "pick_heat_then_place_in_recep": 0.37666666666666665,
+        "pick_two_obj_and_place": 0.15333333333333332
+      },
+      "inv_repair": {
+        "look_at_obj_in_light": 0.38666666666666666,
+        "pick_and_place_simple": 0.6033333333333334,
+        "pick_clean_then_place_in_recep": 0.31666666666666665,
+        "pick_cool_then_place_in_recep": 0.18666666666666668,
+        "pick_heat_then_place_in_recep": 0.36666666666666664,
+        "pick_two_obj_and_place": 0.34
+      }
+    },
+    "funnel": {
+      "none": {
+        "seen": 0.5438888888888889,
+        "picked": 0.4711111111111111,
+        "success": 0.20944444444444443,
+        "P(success|picked)": 0.44457547169811323
+      },
+      "inv_fail": {
+        "seen": 0.5788888888888889,
+        "picked": 0.5183333333333333,
+        "success": 0.2833333333333333,
+        "P(success|picked)": 0.5466237942122186
+      },
+      "inv_rules": {
+        "seen": 0.5722222222222222,
+        "picked": 0.5138888888888888,
+        "success": 0.3333333333333333,
+        "P(success|picked)": 0.6486486486486487
+      },
+      "wmrepair_wm14": {
+        "seen": 0.5955555555555555,
+        "picked": 0.5488888888888889,
+        "success": 0.3622222222222222,
+        "P(success|picked)": 0.659919028340081
+      },
+      "inv_repair": {
+        "seen": 0.5705555555555556,
+        "picked": 0.5138888888888888,
+        "success": 0.36666666666666664,
+        "P(success|picked)": 0.7135135135135136
+      }
+    },
+    "categories": {
+      "inv_fail": {
+        "not_at": {
+          "share": 0.41851948731362804,
+          "exec_admissible": 0.3589583333333333,
+          "recurs": 0.6947916666666667
+        },
+        "already_at": {
+          "share": 0.29741041067224694,
+          "exec_admissible": 0.5133391967165054,
+          "recurs": 0.6094986807387863
+        },
+        "holding_other": {
+          "share": 0.1030604237509809,
+          "exec_admissible": 0.3824027072758037,
+          "recurs": 0.8570219966159053
+        },
+        "not_holding": {
+          "share": 0.0657424361321824,
+          "exec_admissible": 0.4124668435013263,
+          "recurs": 0.7188328912466844
+        },
+        "closed": {
+          "share": 0.0001743831197140117,
+          "exec_admissible": 1.0,
+          "recurs": 0.0
+        },
+        "absent": {
+          "share": 0.04673467608335513,
+          "exec_admissible": 0.36380597014925375,
+          "recurs": 0.5578358208955224
+        },
+        "open_state": {
+          "share": 0.002179788996425146,
+          "exec_admissible": 0.8,
+          "recurs": 0.36
+        },
+        "other": {
+          "share": 0.06617839393146743,
+          "exec_admissible": 0.766798418972332,
+          "recurs": 0.27140974967061926
+        },
+        "_n_gate_steps": 11469
+      },
+      "inv_rules": {
+        "not_at": {
+          "share": 0.4213330652458028,
+          "exec_admissible": 0.49081364829396323,
+          "recurs": 0.6265807683130518
+        },
+        "already_at": {
+          "share": 0.3150698703126571,
+          "exec_admissible": 0.6841097638800255,
+          "recurs": 0.5676451818761965
+        },
+        "holding_other": {
+          "share": 0.09118327133809188,
+          "exec_admissible": 0.35942668136714445,
+          "recurs": 0.8489525909592062
+        },
+        "not_holding": {
+          "share": 0.052880265406655275,
+          "exec_admissible": 0.2965779467680608,
+          "recurs": 0.7319391634980988
+        },
+        "closed": {
+          "share": 0.0008042625917362018,
+          "exec_admissible": 0.875,
+          "recurs": 0.75
+        },
+        "absent": {
+          "share": 0.04564190208102946,
+          "exec_admissible": 0.5726872246696035,
+          "recurs": 0.4955947136563877
+        },
+        "open_state": {
+          "share": 0.003015984719010757,
+          "exec_admissible": 0.7666666666666667,
+          "recurs": 0.4
+        },
+        "other": {
+          "share": 0.07007137830501659,
+          "exec_admissible": 0.8550932568149211,
+          "recurs": 0.12051649928263988
+        },
+        "_n_gate_steps": 9947
+      },
+      "wmrepair_wm14": {
+        "not_at": {
+          "share": 0.3685097419694576,
+          "exec_admissible": 0.5555873106601886,
+          "recurs": 0.5658759645613032
+        },
+        "already_at": {
+          "share": 0.3394418114797262,
+          "exec_admissible": 0.6487744337573689,
+          "recurs": 0.5739993794601304
+        },
+        "holding_other": {
+          "share": 0.12490784623486045,
+          "exec_admissible": 0.35328836424957843,
+          "recurs": 0.845699831365936
+        },
+        "not_holding": {
+          "share": 0.04834123222748815,
+          "exec_admissible": 0.41830065359477125,
+          "recurs": 0.6928104575163399
+        },
+        "closed": {
+          "share": 0.000315955766192733,
+          "exec_admissible": 0.6666666666666666,
+          "recurs": 0.0
+        },
+        "absent": {
+          "share": 0.047288046340179045,
+          "exec_admissible": 0.5389755011135857,
+          "recurs": 0.46325167037861914
+        },
+        "open_state": {
+          "share": 0.0029489204844655083,
+          "exec_admissible": 0.8928571428571429,
+          "recurs": 0.6428571428571429
+        },
+        "other": {
+          "share": 0.06824644549763033,
+          "exec_admissible": 0.5555555555555556,
+          "recurs": 0.4166666666666667
+        },
+        "_n_gate_steps": 9495
+      },
+      "inv_repair": {
+        "not_at": {
+          "share": 0.38234644277507734,
+          "exec_admissible": 0.5157468939612828,
+          "recurs": 0.5596648367523837
+        },
+        "already_at": {
+          "share": 0.37759611135660626,
+          "exec_admissible": 0.5280866003510825,
+          "recurs": 0.609713282621416
+        },
+        "holding_other": {
+          "share": 0.051590808661069375,
+          "exec_admissible": 0.39400428265524623,
+          "recurs": 0.7002141327623126
+        },
+        "not_holding": {
+          "share": 0.04352629253203712,
+          "exec_admissible": 0.26649746192893403,
+          "recurs": 0.7182741116751269
+        },
+        "closed": {
+          "share": 0.0003314184710561202,
+          "exec_admissible": 1.0,
+          "recurs": 0.3333333333333333
+        },
+        "absent": {
+          "share": 0.05567830313742819,
+          "exec_admissible": 0.4603174603174603,
+          "recurs": 0.5158730158730159
+        },
+        "open_state": {
+          "share": 0.0028722934158197082,
+          "exec_admissible": 0.5,
+          "recurs": 0.5769230769230769
+        },
+        "other": {
+          "share": 0.08605832965090587,
+          "exec_admissible": 0.7958921694480102,
+          "recurs": 0.26957637997432604
+        },
+        "_n_gate_steps": 9052
+      }
+    },
+    "diagnosis": {
+      "category_agreement": 0.2961558715113217,
+      "repair_action_agreement_when_both_exist": 0.4181646168401135,
+      "local_correct": {
+        "exec_admissible": 0.6507823613086771,
+        "recurs": 0.5469416785206259,
+        "adopted": 0.34637268847795166
+      },
+      "local_incorrect": {
+        "exec_admissible": 0.5154870567110579,
+        "recurs": 0.6148436330989077,
+        "adopted": 0.2881939248840341
+      },
+      "n_correct": 2812,
+      "n_incorrect": 6683,
+      "episode_SR_mostly_correct": 0.39811320754716983,
+      "n_ep_mostly_correct": 530,
+      "episode_SR_mostly_incorrect": 0.28404255319148936,
+      "n_ep_mostly_incorrect": 940,
+      "confusion": {
+        "already_at->already_at": 1523,
+        "not_at->absent": 1008,
+        "not_at->not_at": 994,
+        "not_at->other": 826,
+        "already_at->absent": 621,
+        "already_at->closed": 605,
+        "other->absent": 466,
+        "not_at->not_holding": 385,
+        "holding_other->not_at": 322,
+        "holding_other->not_holding": 310,
+        "already_at->not_at": 220,
+        "already_at->other": 217,
+        "holding_other->other": 207,
+        "holding_other->absent": 196,
+        "not_at->already_at": 178,
+        "absent->not_at": 170,
+        "not_holding->absent": 141,
+        "holding_other->already_at": 134,
+        "not_holding->not_holding": 131,
+        "absent->closed": 122,
+        "not_at->closed": 108,
+        "not_holding->not_at": 101,
+        "other->other": 81,
+        "other->not_at": 79,
+        "absent->absent": 68,
+        "absent->other": 66,
+        "not_holding->other": 52,
+        "already_at->not_holding": 31,
+        "not_holding->closed": 23,
+        "other->not_holding": 19,
+        "absent->already_at": 15,
+        "open_state->closed": 13,
+        "holding_other->holding_other": 13,
+        "not_holding->already_at": 11,
+        "open_state->already_at": 11,
+        "absent->not_holding": 8,
+        "already_at->holding_other": 6,
+        "open_state->absent": 4,
+        "holding_other->closed": 4,
+        "other->already_at": 3,
+        "closed->closed": 2,
+        "closed->not_holding": 1
+      }
+    }
+  },
+  "14B": {
+    "sr_by_task_type": {
+      "none": {
+        "look_at_obj_in_light": 0.75,
+        "pick_and_place_simple": 0.83,
+        "pick_clean_then_place_in_recep": 0.6333333333333333,
+        "pick_cool_then_place_in_recep": 0.32,
+        "pick_heat_then_place_in_recep": 0.6533333333333333,
+        "pick_two_obj_and_place": 0.36
+      },
+      "inv_fail": {
+        "look_at_obj_in_light": 0.78,
+        "pick_and_place_simple": 0.8633333333333333,
+        "pick_clean_then_place_in_recep": 0.65,
+        "pick_cool_then_place_in_recep": 0.43333333333333335,
+        "pick_heat_then_place_in_recep": 0.6766666666666666,
+        "pick_two_obj_and_place": 0.43
+      },
+      "inv_rules": {
+        "look_at_obj_in_light": 0.8266666666666667,
+        "pick_and_place_simple": 0.88,
+        "pick_clean_then_place_in_recep": 0.68,
+        "pick_cool_then_place_in_recep": 0.49,
+        "pick_heat_then_place_in_recep": 0.68,
+        "pick_two_obj_and_place": 0.5733333333333334
+      },
+      "wmrepair_wm14": {
+        "look_at_obj_in_light": 0.8466666666666667,
+        "pick_and_place_simple": 0.8633333333333333,
+        "pick_clean_then_place_in_recep": 0.6633333333333333,
+        "pick_cool_then_place_in_recep": 0.48,
+        "pick_heat_then_place_in_recep": 0.6533333333333333,
+        "pick_two_obj_and_place": 0.44666666666666666
+      },
+      "inv_repair": {
+        "look_at_obj_in_light": 0.82,
+        "pick_and_place_simple": 0.8666666666666667,
+        "pick_clean_then_place_in_recep": 0.6633333333333333,
+        "pick_cool_then_place_in_recep": 0.47333333333333333,
+        "pick_heat_then_place_in_recep": 0.7166666666666667,
+        "pick_two_obj_and_place": 0.63
+      }
+    },
+    "funnel": {
+      "none": {
+        "seen": 0.7916666666666666,
+        "picked": 0.7477777777777778,
+        "success": 0.5911111111111111,
+        "P(success|picked)": 0.7904903417533432
+      },
+      "inv_fail": {
+        "seen": 0.8083333333333333,
+        "picked": 0.7616666666666667,
+        "success": 0.6388888888888888,
+        "P(success|picked)": 0.8388037928519329
+      },
+      "inv_rules": {
+        "seen": 0.8122222222222222,
+        "picked": 0.7844444444444445,
+        "success": 0.6883333333333334,
+        "P(success|picked)": 0.8774787535410765
+      },
+      "wmrepair_wm14": {
+        "seen": 0.8111111111111111,
+        "picked": 0.7811111111111111,
+        "success": 0.6588888888888889,
+        "P(success|picked)": 0.8435277382645804
+      },
+      "inv_repair": {
+        "seen": 0.8155555555555556,
+        "picked": 0.7894444444444444,
+        "success": 0.695,
+        "P(success|picked)": 0.88036593947924
+      }
+    },
+    "categories": {
+      "inv_fail": {
+        "not_at": {
+          "share": 0.4139344262295082,
+          "exec_admissible": 0.3560689402273561,
+          "recurs": 0.6681334800146681
+        },
+        "already_at": {
+          "share": 0.13570127504553733,
+          "exec_admissible": 0.40380313199105144,
+          "recurs": 0.5659955257270693
+        },
+        "holding_other": {
+          "share": 0.21159684274438373,
+          "exec_admissible": 0.17862266857962697,
+          "recurs": 0.763271162123386
+        },
+        "not_holding": {
+          "share": 0.06633272616879174,
+          "exec_admissible": 0.3684210526315789,
+          "recurs": 0.7276887871853547
+        },
+        "closed": {
+          "share": 0.0,
+          "exec_admissible": null,
+          "recurs": null
+        },
+        "absent": {
+          "share": 0.13342440801457195,
+          "exec_admissible": 0.30716723549488056,
+          "recurs": 0.3742889647326507
+        },
+        "open_state": {
+          "share": 0.006071645415907711,
+          "exec_admissible": 0.425,
+          "recurs": 0.8
+        },
+        "other": {
+          "share": 0.03293867638129933,
+          "exec_admissible": 0.5023041474654378,
+          "recurs": 0.7188940092165899
+        },
+        "_n_gate_steps": 6588
+      },
+      "inv_rules": {
+        "not_at": {
+          "share": 0.39569471624266145,
+          "exec_admissible": 0.43224530168150344,
+          "recurs": 0.6330365974282888
+        },
+        "already_at": {
+          "share": 0.15655577299412915,
+          "exec_admissible": 0.4875,
+          "recurs": 0.53375
+        },
+        "holding_other": {
+          "share": 0.16046966731898238,
+          "exec_admissible": 0.2597560975609756,
+          "recurs": 0.6170731707317073
+        },
+        "not_holding": {
+          "share": 0.06379647749510763,
+          "exec_admissible": 0.3588957055214724,
+          "recurs": 0.7085889570552147
+        },
+        "closed": {
+          "share": 0.00019569471624266145,
+          "exec_admissible": 1.0,
+          "recurs": 0.0
+        },
+        "absent": {
+          "share": 0.18160469667318982,
+          "exec_admissible": 0.39870689655172414,
+          "recurs": 0.3879310344827586
+        },
+        "open_state": {
+          "share": 0.013894324853228963,
+          "exec_admissible": 0.1267605633802817,
+          "recurs": 0.8873239436619719
+        },
+        "other": {
+          "share": 0.027788649706457925,
+          "exec_admissible": 0.13380281690140844,
+          "recurs": 0.5492957746478874
+        },
+        "_n_gate_steps": 5110
+      },
+      "wmrepair_wm14": {
+        "not_at": {
+          "share": 0.36008079324274694,
+          "exec_admissible": 0.5277919428862825,
+          "recurs": 0.609382967873534
+        },
+        "already_at": {
+          "share": 0.11384502387073081,
+          "exec_admissible": 0.5032258064516129,
+          "recurs": 0.4290322580645161
+        },
+        "holding_other": {
+          "share": 0.20877708409842086,
+          "exec_admissible": 0.30255057167985927,
+          "recurs": 0.7308707124010554
+        },
+        "not_holding": {
+          "share": 0.09511568123393316,
+          "exec_admissible": 0.6544401544401545,
+          "recurs": 0.8223938223938224
+        },
+        "closed": {
+          "share": 0.0,
+          "exec_admissible": null,
+          "recurs": null
+        },
+        "absent": {
+          "share": 0.1782959970620639,
+          "exec_admissible": 0.5077239958805355,
+          "recurs": 0.4490216271884655
+        },
+        "open_state": {
+          "share": 0.0038560411311053984,
+          "exec_admissible": 0.38095238095238093,
+          "recurs": 0.5714285714285714
+        },
+        "other": {
+          "share": 0.0400293793609989,
+          "exec_admissible": 0.6055045871559633,
+          "recurs": 0.7844036697247706
+        },
+        "_n_gate_steps": 5446
+      },
+      "inv_repair": {
+        "not_at": {
+          "share": 0.38053905893101875,
+          "exec_admissible": 0.5588235294117647,
+          "recurs": 0.5618247298919568
+        },
+        "already_at": {
+          "share": 0.1566925536774783,
+          "exec_admissible": 0.5393586005830904,
+          "recurs": 0.4737609329446064
+        },
+        "holding_other": {
+          "share": 0.12334399269072636,
+          "exec_admissible": 0.5518518518518518,
+          "recurs": 0.40185185185185185
+        },
+        "not_holding": {
+          "share": 0.05047967108268616,
+          "exec_admissible": 0.5294117647058824,
+          "recurs": 0.583710407239819
+        },
+        "closed": {
+          "share": 0.0,
+          "exec_admissible": null,
+          "recurs": null
+        },
+        "absent": {
+          "share": 0.21333942439470077,
+          "exec_admissible": 0.45074946466809424,
+          "recurs": 0.4079229122055675
+        },
+        "open_state": {
+          "share": 0.006624029237094564,
+          "exec_admissible": 0.5172413793103449,
+          "recurs": 0.7586206896551724
+        },
+        "other": {
+          "share": 0.06898126998629511,
+          "exec_admissible": 0.4370860927152318,
+          "recurs": 0.7880794701986755
+        },
+        "_n_gate_steps": 4378
+      }
+    },
+    "diagnosis": {
+      "category_agreement": 0.18802791039294894,
+      "repair_action_agreement_when_both_exist": 0.31633906633906633,
+      "local_correct": {
+        "exec_admissible": 0.6005859375,
+        "recurs": 0.4892578125,
+        "adopted": 0.373046875
+      },
+      "local_incorrect": {
+        "exec_admissible": 0.4631388511985527,
+        "recurs": 0.6413387607417458,
+        "adopted": 0.30597014925373134
+      },
+      "n_correct": 1024,
+      "n_incorrect": 4422,
+      "episode_SR_mostly_correct": 0.625,
+      "n_ep_mostly_correct": 248,
+      "episode_SR_mostly_incorrect": 0.4398496240601504,
+      "n_ep_mostly_incorrect": 798,
+      "confusion": {
+        "not_at->not_at": 561,
+        "not_at->other": 541,
+        "not_at->absent": 464,
+        "holding_other->other": 402,
+        "holding_other->not_at": 357,
+        "already_at->closed": 347,
+        "absent->not_at": 309,
+        "not_at->not_holding": 240,
+        "absent->absent": 213,
+        "absent->other": 212,
+        "holding_other->not_holding": 191,
+        "absent->closed": 189,
+        "already_at->already_at": 162,
+        "not_holding->not_at": 159,
+        "not_at->already_at": 130,
+        "not_holding->closed": 113,
+        "not_holding->other": 110,
+        "holding_other->absent": 103,
+        "other->absent": 87,
+        "not_holding->absent": 87,
+        "holding_other->already_at": 77,
+        "other->other": 61,
+        "other->not_at": 55,
+        "already_at->absent": 52,
+        "already_at->not_at": 34,
+        "absent->already_at": 29,
+        "not_at->closed": 25,
+        "not_holding->already_at": 25,
+        "not_holding->not_holding": 24,
+        "absent->not_holding": 19,
+        "open_state->closed": 15,
+        "already_at->other": 14,
+        "other->not_holding": 10,
+        "already_at->not_holding": 10,
+        "open_state->other": 4,
+        "holding_other->closed": 4,
+        "other->already_at": 4,
+        "holding_other->holding_other": 3,
+        "open_state->absent": 1,
+        "open_state->not_at": 1,
+        "already_at->holding_other": 1,
+        "other->closed": 1
+      }
+    }
+  }
+}

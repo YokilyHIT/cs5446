@@ -1,0 +1,12 @@
+{
+  "rules": [
+    "An action succeeds if the required conditions are met, such as object presence, accessibility, and correct inventory status.",
+    "Taking an object succeeds if it is present, not already held, and the location is accessible.",
+    "Moving to a location succeeds if it exists, is accessible, and the agent is not already there.",
+    "Examining an object or location always succeeds and provides descriptive information.",
+    "Actions fail if the object is not in inventory, not present, or not accessible in the current location.",
+    "Opening a container succeeds only if it is closed and the agent is at its location."
+  ],
+  "val_acc": 0.7933333333333333,
+  "val_acc_no_rules": 0.68
+}

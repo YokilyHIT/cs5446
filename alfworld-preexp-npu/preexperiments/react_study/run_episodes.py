@@ -51,6 +51,10 @@ def main(a: argparse.Namespace) -> None:
         from preexperiments.react_study.router import Router
         agent_mod.ROUTER = Router(a.router)
     agent_mod.ROUTE_RAND_P = (a.route_pR, a.route_pW)
+    if a.knowledge:
+        from preexperiments.react_study import baselines_r6
+        baselines_r6.KNOWLEDGE = baselines_r6.load_knowledge(a.knowledge)
+        print(f"[run] knowledge items: {len(baselines_r6.KNOWLEDGE)} from {a.knowledge}", flush=True)
     config = load_yaml_config(a.config)
     db_cfg = {**config.get("direction_b", {}), "reasoning_mode": "react"}
     hist_len = config["sampling"].get("history_length", 50)
@@ -80,7 +84,7 @@ def main(a: argparse.Namespace) -> None:
                "history_length": hist_len, "reasoning_mode": "react",
                "record_state": a.record_state, "protocol": a.protocol, "variant": a.variant,
                "second_call_when_closed": a.second_call_when_closed, "memory_mode": a.memory,
-               "memory_init": a.memory_init, "k_me": a.k_me, "wm_role": a.wm_role, "router": a.router, "route_pR": a.route_pR, "route_pW": a.route_pW,
+               "memory_init": a.memory_init, "k_me": a.k_me, "wm_role": a.wm_role, "router": a.router, "route_pR": a.route_pR, "route_pW": a.route_pW, "knowledge": a.knowledge,
                "env": {k: os.environ.get(k, "") for k in ("PREEXP_API_BASES", "PREEXP_PLANNER_MODEL",
                        "PREEXP_PLANNER_BASES", "PREEXP_WM_ALT_MODEL", "PREEXP_WM_ALT_BASES")}}
     (d / f"{name}.config.json").write_text(json.dumps(run_cfg, indent=2))
@@ -160,6 +164,7 @@ def build_arg_parser():
     p.add_argument("--router", default="", help="round 4: router model json for arm route")
     p.add_argument("--route_pR", type=float, default=0.0, help="route_rand: P(R)")
     p.add_argument("--route_pW", type=float, default=0.0, help="route_rand: P(W)")
+    p.add_argument("--knowledge", default="", help="round 6: rules / insights json for walle / expel / inv_expel")
     p.add_argument("--wm_role", default="wm", choices=["wm", "wm_alt"],
                    help="round 4: wm_alt routes WM calls to PREEXP_WM_ALT_* (e.g. Qwen3-14B)")
     return p

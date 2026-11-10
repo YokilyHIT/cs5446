@@ -1,0 +1,45 @@
+{
+  "frozen_at": "2026-10-23, before any run of these arms beyond 3-task smoke tests",
+  "purpose": "separate the repair INTERFACE from (a) a stronger model choosing the action and (b) unequal information in the WM prompts",
+  "planner": "4B; WM / takeover model = Qwen3-14B (wm_alt, thinking off); gate = a_base not admissible (same as frozen method)",
+  "new_arms": {
+    "inv_takeover": "14B decides directly with the planner's own v2 prompt + FAIL_BLOCK (no diagnosis format)",
+    "inv_wmrepair_reason": "same WM call as the frozen method, planner shown the reason only",
+    "inv_wmrepair_action": "same WM call, planner shown the suggested first step only (no reason)",
+    "inv_wmpred_info": "next-observation prediction with the same information as the repair prompt (valid actions + 'not in the valid list')"
+  },
+  "runs": {
+    "dev460 x 2": [
+      "inv_takeover",
+      "inv_wmrepair_reason",
+      "inv_wmrepair_action",
+      "inv_wmpred_info"
+    ],
+    "fresh600 x 3": [
+      "inv_takeover",
+      "inv_wmpred (original)",
+      "inv_wmpred_info",
+      "inv_wmrepair_reason",
+      "inv_wmrepair_action"
+    ]
+  },
+  "primary_fresh600_holm_PR": {
+    "C1": "wmrepair_wm14 - inv_takeover (does asking for a diagnosis beat letting the 14B model act?)",
+    "C2": "wmrepair_wm14 - inv_wmpred_info (interface with equal information)",
+    "C3": "wmrepair_reason - inv_fail (does the reason alone add value?)"
+  },
+  "secondary": [
+    "wmrepair_action - inv_fail",
+    "wmrepair_wm14 - wmrepair_action",
+    "wmrepair_wm14 - wmrepair_reason",
+    "inv_wmpred_info - inv_wmpred",
+    "inv_takeover - inv_fail",
+    "SR versions of all"
+  ],
+  "interpretation": {
+    "interface claim supported": "C1 > 0 and C2 > 0 (Holm < .05)",
+    "gain mostly 'stronger model acts'": "C1 not significant or < 0: report the repair interface as a way to use a stronger model at failure steps, not as an independent effect",
+    "reason carries information": "C3 > 0; if only the action-only arm works, the value is the suggested action, not the diagnosis"
+  },
+  "test": "paired task bootstrap 20k on rep-averaged per-task values, two-sided, Holm within the primary family"
+}

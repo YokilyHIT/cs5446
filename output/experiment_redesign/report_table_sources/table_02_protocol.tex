@@ -1,0 +1,16 @@
+\begin{table}[tbp]
+\caption{Experimental protocol and the role of each task set. Model weights remain frozen throughout.}
+\label{tab:protocol}\centering
+\begin{tabular}{lp{0.64\linewidth}}\toprule
+Component & Configuration or purpose\\\midrule
+Planner / WM & Qwen3-4B-Instruct-2507 / Qwen3-14B, thinking off for 14B\\
+Interaction budget & At most 30 environment steps per episode\\
+Main decoding & Temperature 0; top-$p$ 0.5; seed 42\\
+Development & dev460: 460 tasks, two runs each; method selection\\
+Frozen evaluation & fresh600: 600 tasks, three runs each; 100 tasks per type\\
+Knowledge pool & 448 tasks disjoint from fresh600; baseline learning and calibration\\
+Repeated evaluation & unseen134: 134 tasks, five runs each; previously used split\\
+Uncertainty & Paired task bootstrap, 20,000 resamples\\
+Primary testing & Holm adjustment for superiority family; separate PR non-inferiority test\\\bottomrule
+\end{tabular}
+\end{table}

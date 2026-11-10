@@ -109,7 +109,19 @@ ARMS = ("none", "rethink", "always", "selective", "random_post", "random_pre", "
         "inv_wmrepair",
         # round 5 stage A: generic / structured self-reflection, rule cards, oracle state facts,
         # WM next-observation prediction on the failure gate, post-execution-failure WM repair
-        "inv_reflect", "inv_sreflect", "inv_rules", "inv_state", "inv_wmpred", "post_wmrepair")
+        "inv_reflect", "inv_sreflect", "inv_rules", "inv_state", "inv_wmpred", "post_wmrepair",
+        # round 5 confound controls: the WM_ROLE model takes over the decision (same planner prompt +
+        # failure notice); WM repair shown as reason only / action only; next-obs prediction given the
+        # same information as the repair prompt (valid actions + failure fact)
+        "inv_takeover", "inv_wmrepair_reason", "inv_wmrepair_action", "inv_wmpred_info",
+        # round 5 follow-ups: execute the WM's repair action directly; episode-level memory of diagnoses
+        "inv_wmrepair_exec", "inv_wmrepair_mem",
+        # round 6 recent-work baselines (baselines_r6.py): WALL-E-style per-step WM judge (+ learned rules via
+        # --knowledge), RPMS-style rules + belief state at the failure gate, ExpeL-style insights every step / at the gate
+        "walle", "inv_rpms", "expel", "inv_expel",
+        # round 7 (hybrid_r7.py): WM repair checked by rules -- hand rules + tracked state (symbolic check, re-ask on
+        # conflict), WALL-E-style learned rules (WM self-check); control: WM repair + RPMS block concatenated
+        "inv_wmverify", "inv_wmverify_learned", "inv_wmrules_concat")
 
 # Round 4: role used for every WM call ("wm" -> PREEXP_API_BASES model, "wm_alt" -> PREEXP_WM_ALT_*).
 # Set once per process (run_episodes --wm_role / branch_r4).
@@ -242,8 +254,12 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
         set_role(WM_ROLE)
         post_block, d = wm_repair_block(pipe, state, recent[-1][0])
         post_d = d
+    mem_block = memory.render() if (arm == "inv_wmrepair_mem" and memory is not None) else ""
+    if arm == "expel":
+        from preexperiments.react_study import baselines_r6 as B6
+        mem_block = B6.expel_block(B6.KNOWLEDGE)
     set_role("planner_base")
-    a_base, forced, _tok, diag = pipe._dispatch_choose(state, post_block or "")
+    a_base, forced, _tok, diag = pipe._dispatch_choose(state, (post_block or "") + mem_block)
     rec: Dict[str, Any] = {
         "baseline_action": a_base, "base_forced": bool(forced), "base_raw": diag["raw_response"],
         "action": a_base, "action_forced": bool(forced),
@@ -252,6 +268,27 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
         "second_action": None, "second_raw": None,
     }
     if arm == "none":
+        return rec
+    if arm == "expel":  # insights are in every planner prompt; no gate
+        return rec
+    if arm == "walle":  # WALL-E-style one-step MPC: the WM judges every proposed action (no valid-action list)
+        from preexperiments.react_study import baselines_r6 as B6
+        a, checks, rejects = a_base, 0, 0
+        while a != CHECK_VALID and rejects <= B6.MAX_WALLE_REVISIONS:
+            set_role(WM_ROLE)
+            j = B6.walle_judge(pipe, state, a, B6.KNOWLEDGE)
+            checks += 1
+            if not j["fail"] or rejects == B6.MAX_WALLE_REVISIONS:
+                break
+            rejects += 1
+            rejected = a
+            set_role("planner_second")
+            a, f2, _t, d2 = pipe._dispatch_choose(state, B6.WALLE_BLOCK.format(
+                action=rejected, feedback=j["feedback"] or "it is not possible now", suggestion=j["suggestion"] or "choose another action"))
+            rec.setdefault("walle_trace", []).append({"rejected": rejected, "feedback": j["feedback"],
+                                                      "suggestion": j["suggestion"], "revised": a})
+            rec.update(action=a, action_forced=bool(f2), second_action=a, second_raw=d2["raw_response"])
+        rec.update(wm_called=checks > 0, walle_checks=checks, walle_rejects=rejects, gate_open=rejects > 0)
         return rec
     if arm == "post_wmrepair":
         rec["gate_open"] = post_block is not None
@@ -371,6 +408,60 @@ def decide(pipe: DirectionBPipeline, state: Dict[str, Any], arm: str, *,
                 rec.update(wm_called=True, wm_prediction=pred["wm_prediction"])
                 set_role("planner_second")
                 block = FORESIGHT_BLOCK.format(base_action=a_base, prediction=pred["wm_prediction"] or "(no prediction)")
+            elif arm == "inv_rpms":
+                from preexperiments.react_study import baselines_r6 as B6
+                block = B6.rpms_block(a_base, recent or [])
+            elif arm == "inv_expel":
+                from preexperiments.react_study import baselines_r6 as B6
+                block = B6.EXPEL_GATE_BLOCK.format(action=a_base, insights=B6.expel_block(B6.KNOWLEDGE))
+            elif arm == "inv_takeover":
+                set_role(WM_ROLE)  # the WM_ROLE model decides, with the planner's own prompt + failure notice
+                a2, f2, _t, d2 = pipe._dispatch_choose(state, FAIL_BLOCK.format(base_action=a_base))
+                rec.update(wm_called=True, takeover=True, action=a2, action_forced=bool(f2), second_action=a2,
+                           second_raw=d2["raw_response"])
+                return rec
+            elif arm == "inv_wmpred_info":
+                set_role(WM_ROLE)
+                pred = PC.wm_pred_info(pipe, state, a_base)
+                rec.update(wm_called=True, wm_prediction=pred)
+                set_role("planner_second")
+                block = FORESIGHT_BLOCK.format(base_action=a_base, prediction=pred or "(no prediction)")
+            elif arm in ("inv_wmrepair_reason", "inv_wmrepair_action"):
+                set_role(WM_ROLE)
+                block, d = wm_repair_block(pipe, state, a_base, mode=arm.rsplit("_", 1)[1])
+                rec.update(wm_called=True, diag_reason=d["reason"], diag_repair=d["repair"], wm_raw=d["raw"])
+                set_role("planner_second")
+            elif arm == "inv_wmrepair_exec":
+                set_role(WM_ROLE)
+                block, d = wm_repair_block(pipe, state, a_base)
+                rec.update(wm_called=True, diag_reason=d["reason"], diag_repair=d["repair"], wm_raw=d["raw"])
+                set_role("planner_second")
+                if d["repair"]:  # execute the suggested repair directly, no planner re-decision
+                    rec.update(action=d["repair"], action_forced=False, second_action=d["repair"],
+                               second_raw=None, repair_executed=True)
+                    return rec
+            elif arm == "inv_wmrepair_mem":
+                set_role(WM_ROLE)
+                block, d = wm_repair_block(pipe, state, a_base)
+                rec.update(wm_called=True, diag_reason=d["reason"], diag_repair=d["repair"], wm_raw=d["raw"])
+                set_role("planner_second")
+                block = mem_block + block
+                if memory is not None:
+                    memory.note(a_base, d["reason"])
+            elif arm in ("inv_wmverify", "inv_wmverify_learned", "inv_wmrules_concat"):
+                from preexperiments.react_study import hybrid_r7 as H7
+                set_role(WM_ROLE)
+                if arm == "inv_wmverify":
+                    block, d, d1, v = H7.wm_verify_hand(pipe, state, a_base, recent or [])
+                    rec.update(verify=v, first_reason=d1["reason"], first_repair=d1["repair"])
+                elif arm == "inv_wmverify_learned":
+                    from preexperiments.react_study import baselines_r6 as B6
+                    block, d, d1 = H7.wm_verify_learned(pipe, state, a_base, B6.KNOWLEDGE)
+                    rec.update(first_reason=d1["reason"], first_repair=d1["repair"])
+                else:
+                    block, d = H7.concat_block(pipe, state, a_base, recent or [])
+                rec.update(wm_called=True, diag_reason=d["reason"], diag_repair=d["repair"], wm_raw=d["raw"])
+                set_role("planner_second")
             elif arm == "inv_wmrepair":
                 set_role(WM_ROLE)
                 block, d = wm_repair_block(pipe, state, a_base)
@@ -499,6 +590,9 @@ def run_policy(pipe: DirectionBPipeline, env, obs: str, info: Dict[str, Any], *,
 
     `first_action`, if given, is executed at start_step instead of asking the
     policy (stage-3 branches whose first action was already decided)."""
+    if arm == "inv_wmrepair_mem" and memory is None:
+        from preexperiments.react_study.preconditions import RepairMemory
+        memory = RepairMemory()
     steps: List[Dict[str, Any]] = []
     done = success = False
     history = list(history)

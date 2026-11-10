@@ -1,0 +1,431 @@
+% Based on samplepaper.tex. Compile from the repository root with pdfLaTeX.
+% Supplementary experiments are included from report_supplement.tex.
+\documentclass[runningheads]{llncs}
+% Course-report layout requested by the author; overrides LNCS text area.
+\usepackage[a4paper,left=25mm,right=25mm,top=25mm,bottom=25mm,includeheadfoot]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext}
+\usepackage[varvw]{newtxmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{url}
+% Uniform body paragraphs, including the first paragraph after a heading.
+\usepackage{indentfirst}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+% Display minor headings on their own line instead of LNCS run-in headings.
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {1.5ex \@plus .5ex \@minus .2ex}%
+  {.6ex \@plus .2ex}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
+
+\begin{document}
+\title{From Prediction to Repair: World-Model Guidance for LLM Planning}
+\titlerunning{From Prediction to Repair}
+\author{%
+\begin{tabular}{ccc}
+CAI YUANYONGQING & LAI LIWEN & YIN YUTING \\
+{\small\ttfamily e1521197@u.nus.edu} &
+{\small\ttfamily e0134124@u.nus.edu} &
+{\small\ttfamily yuting.yin@u.nus.edu} \\[1.2em]
+Catherine Kang & WANG CONGTANG & Name Six \\
+{\small\ttfamily e1285876@u.nus.edu} &
+{\small\ttfamily e1553261@u.nus.edu} &
+{\small\ttfamily six@example.com}
+\end{tabular}%
+}
+
+\authorrunning{CS5446 Project Team}
+
+\institute{National University of Singapore}
+\maketitle
+
+\begin{abstract}
+How should a frozen world model guide a language-model planner? We investigate three connected questions on ALFWorld: when to consult the model, what information the planner needs, and how to provide it. First, selective next-observation forecasts do not reliably outperform random invocation or no-information resampling, motivating a shift from invocation timing to information content. Second, failure analysis reveals repeated infeasible actions, and fixed-trigger oracle probes show that a missing-precondition diagnosis with a valid first step is more useful than a failure forecast. Third, we replace oracle feedback with frozen world-model repair: the model explains an infeasible proposal and suggests a first step, while the planner retains the decision. On 600 previously unrun tasks with three runs per condition, success increases from 20.9 to 36.2 percent. With identical inputs and the same trigger, repair exceeds next-observation prediction by 4.1 percentage points of progress. Component ablations favor the combination of explanation and suggested step, and aligned baselines examine alternative triggers and knowledge sources. Together, the studies trace a progression from limited predictive guidance to actionable repair, within the tested environment and model configurations.
+\keywords{LLM planning \and World models \and Action repair \and ALFWorld}
+\end{abstract}
+
+\section{Introduction}
+Language-model agents interleave reasoning with actions to solve interactive tasks, as demonstrated by ReAct~\cite{react}. Even a plausible plan, however, can fail at an individual execution step. In ALFWorld~\cite{alfworld}, an agent may attempt to heat an object without holding it or without being near the required appliance. The resulting observation, ``Nothing happens.'', provides little guidance about what to change. The agent may then repeat the same action until it exhausts its step budget.
+
+A world model (WM) can expose knowledge about action consequences and execution conditions. A common interface asks it to forecast the next observation, but the planner must still decide what to do with that forecast. We began by asking whether forecasts become more useful when supplied at selected moments. When improvements in prediction and invocation timing failed to yield reliable decision gains, the investigation shifted to the information needed at failure states and then to how a frozen WM could provide it.
+
+The report follows this progression through three connected research questions:
+\begin{enumerate}
+\item \textbf{WHEN: When should the planner consult a world model?} We test whether selective invocation can make next-observation foresight useful beyond random invocation and another decision opportunity.
+\item \textbf{WHAT: What information does the planner need?} We analyze execution failures and compare information types under a common invalid-action trigger, using oracle feedback to isolate their potential value.
+\item \textbf{HOW: How should the world model deliver that information?} We replace oracle repair with a frozen WM's diagnosis and first-step suggestion, then test its effectiveness, components and costs.
+\end{enumerate}
+
+The resulting method is \textbf{failure-triggered world-model repair}. When a proposal is outside the environment's valid-action list, the WM explains the missing precondition and suggests a valid first step. The planner receives both pieces of advice and selects the executed action. Both models remain frozen, and the WM receives no explicit rule base. This method emerges from the preceding studies rather than serving as the starting assumption.
+
+Our contributions mirror the three questions. The WHEN study documents limited decision value from forecasts and their selective invocation. The WHAT study identifies missing action preconditions as a concrete bottleneck and establishes the value of repair information through oracle probes. The HOW study tests whether a frozen WM can supply that information, obtaining a 15.3 percentage-point success gain on fresh600 and a 4.1-point progress advantage over equal-information prediction. The component ablations and aligned baselines then explain the conditions under which repair helps.
+
+Table~\ref{tab:research-roadmap} summarizes the evidence chain. Earlier timing studies provide motivation, development probes establish an information target, and the frozen evaluation tests the resulting method. Supplementary material retains capacity comparisons, extended controls and rule-based variants. The principal claim concerns advisory guidance with planner-controlled action selection; delegation results delimit that setting.
+
+\begin{table}[tbp]
+\caption{The WHEN--WHAT--HOW research progression. Each study motivates the next rather than treating all experiments as independent method comparisons.}
+\label{tab:research-roadmap}\centering
+\begin{tabular}{lp{0.35\linewidth}p{0.44\linewidth}}\toprule
+Question & Experimental focus & Finding and next question\\\midrule
+WHEN & Forecast invocation, resampling controls and learned routing & Timing provides no reliable remedy for weak forecast utility. What information is missing?\\
+WHAT & Failure analysis and oracle information at one trigger & Missing-precondition diagnosis and a first step help. Can a frozen WM provide them?\\
+HOW & WM repair, equal-information ablations and aligned baselines & Repair improves decisions in the tested setting; analyze its components and limits.\\\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Related Work}
+ReAct couples reasoning traces with environment actions~\cite{react}, while ALFWorld provides a text-based testbed for interactive household tasks~\cite{alfworld}. We adopt a ReAct-style interaction protocol and expose the current valid actions at each step. Our focus is the additional information that a WM supplies when this protocol still produces an infeasible proposal.
+
+Several approaches supply agents with knowledge beyond the current observation. WALL-E learns rules that align an LLM world model with environment dynamics~\cite{walle}. ExpeL extracts natural-language insights from experience without updating model parameters~\cite{expel}. WorldEvolver combines memory with selective foresight under frozen model parameters~\cite{worldevolver}. RPMS uses explicit rules and a belief state to address infeasible actions and state drift~\cite{rpms}. These approaches motivate our comparisons with per-action WM judging, distilled insights, confidence-gated forecasts and rules-plus-state guidance.
+
+Our baselines implement selected mechanisms under common models and evaluation tasks; they are aligned comparisons rather than reproductions of the complete original systems. WM feedback and rule-informed suggestions are established ideas. Our contribution is controlled evidence about the information supplied by a frozen WM, the trigger for supplying it and its value without an explicit rule base.
+
+\section{Shared Experimental Setup}\label{sec:setup}
+\paragraph{Environment and models}
+We use ALFWorld's TextWorld environment, six task types and a maximum of 30 steps per episode. The planner is Qwen3-4B-Instruct-2507; the WM is Qwen3-14B with thinking disabled. Neither is fine-tuned. This is the main configuration for Studies 2 and 3. Study 1 combines a matched comparison using this configuration with earlier timing and memory experiments; those historical results are identified separately. Additional model-size comparisons appear in the appendix. These experiments test the interface within a specific model family, not independently of model capacity. The main decoding settings are temperature zero, top-$p=0.5$ and seed 42. Models are served using vLLM on Ascend 910B3 NPUs. The planner prompt contains the task, action templates, one same-type example, history and current valid actions, and requests \texttt{Thought:} and \texttt{Action:} outputs.
+
+\paragraph{Data and evaluation}
+Development uses dev460 with two runs per task. The principal evaluation uses fresh600: 600 training-split task instances not run before method freeze, balanced at 100 per task type, with three runs per condition. These are held-out instances within the training scene distribution, not an out-of-distribution split. A separate pool of 448 tasks, disjoint from fresh600, supplies baseline knowledge and calibration. Earlier timing experiments also used dev600 and unseen134. Those results motivate method development; fresh600 supplies the principal frozen repair evaluation. Repeated repair evaluation on unseen134 remains supplementary because the split had already been used.
+
+Success rate (SR) is the fraction of completed tasks. Progress rate (PR) measures completion of task subgoals and equals one on success. Unless a column specifies otherwise, SR and PR are reported as percentages and contrasts as percentage-point differences. We average repetitions within each task and compute paired task-bootstrap intervals from 20,000 resamples, giving 600 statistical units on fresh600. Primary superiority families use Holm correction; non-inferiority is assessed separately with a pre-registered margin of $-2$ PR points. Other comparisons are identified as secondary or exploratory.
+
+\begin{table}[tbp]
+\caption{Experimental protocol and the role of each task set. Model weights remain frozen throughout.}
+\label{tab:protocol}\centering
+\begin{tabular}{lp{0.64\linewidth}}\toprule
+Component & Configuration or purpose\\\midrule
+Planner / WM & Qwen3-4B-Instruct-2507 / Qwen3-14B, thinking off for 14B\\
+Interaction budget & At most 30 environment steps per episode\\
+Main decoding & Temperature 0; top-$p$ 0.5; seed 42\\
+Development & dev460: 460 tasks, two runs each; method selection\\
+Frozen evaluation & fresh600: 600 tasks, three runs each; 100 tasks per type\\
+Knowledge pool & 448 tasks disjoint from fresh600; baseline learning and calibration\\
+Repeated evaluation & unseen134: 134 tasks, five runs each; previously used split\\
+Uncertainty & Paired task bootstrap, 20,000 resamples\\
+Primary testing & Holm adjustment for superiority family; separate PR non-inferiority test\\\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:protocol} summarizes the evaluation protocol. Each fresh600 condition comprises 1,800 episode runs but 600 task-level statistical units. Pairing by task accounts for shared task difficulty, while averaging repetitions before bootstrapping avoids treating repeated runs as independent tasks. The intervals describe uncertainty over tasks in this evaluation distribution, not variation across model families or environments. H1 and H3 form the two-comparison Holm family; H2 tests whether the lower bound of the PR contrast exceeds the non-inferiority margin.
+
+\paragraph{Controls}
+Within each comparison, controls retain the same planner. Study 1 compares forecasts with no-information resampling. Studies 2 and 3 use no intervention, a failure-only notice, generic and structured self-reflection, hand-written rule cards, and oracle repair derived from tracked state and action rules. Interface ablations hold the gate and WM fixed. The equal-information prediction control gives the WM the same inputs as repair, preventing access to extra context from explaining the whole difference.
+
+\section{Study 1---WHEN: Can Better Timing Make Forecasts Useful?}\label{sec:when}
+We first investigate the conventional predictive interface. The planner proposes an action, the WM forecasts its next observation, and the planner receives that forecast before choosing again. We vary when forecasts are shown: every step, random invocation, confidence gating, rule- and uncertainty-based gates, and learned routing. Memory variants additionally test whether more accurate predictions improve decisions. These experiments ask whether the main obstacle is consulting the WM at the wrong moment.
+
+\subsection{Selective Invocation and Prediction Quality}
+In the earlier unseen134 evaluation, selective foresight with memory improves SR over no intervention by 3.9 points (95\% CI $[0.3,7.6]$). However, its contrast with random invocation is only $+0.6$ points ($[-2.7,4.2]$), which is not significant. Thus, an improvement over no intervention alone does not establish the value of the selection rule.
+
+Prediction quality and decision quality also diverge. In the earlier dev600 memory study, exact-match prediction accuracy rises from 37.7\% to approximately 60--62\%, while task SR changes from 22.8\% to 22.3\%. A model-capacity comparison likewise finds better forecasts from a larger WM without a reliable downstream gain. These historical experiments use their own configurations and task sets; their absolute scores are not directly comparable to fresh600 repair results. They motivate checking whether forecasts help beyond the opportunity to reconsider an action.
+
+\subsection{Forecasts versus Another Decision Opportunity}
+Table~\ref{tab:when-resampling} isolates this question on dev460 with the main planner and WM configuration. Intervention occurs at randomly selected 30\% of steps, and the original action is executed when the gate is closed. The resampling control asks the planner again without adding forecast information. Oracle foresight supplies the true next observation at the same selected steps.
+
+\begin{table}[tbp]
+\caption{WHEN study: prediction at a matched random trigger on dev460, two runs per task. Resampling uses temperature 0.7; learned forecasts use the main WM. Primary PR contrasts belong to the original six-comparison Holm family across both planner sizes.}
+\label{tab:when-resampling}\centering
+\begin{tabular}{lrrl}\toprule
+Condition & SR (\%) & PR (\%) & $\Delta$PR vs. resampling [CI]\\\midrule
+No intervention & 11.7 & 32.8 & ---\\
+No-information resampling & 14.5 & 33.0 & Reference\\
+WM next-observation forecast & 14.0 & 34.5 & $+1.4\ [-0.4,3.2]$\\
+Oracle next observation & 16.8 & 36.0 & $+3.0\ [1.2,4.8]$\\\bottomrule
+\end{tabular}
+\end{table}
+
+The WM forecast does not significantly outperform resampling (Holm-adjusted $p=0.594$), whereas the oracle does ($p=0.005$). The result leaves room for useful predictive information, but shows that the tested frozen WM does not supply it reliably enough to improve on the decision-opportunity control. The corresponding matrix with other model sizes is summarized in the appendix.
+
+\subsection{Can a Learned Router Identify Helpful States?}
+State-level branching experiments test whether the benefit of foresight can be predicted before invoking it. A learned router achieves an AUROC of 0.70--0.74 on 127 states, but only 0.42--0.43 on 374 new states. This failure to generalize, together with the resampling comparison, led to stopping the router line. A later confidence-gated control using the main WM on fresh600 also gives only 22.1\% SR and 41.4\% PR, compared with 20.9\% and 39.4\% without intervention; Study 3 includes it among the aligned baselines.
+
+\paragraph{Finding 1: From timing to information}
+The tested timing strategies do not reliably overcome the limited decision value of next-observation forecasts. This is not a general impossibility result for prediction or selective invocation. It motivates a more specific question: when the planner fails, what information would help it recover? Study 2 therefore holds the trigger fixed and varies the information supplied.
+
+\section{Study 2---WHAT: What Information Does the Planner Need?}\label{sec:what}
+We now move from scheduling forecasts to diagnosing the planner's bottleneck. Failure analysis identifies candidate information needs; an oracle probe then tests those needs without requiring a learned WM to produce accurate advice.
+
+\subsection{Failure Analysis}
+
+On 460 development tasks with two runs per task, 31.3\% of the unassisted planner's actions are invalid even though the valid-action list appears in its prompt. Among failed episodes, 74\% end with at most four distinct actions in the final ten steps, indicating persistent repetition. In addition, 84\% of heat, cool and clean attempts are invalid. These patterns motivate an intervention that addresses local action feasibility.
+
+\begin{table}[tbp]
+\caption{Failure signals motivating repair. All values use the main experimental configuration on dev460 with two runs per task; the denominators differ by row.}
+\label{tab:failure-signals}\centering
+\begin{tabular}{p{0.68\linewidth}r}\toprule
+Signal & Value\\\midrule
+Invalid proposals among all actions & 31.3\%\\
+Loop endings among failed episodes & 74\%\\
+Invalid actions among heat/cool/clean attempts & 84\%\\
+Success conditional on picking up the target & 27\%\\\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:failure-signals} summarizes both the frequency and persistence of execution errors. Knowing which actions are currently executable does not necessarily tell the planner how to recover from a specific mistake. This suggests using list membership to identify proposals requiring revision, then testing whether an explanation and a feasible first step supply the missing information. The low completion rate after pickup further motivates examining downstream subgoals rather than object discovery alone.
+
+\subsection{Oracle Information at a Fixed Failure Trigger}
+All intervention conditions in this probe use the same trigger: the proposed action is outside the valid-action list. Only the information or constraint used for the revised decision changes. This differs from Study 1's random trigger: the comparison now targets states where an execution precondition is already known to be unsatisfied.
+
+A fixed-trigger oracle probe confirms the potential value of repair information. On the development tasks, notifying the planner that an action will fail yields 18.3\% success and 36.7\% progress. Providing the true missing precondition and a valid first step yields 29.1\% success and 41.0\% progress. The pre-registered progress contrast is $+4.2$ points, with 95\% confidence interval (CI) $[2.4,6.0]$ and Holm-adjusted $p<0.001$. These are diagnostic oracle results, distinct from the frozen-WM evaluation below.
+
+\begin{table}[tbp]
+\caption{WHAT study: information at the invalid-action trigger on dev460, two runs per task. Oracle repair derives a cause and first step from tracked state and action rules.}
+\label{tab:what-oracle}\centering
+\begin{tabular}{lrr}\toprule
+Information or control & SR (\%) & PR (\%)\\\midrule
+No intervention & 11.7 & 32.8\\
+Resample, temperature 0.7 & 14.9 & 35.0\\
+Failure notification & 18.3 & 36.7\\
+Legal projection & 14.2 & 36.2\\
+Oracle cause and first step & 29.1 & 41.0\\\bottomrule
+\end{tabular}
+\end{table}
+
+For an invalid action, the true next observation is ``Nothing happens.'' Failure notification therefore already supplies the oracle forecast at this trigger. Oracle repair improves PR over that notice by $4.2$ points ($[2.4,6.0]$) and over legal projection by $4.7$ ($[2.4,7.0]$), both with Holm-adjusted $p<0.001$. Merely selecting a legal action is not enough: the planner benefits from information connecting its failed intention to a feasible first step.
+
+\paragraph{Finding 2: From missing information to repair}
+The probe supports a concrete information target: an explanation of the unsatisfied precondition together with an actionable first step. At the failure trigger, this is more useful than a perfect forecast that only reports failure. The remaining question is whether a frozen WM can supply comparable advice without receiving the oracle's explicit rules and state-derived diagnosis. Study 3 replaces the oracle with learned-model inference while preserving the planner's final decision.
+
+\section{Study 3---HOW: Delivering Repair through a Frozen World Model}\label{sec:how}\label{sec:method}
+The first two studies identify both a limitation and a target: changing forecast timing offers little reliable gain, whereas diagnosis and a first step have value at infeasible proposals. We now ask a frozen WM to produce that information. The evaluation first tests the selected method, then separates the effects of input context, output components and subsequent use of the advice.
+
+\subsection{Repair Interface}
+Let $x_t$ contain the task instruction, interaction history and current observation, and let $V_t$ be the environment-provided valid-action set. The planner $P$ proposes $a_t=P(x_t,V_t)$. The repair gate is
+\begin{equation}
+g_t=\mathbf{1}[a_t\notin V_t\;\land\;a_t\ne a_{\mathrm{check}}].
+\end{equation}
+Here $a_{\mathrm{check}}$ denotes the interface command \texttt{check valid actions}, which is excluded from the gate. If $g_t=0$, the action follows the normal execution path. Otherwise, the frozen WM receives $(x_t,V_t,a_t)$ and produces a cause $c_t$ and a suggested first step $u_t$. The cause is a short explanation of the missing precondition. The suggested step must belong to $V_t$; an invalid suggestion is discarded. The planner then selects the executed action:
+\begin{equation}
+a_t^{\mathrm{exec}}=
+\begin{cases}
+a_t, & g_t=0,\\
+P(x_t,V_t,\operatorname{repair}(a_t,c_t,u_t)), & g_t=1.
+\end{cases}
+\end{equation}
+The planner remains free to accept or reject the suggested step. The WM receives no hand-written rule cards, and its advice is supplied for the current revision rather than stored in a separate persistent repair memory.
+
+The gate operates before execution. Throughout this report, ``failure-triggered'' therefore means intervention at a proposal identified as infeasible by the environment's valid-action list. It does not mean that the WM predicts failure or that the action has already produced a failed transition.
+
+\paragraph{Prompt, parsing and fallback}
+The WM prompt states that the candidate action is not executable and requests two fields: \texttt{Reason:}, containing one explanatory sentence, and \texttt{Repair:}, containing an action copied from the valid list or \texttt{none}. The implementation parses both fields and matches the suggested action against the admissible strings. An unmatched suggestion is discarded; a missing reason is replaced with a generic invalid-action statement. This validation checks immediate action admissibility, not the explanation's correctness or the suggestion's long-term value.
+
+The component ablations use the same WM call and vary only the fields displayed to the planner: cause-only hides the suggested step, and step-only hides the cause. The equal-information prediction control instead changes the WM's requested output while preserving its input context. The first comparison tests which response components help the planner; the second tests whether asking for repair is more useful than asking for a forecast.
+
+\paragraph{Illustrative interaction}
+Suppose the planner proposes \texttt{take apple 1 from countertop 1} while holding a tomato. An illustrative response is ``Reason: you are already holding another object'' and ``Repair: move tomato 2 to countertop 1'', provided the suggested move is admissible. The planner may follow that suggestion or select another action. This example illustrates the interface, not a newly evaluated trajectory. The WM recommends a first step toward making the proposal feasible; it neither supplies a complete plan nor guarantees that the original proposal is the best way to achieve the task.
+
+\subsection{Development and Method Selection}
+On dev460, WM repair improves progress over generic reflection by $4.4$ points (CI $[2.3,6.4]$), structured reflection by $5.1$ ($[2.9,7.3]$), and same-trigger WM prediction by $7.1$ ($[5.1,9.1]$). The contrast to rule cards is $1.3$ ($[-0.9,3.5]$). A pre-registered selection rule chose the WM repair configuration used in the main evaluation. The method, prompts, decoding and test-set hash were frozen before the first fresh600 run.
+
+\begin{table}[tbp]
+\caption{Selected development conditions on dev460, two runs per task, using the main planner and WM configuration. Legal is the fraction of executed actions that are admissible.}
+\label{tab:development}\centering
+\begin{tabular}{lrrr}\toprule
+Condition & SR (\%) & PR (\%) & Legal\\\midrule
+No intervention & 11.7 & 32.8 & 0.69\\
+Failure only & 18.3 & 36.7 & 0.85\\
+Generic reflection & 18.7 & 37.8 & 0.86\\
+Structured reflection & 17.3 & 37.1 & 0.84\\
+Rule cards & 26.4 & 40.9 & 0.88\\
+WM prediction & 15.3 & 35.1 & 0.80\\
+WM repair & 26.5 & 42.2 & 0.89\\
+Oracle repair & 29.1 & 41.0 & 0.90\\\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:development} shows why success, progress and admissibility provide complementary evidence. Repair improves progress and makes executed actions more often admissible than reflection or prediction, but remains below oracle success. Its development success is almost identical to that of rule cards, so selection does not establish an unconditional advantage over explicit rules. Because dev460 and fresh600 contain different tasks, differences in their absolute scores should not be interpreted as gains from revising the method.
+
+\subsection{Evaluation of the Frozen Method}
+Table~\ref{tab:main} presents the frozen evaluation. Repair increases success from 20.9\% to 36.2\%, approaching the oracle condition's 36.7\%. It also improves on failure notification, which already yields a substantial gain over no intervention. The result therefore reflects useful repair information beyond the benefit of flagging an invalid proposal.
+
+\begin{table}[tbp]
+\caption{Main evaluation on fresh600, three runs per task. All conditions share the same planner; the repair condition uses the frozen WM specified in the experimental setup.}
+\label{tab:main}\centering
+\begin{tabular}{lrr}\toprule
+Condition & SR (\%) & PR (\%)\\\midrule
+No intervention & 20.9 & 39.4\\
+Failure only & 28.3 & 44.8\\
+Generic reflection & 28.6 & 45.9\\
+Structured self-reflection & 23.7 & 42.8\\
+Hand-written rule cards & 33.3 & 46.8\\
+\textbf{WM repair} & \textbf{36.2} & \textbf{49.0}\\
+Oracle repair & 36.7 & 47.5\\\bottomrule
+\end{tabular}
+\end{table}
+
+All three primary hypotheses are supported. Repair improves PR over failure notification by $4.2$ points (CI $[2.6,5.7]$, Holm-adjusted $p<0.001$) and SR over no intervention by $15.3$ points ($[12.7,17.8]$, Holm-adjusted $p<0.001$). Its PR contrast with rule cards is $+2.2$ points ($[0.5,3.9]$), satisfying the pre-specified non-inferiority criterion. This result concerns progress under the chosen margin and does not imply equivalence across tasks or metrics.
+
+\begin{table}[tbp]
+\caption{Pre-registered primary tests on fresh600 under the main experimental configuration. Differences use unrounded task-level estimates; CI is a 95\% paired bootstrap interval.}
+\label{tab:hypotheses}\centering
+\begin{tabular}{llrl}\toprule
+Test & Contrast and metric & Difference [CI] & Decision\\\midrule
+H1 & Repair $-$ failure, PR & $+4.2\ [2.6,5.7]$ & Supported\\
+H2 & Repair $-$ rules, PR & $+2.2\ [0.5,3.9]$ & Non-inferior\\
+H3 & Repair $-$ none, SR & $+15.3\ [12.7,17.8]$ & Supported\\\bottomrule
+\end{tabular}
+\end{table}
+
+The three hypotheses address different claims. H3 measures the overall benefit relative to an unassisted planner, including the value of detecting invalid proposals. H1 isolates the additional benefit of diagnosis and a suggested step beyond failure notification, making it central to the interface argument. H2 tests whether repair can substitute for an explicit knowledge source within the specified progress tolerance. It does not rank neural and symbolic methods universally.
+
+\subsection{Ablation Study: Prediction and Repair Components}
+Table~\ref{tab:ablation} compares output formats and response components. With identical WM inputs, repair exceeds prediction by $4.1$ PR points (CI $[2.5,5.7]$, Holm-adjusted $p<0.001$). Adding the repair context to the prediction prompt narrows the gap but does not eliminate it. Thus, the requested output contributes to planning performance beyond the amount of input information.
+
+Cause alone improves PR over failure notification by $0.8$ points ($[-0.5,2.1]$), a non-significant primary contrast. Step alone adds $2.2$ points ($[0.6,3.8]$), and adding the cause to the step contributes a further $2.0$ ($[0.3,3.6]$); these latter comparisons are secondary and uncorrected. The combined response performs best among the tested formats, supporting the usefulness of an actionable step accompanied by an explanation.
+
+\begin{table}[tbp]
+\caption{Interface ablations with the planner, WM and failure trigger held fixed. Repeats denotes repeated occurrences of the same failure per episode.}
+\label{tab:ablation}\centering
+\begin{tabular}{lrrr}\toprule
+Information supplied & SR (\%) & PR (\%) & Repeats\\\midrule
+Failure notice only & 28.3 & 44.8 & 4.16\\
+Next-observation prediction & 24.1 & 42.4 & 5.15\\
+Prediction with repair inputs & 29.2 & 44.9 & 3.87\\
+Cause only & 29.7 & 45.6 & 4.24\\
+First step only & 32.2 & 47.0 & 3.76\\
+\textbf{Cause and first step} & \textbf{36.2} & \textbf{49.0} & \textbf{3.14}\\\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Performance across Task Types}
+Table~\ref{tab:tasks} reports success across the six task types. Repair has higher success than no intervention and failure notification in every category. Its comparison with rule cards is more varied: repair leads numerically on look-at, simple placement, cleaning and cooling, whereas rules lead on heating and two-object placement. These task-wise summaries are descriptive; we do not claim significance from a corrected family of per-type tests.
+
+\begin{table}[tbp]
+\caption{Success rate (\%) by task type on fresh600. Each type contains 100 tasks with three runs per condition. The oracle column is a diagnostic reference, not a guaranteed upper bound for every task type.}
+\label{tab:tasks}\centering
+\begin{tabular}{lrrrrr}\toprule
+Task type & None & Failure & Rules & WM repair & Oracle\\\midrule
+Look at object in light & 27.3 & 36.0 & 33.0 & 46.3 & 38.7\\
+Simple pick and place & 44.7 & 54.7 & 56.0 & 61.7 & 60.3\\
+Clean then place & 19.0 & 27.3 & 27.0 & 34.7 & 31.7\\
+Cool then place & 6.7 & 14.3 & 13.3 & 21.7 & 18.7\\
+Heat then place & 27.0 & 32.3 & 46.7 & 37.7 & 36.7\\
+Pick two objects and place & 1.0 & 5.3 & 24.0 & 15.3 & 34.0\\\bottomrule
+\end{tabular}
+\end{table}
+
+Two-object placement exposes a remaining weakness. Repair raises success from 1.0\% to 15.3\%, but falls short of rule cards at 24.0\% and oracle repair at 34.0\%. Inventory constraints therefore remain consequential despite the close aggregate oracle comparison. On other task types, repair can exceed the oracle condition because the oracle supplies a true local cause and one first step rather than an optimal episode-level policy. Different advice can produce different trajectories. Near-oracle aggregate performance should therefore not be interpreted as complete recovery of the environment's action knowledge.
+
+\subsection{Subgoal Progress and Remaining Failures}
+Table~\ref{tab:funnel} traces progress from seeing the target through pickup to completion. Conditional success after pickup increases from 44\% without intervention and 55\% with failure notification to 66\% with repair. Changes in target visibility and pickup are smaller: repair sees the target in 60\% of episodes and picks it up in 55\%, compared with 54\% and 47\% without intervention. This pattern is consistent with a substantial part of the gain occurring after object acquisition. The conditional rates are descriptive and may reflect changes in which episodes reach pickup, rather than a causal effect estimated on an identical subset.
+
+\begin{table}[tbp]
+\caption{Subgoal funnel on fresh600 under the main experimental configuration. All entries are percentages. Visibility and pickup are marginal episode rates; the final column conditions success on pickup. Values follow the recorded rounded analysis.}
+\label{tab:funnel}\centering
+\begin{tabular}{lrrrr}\toprule
+Condition & Saw target & Picked target & Success & Success given pickup\\\midrule
+None & 54 & 47 & 20.9 & 44\\
+Failure only & 58 & 52 & 28.3 & 55\\
+Rule cards & 57 & 51 & 33.3 & 65\\
+WM repair & 60 & 55 & 36.2 & 66\\
+Oracle repair & 57 & 51 & 36.7 & 71\\\bottomrule
+\end{tabular}
+\end{table}
+
+Diagnosis accuracy provides a complementary view. Across 9,495 repair-triggered steps, the WM's cause agrees with the environment-derived category in approximately 30\% of cases. Revised actions are admissible in 65\% of category-matching cases and 52\% of non-matching cases. Episodes with mostly matching diagnoses also succeed more often (39.8\% versus 28.4\%). These are associations rather than randomized effects: less difficult states may support both more accurate diagnoses and higher task success.
+
+Performance also varies by failure category. When the agent is classified as being away from the required location, revised actions are admissible in 56\% of repair cases, compared with 36\% under failure notification. When the agent is holding another object, the corresponding rates are 35\% and 38\%, and the same failed proposal recurs later in 85\% of repair cases. Because methods visit different states, these conditional summaries do not establish category-specific causal effects. They nevertheless identify an inventory-related weakness consistent with the difficulty of two-object placement.
+
+\subsection{Ablation Study: Memory and Action Execution}
+A correction that helps the current decision may not remain useful later. Table~\ref{tab:followups} compares the frozen method with two variants: retaining the latest five diagnoses and directly executing the suggested first step. All use the same planner and WM. Direct execution changes action-selection authority at repair steps, so it serves as a diagnostic control outside the main planner-controlled setting.
+
+\begin{table}[tbp]
+\caption{Follow-up controls on fresh600. PR contrasts are pre-registered primary tests with Holm adjustment; SR differences are exploratory. Tokens are per episode.}
+\label{tab:followups}\centering
+\begin{tabular}{lrrrl}\toprule
+Condition & SR (\%) & PR (\%) & Tokens & $\Delta$PR vs. repair [CI]\\\midrule
+Frozen WM repair & 36.2 & 49.0 & 47.8k & Reference\\
+Retain five diagnoses & 31.8 & 47.9 & 51.6k & $-1.0\ [-2.5,0.4]$\\
+Execute suggested step & 36.9 & 49.2 & 41.1k & $+0.2\ [-1.4,1.8]$\\\bottomrule
+\end{tabular}
+\end{table}
+
+Neither variant significantly improves the primary PR outcome. Retaining diagnoses reduces SR by 4.4 points (CI $[2.3,6.5]$ for the reduction, exploratory) and increases token use. Stale or incorrect explanations may continue to influence decisions after the state changes, although this experiment does not separate that effect from the larger prompt. Direct execution changes SR by $+0.7$ points ($[-1.4,2.8]$, exploratory), providing no reliable gain. Forcing adoption of the suggested step is therefore insufficient to improve performance in this test. This differs from the takeover control in the appendix, where the advisory model chooses an action rather than merely having its suggested repair executed.
+
+\subsection{Aligned Baselines}
+Table~\ref{tab:baselines} holds the planner fixed and uses the same frozen advisory model for any WM or knowledge-learning role. WALL-E-style judging checks each proposed action without the valid list, returns feedback and a suggestion on predicted failure, and permits up to two revisions. Its rule variant adds learned rules. RPMS-style guidance provides verb-relevant rule cards and an observation-derived belief state at the failure gate. ExpeL-style guidance supplies 15 distilled insights either in every prompt or at the gate. WorldEvolver-style prediction forecasts each action and exposes sufficiently confident forecasts, calibrated to approximately 30\% use, optionally with episodic memory.
+
+\begin{table}[tbp]
+\caption{Aligned baselines on fresh600. Calls denotes online advisory-model calls per episode; Tokens denotes total tokens per episode. Offline knowledge-learning costs are excluded from the call count.}
+\label{tab:baselines}\centering
+\begin{tabular}{lrrrr}\toprule
+Method & SR (\%) & PR (\%) & Calls & Tokens\\\midrule
+\textbf{WM repair} & \textbf{36.2} & \textbf{49.0} & 5.3 & 47.8k\\
+WALL-E-style & 26.8 & 48.2 & 54.5 & 118.2k\\
+WALL-E-style + rules & 27.3 & 46.0 & 44.7 & 101.6k\\
+RPMS-style & 37.2 & 48.1 & 0 & 42.6k\\
+ExpeL-style, every step & 12.9 & 24.1 & 0 & 56.7k\\
+ExpeL-style, failure gate & 28.1 & 43.4 & 0 & 52.2k\\
+WorldEvolver-style & 22.1 & 41.4 & 25.9 & 88.7k\\
+WorldEvolver-style + memory & 23.4 & 41.9 & 25.8 & 95.9k\\\bottomrule
+\end{tabular}
+\end{table}
+
+Repair achieves higher SR than the WM-driven and experience-learned alternatives. On PR, it is non-inferior to plain WALL-E-style judging ($+0.7$, CI $[-1.5,2.9]$) and RPMS-style guidance ($+0.9$, $[-0.8,2.6]$). It exceeds WALL-E-style judging with learned rules by $2.9$ PR points ($[0.9,4.9]$) and confidence-gated prediction by $7.6$ ($[5.8,9.4]$); both contrasts remain significant after their respective Holm corrections. Repair also requires fewer advisory calls. Because these systems differ in information access and knowledge sources as well as their triggers, the comparison does not isolate a causal effect of the trigger alone.
+
+\paragraph{Cost interpretation}
+Repair uses 47.8k tokens per episode, including approximately 4.5k from the WM. Most token use therefore remains in planner interaction and revision. Failure notification uses 46.9k tokens, so repair supplies additional useful information at a similar total token count; no intervention uses 37.6k. The reported call counts cover online inference, excluding the offline construction of learned rules and insights. Token counts do not directly measure latency or energy, particularly when models differ in size.
+
+These results show that environment-grounded repair can reduce advisory calls relative to the tested per-action judging and confidence-gated forecasting implementations. The benefit is specific to those comparisons: RPMS-style guidance requires no online WM calls, and using a larger planner directly remains a competitive alternative.
+
+\paragraph{Finding 3: From oracle repair to WM guidance}
+A frozen WM can supply useful repair information without an explicit rule base. The main evaluation establishes a gain over no intervention and failure notification; equal-information ablations show that asking for repair matters beyond providing more context. The suggested step and explanation work best together among the tested interfaces. Baseline and mechanism analyses delimit this result: gains vary across tasks, inventory failures persist, and explicit rules or stronger-model delegation can remain preferable.
+
+\section{Discussion and Limitations}
+The three studies support a connected interpretation. WHEN finds no reliable remedy in the tested forecast schedules; WHAT identifies missing-precondition information as useful; HOW shows that a frozen WM can supply actionable repair. Within this chain, the equal-information comparison provides the clearest evidence for the repair interface. Under the same trigger, a WM response describing a missing precondition and a suggested step helps more than a forecast. Component ablations further indicate that the step supplies much of the actionable information, while the explanation improves its use. This supports repair as guidance when the planner retains decision authority and no explicit rule base is supplied.
+
+Several limitations constrain this conclusion. First, the gate requires the environment's valid-action list before execution. A post-execution trigger retained about half the development gain; a prompt without the valid list remains untested. Second, stronger-model delegation performs better: a 14B planner alone reaches 59.1\% SR using 27.5k tokens per episode, versus 36.2\% and 47.8k for our configuration. Letting the 14B model take over failing steps reaches 49.0\% SR. Restricting the main claim to planner-controlled decisions was a scope choice made after that result was known; both delegation controls are retained in the supplement.
+
+Third, a 4B WM provides a weaker result, and its SR advantage over failure notification is not significant. This supports the chosen configuration but does not establish a universal rule about relative model sizes. Fourth, rule cards and the state tracker were written after failure analysis, and aligned baselines are not full reproductions. Fifth, evidence comes from one environment and model family; fresh600 tests new instances within the training scene distribution. Finally, a frozen source file later gained control-arm code. The archived frozen version matches the registered hash, and the frozen method's code path is unchanged.
+
+\section{Conclusion}
+The WHEN--WHAT--HOW investigation explains the move from predictive foresight to repair. First, selective invocation does not reliably make the tested forecasts more useful than matched controls. Second, fixed-trigger oracle probes show that the planner benefits from a missing-precondition diagnosis and a feasible first step. Third, a frozen WM can provide such advice while leaving action selection to the planner: success on fresh600 increases from 20.9\% to 36.2\%, and repair exceeds equal-information prediction by 4.1 PR points. The central lesson is to evaluate WM guidance by the information it supplies for the planner's current difficulty, as well as by when it is invoked. This conclusion remains bounded by the valid-action-list requirement, the tested model family and the observed advantages of some rule-based and delegation alternatives.
+
+\clearpage
+\appendix
+\section*{Supplementary Experiments}
+\input{report_supplement}
+\clearpage
+
+\bibliographystyle{splncs04}
+\bibliography{report_references}
+
+% Required final two pages. Confirm pagination after compiling with LNCS.
+\clearpage
+\section*{Mandatory Paper Self-Review}
+\paragraph{1. What is the main scientific contribution of the paper?}
+The paper traces a WHEN--WHAT--HOW investigation: testing forecast timing, identifying the information needed at failures, and evaluating a frozen WM repair interface. With the trigger and inputs held constant, a missing-precondition explanation and suggested first step improve progress over prediction. The contribution is the interface evaluation and its empirical findings, rather than a newly trained model.
+
+\paragraph{2. How does it differ from the closest prior work?}
+WALL-E establishes the value of world-model guidance and rule learning. Our method uses an environment-provided feasibility check and supplies no explicit rule base to the WM. Equal-information ablations and aligned baselines examine how the repair interface differs from prediction and per-action judging. The baseline implementations target selected mechanisms rather than reproduce complete prior systems.
+
+\paragraph{3. What evidence supports the principal claims?}
+The main evaluation uses 600 previously unrun tasks, three runs per condition, paired task-bootstrap intervals and pre-registered primary contrasts. Success increases from 20.9\% to 36.2\%, and repair exceeds equal-information prediction by 4.1 PR points. Earlier timing controls motivate the shift in question; failure analysis and oracle probes identify the target information; component ablations and aligned baselines test the resulting interface.
+
+\paragraph{4. What are the main limitations of the work?}
+The method requires an environment-provided valid-action list. Evidence is limited to one environment and model family, with fresh600 drawn from the training scene distribution. A 14B planner alone and stronger-model takeover achieve higher success. The scope restriction to planner-controlled decisions was adopted after observing takeover results. Rule-based controls use manually developed knowledge, and the baseline implementations are aligned comparisons rather than full reproductions.
+
+\paragraph{5. Why is the new result important?}
+The experiments distinguish accurate forecasting from useful planning assistance. They identify a compact interface through which a WM can provide actionable local guidance, while documenting cases where explicit rules or delegation to a stronger decision-maker remain preferable.
+
+\clearpage
+\section*{Mandatory Paper Self-Review: LLM Usage}
+\paragraph{6(i). Uses of LLMs.}
+LLMs serve as the planner and WM studied in the experiments. The 14B model also generates baseline rules or insights from a disjoint task pool. OpenAI Codex assisted with restructuring the research report and drafting and revising the LaTeX manuscript, including its abstract, prose, tables and self-review. No new experiments were conducted during manuscript preparation. The available records do not establish other historical uses of LLMs in research design or analysis.
+
+\paragraph{6(ii). Models and access dates.}
+Experiments use Qwen3-4B-Instruct-2507 and Qwen3-14B (Qwen/Alibaba; nominal sizes 4B and 14B), as documented in the project report covering experiments through October 30, 2026. Exact checkpoint revisions and per-run access dates require confirmation from experiment logs. Manuscript assistance used OpenAI Codex on November 6, 2026; the exact backend model identifier and parameter count are not available in the manuscript record and are not inferred here.
+
+\paragraph{6(iii). Customization.}
+Experimental model weights remain frozen. Customizations include ReAct prompting, valid-action gating, a repair prompt and planner revision. Baseline variants add learned textual rules, insights or episodic memory. Neither the planner nor the WM is fine-tuned. Manuscript preparation used local Markdown and recorded result tables, with bibliographic metadata checked against primary paper records.
+
+\paragraph{6(iv). Human validation.}
+Task success and progress are assessed through the environment and analysis pipeline; offline diagnosis comparisons use environment-derived categories. The available records do not specify the number of human examiners, the proportion of outputs inspected or an adjudication procedure. The authors should supply these details if human review was performed. This AI-assisted draft requires author verification of its claims, numerical results and disclosures; completed human validation is not claimed.
+
+\paragraph{6(v). Reproducibility materials.}
+The local project includes prompts, implementation code, pre-registration records and aggregate result tables. The transferred package excludes episode-level raw JSONL files and run logs. No anonymous public release URL or DOI has been provided, so this draft does not claim that code or conversation transcripts are publicly available.
+\end{document}

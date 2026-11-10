@@ -1,0 +1,67 @@
+{
+  "planner": "p14b",
+  "n_pairs": 45,
+  "n_success_batches": 24,
+  "insights": [
+    {
+      "text": "When attempting to take an object from a surface, ensure you are at the correct location, the object is present, and you explicitly confirm its presence before attempting to take it. If the action fails, consider relocating the object to a temporary location to troubleshoot.",
+      "importance": 43
+    },
+    {
+      "text": "After retrieving an object, explicitly navigate to the target location before attempting to move it there, as being at the correct location is essential for successful placement\u2014this applies to all objects and ensures the target location is accessible and ready to receive the object.",
+      "importance": 31
+    },
+    {
+      "text": "When performing a move action, ensure you are at the target location first, the object is in your inventory, and the target location is accessible and has space. If the move fails, verify these conditions and consider using a temporary location to reorganize objects.",
+      "importance": 19
+    },
+    {
+      "text": "Prioritize locating and retrieving the required object early, then proceed to perform necessary actions (e.g., cooling, moving) in a logical sequence, ensuring you are at the correct location for each step and confirming the object's presence before taking it.",
+      "importance": 13
+    },
+    {
+      "text": "After retrieving an object, explicitly navigate to the target location before attempting to move it there, as being at the correct location is essential for successful placement\u2014this applies to all objects and ensures the target location is accessible and ready to receive the object.",
+      "importance": 13
+    },
+    {
+      "text": "When performing an action like heating or cooling an object, ensure the object is in your inventory and the tool is accessible and in a usable state (e.g., open, on, or ready). If the action fails, consider checking compatibility, tool readiness, or if the object is obstructed or not properly placed in the tool.",
+      "importance": 10
+    },
+    {
+      "text": "When attempting to move an object to a target location, ensure you are at the target location first, the object is in your inventory, and the target location is accessible. If the move fails, verify these conditions and consider using a temporary location to reorganize objects.",
+      "importance": 9
+    },
+    {
+      "text": "When examining an object under another object (e.g., a pencil under a desklamp), ensure the desklamp is turned on, the object is in the same location as the desklamp, and you are at that location before attempting the examination.",
+      "importance": 9
+    },
+    {
+      "text": "To observe an object under another object (e.g., a pen under a desklamp), ensure the desklamp is turned on and the object is visible in the examined location, and confirm you are at the correct location before examining.",
+      "importance": 7
+    },
+    {
+      "text": "To successfully cool or heat an object, perform the action while the object is in your inventory and the tool is accessible and in the correct state\u2014do not attempt to cool an object while it is on a surface or in a container.",
+      "importance": 6
+    },
+    {
+      "text": "To successfully cool or heat an object, ensure the tool (e.g., fridge, microwave) is open and accessible, and the object is in your inventory before initiating the action\u2014do not attempt to cool an object while it is on a surface or in a container.",
+      "importance": 5
+    },
+    {
+      "text": "After retrieving an object, explicitly navigate to the target location before attempting to move it there, as being at the correct location is essential for successful placement\u2014this applies to all objects regardless of task complexity, and ensures the target location is accessible and ready to receive the object.",
+      "importance": 5
+    },
+    {
+      "text": "To interact with an object, ensure you are at the correct location, the object is accessible, and visible before attempting to use, examine, or manipulate it\u2014this includes checking if containers are open or if objects are obstructed.",
+      "importance": 4
+    },
+    {
+      "text": "After retrieving an object, explicitly navigate to the target location before attempting to move it there, as being at the correct location is essential for successful placement, and ensure the target location is accessible.",
+      "importance": 4
+    },
+    {
+      "text": "When attempting to move an object to a target location, ensure you are at the target location before executing the move, and confirm the target location is accessible and not already occupied by the object.",
+      "importance": 3
+    }
+  ]
+}

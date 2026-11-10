@@ -149,8 +149,11 @@ _REASON_RE = re.compile(r"reason\s*:\s*(.+)", re.IGNORECASE)
 _REPAIR_RE = re.compile(r"repair\s*:\s*(.+)", re.IGNORECASE)
 
 
-def wm_repair_block(pipe, state, action):
-    """Ask the (frozen) world model -- the LLM behind the current role -- for reason + repair."""
+def wm_repair_block(pipe, state, action, mode="full"):
+    """Ask the (frozen) world model -- the LLM behind the current role -- for reason + repair.
+
+    `mode` only changes what the planner is SHOWN; the WM call is identical in all modes:
+    "full" reason + repair action, "reason" reason only, "action" repair action only (no reason)."""
     from preexperiments.common.alfworld_runner import format_admissible
     prompt = WM_REPAIR_PROMPT.format(goal=state["goal"], history=state["history"] or "(no actions taken yet)",
                                      observation=state["current_observation"],
@@ -166,7 +169,56 @@ def wm_repair_block(pipe, state, action):
     line = f' To make progress toward it, first do: "{rep}".' if rep else ""
     if reason and reason[0].isupper() and not reason[:2].isupper():
         reason = reason[0].lower() + reason[1:]
-    return REPAIR_BLOCK.format(base_action=action, reason=reason, repair_line=line), {"reason": reason, "repair": rep, "raw": t}
+    d = {"reason": reason, "repair": rep, "raw": t}
+    if mode == "reason":
+        return REPAIR_BLOCK.format(base_action=action, reason=reason, repair_line=""), d
+    if mode == "action":
+        line = f' A suggested first step is: "{rep}".' if rep else ""
+        return ACTION_ONLY_BLOCK.format(base_action=action, repair_line=line), d
+    return REPAIR_BLOCK.format(base_action=action, reason=reason, repair_line=line), d
+
+
+ACTION_ONLY_BLOCK = """
+Note: executing "{base_action}" now would have no effect ("Nothing happens.").{repair_line}
+
+You are still at the current state described above.
+"""
+
+# next-observation prediction with the SAME information the repair prompt gets (valid actions + failure fact)
+WM_PRED_INFO_PROMPT = """You are a world model for an interactive household environment.
+
+Current task:
+{goal}
+
+Recent action-observation history:
+{history}
+
+Current observation:
+{observation}
+
+Valid actions now:
+{admissible}
+
+Candidate action:
+{action}
+
+The candidate action is NOT in the list of valid actions now.
+Predict the immediate NEXT observation after executing this action.
+
+Return exactly:
+Prediction: <one concise predicted observation>"""
+
+
+def wm_pred_info(pipe, state, action):
+    from preexperiments.common.alfworld_runner import format_admissible
+    from preexperiments.direction_b.pipeline import parse_prediction
+    prompt = WM_PRED_INFO_PROMPT.format(goal=state["goal"], history=state["history"] or "(no actions taken yet)",
+                                        observation=state["current_observation"],
+                                        admissible=format_admissible(state["admissible_actions"]), action=action)
+    resp = pipe.llm.complete(prompt, seed=pipe.seed, temperature=pipe.temperature, top_p=pipe.top_p,
+                             max_tokens=pipe.max_tokens_prediction)
+    pred, _conf = parse_prediction(resp.text or "")
+    return pred or (resp.text or "").strip()
 
 
 # ---------------------------------------------------------------- round 5 baselines
@@ -225,3 +277,27 @@ def state_block(action, history):
     fmt = lambda xs: ", ".join(sorted(xs)) if xs else "none"
     return STATE_BLOCK.format(base_action=action, loc=s["loc"] or "the middle of the room (no receptacle yet)",
                               holding=s["holding"] or "nothing", opened=fmt(s["opened"]), closed=fmt(s["closed"]))
+
+
+# ---------------------------------------------------------------- round 5 follow-ups
+class RepairMemory:
+    """Episode-level memory of diagnosed failures (inv_wmrepair_mem). `add` is the episodic-memory hook
+    that run_policy calls after every step; it is a no-op here -- notes are added by the arm itself."""
+
+    def __init__(self, k: int = 5):
+        self.k, self.notes = k, []
+
+    def add(self, *a, **kw):
+        pass
+
+    def note(self, action, reason):
+        n = f'- "{action}" could not be executed because {reason}.'
+        if n in self.notes:
+            self.notes.remove(n)
+        self.notes = (self.notes + [n])[-self.k:]
+
+    def render(self):
+        if not self.notes:
+            return ""
+        return ("\nLessons from failed actions earlier in this episode (diagnosed by a world model):\n"
+                + "\n".join(self.notes) + "\nAvoid repeating them unless the situation has changed.\n")

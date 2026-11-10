@@ -1,0 +1,32 @@
+{
+  "frozen_at": "2026-10-26, before any fresh600 run of these baselines (only 3-task smoke tests); rules/insights learned on label-pool data only",
+  "purpose": "compare the frozen method (failure-triggered 14B WM repair) with recent-work baselines aligned in model scale, protocol and tasks",
+  "alignment": {
+    "planners": "Qwen3-4B-Instruct-2507 and Qwen3-14B (thinking off), unchanged",
+    "world model / knowledge model": "the same frozen Qwen3-14B (wm_alt) for every baseline",
+    "protocol": "v2-list, T=0, top_p 0.5, seed 42, 30 steps",
+    "tasks": "fresh600 x 3 reps (same task list and reps as the frozen evaluation)",
+    "learning data": "label-pool none runs only (448 training-split tasks, disjoint from fresh600 and unseen134)"
+  },
+  "arms": {
+    "walle": "WALL-E-style one-step MPC: WM judges every proposed action without the valid-action list; Feedback+Suggestion on predicted failure; <=2 revisions; no rules",
+    "walle_rules": "same + rules learned by learn_walle_rules.py (2 iterations induce/consolidate/prune)",
+    "inv_rpms": "RPMS-style: same failure gate as the frozen method; verb-relevant rule cards + belief state tracked from observations, rules first; no episodic memory",
+    "expel": "ExpeL-style insights (learn_expel_insights.py, from the planner's own trajectories) in every planner prompt",
+    "inv_expel": "same insights shown only at the failure gate"
+  },
+  "deviations_from_original_methods": [
+    "WALL-E: rule learning re-implemented in natural language with the 14B model, 2 iterations; one-step MPC with at most 2 revisions",
+    "RPMS: hand-written rule cards stand in for its rule base; episodic memory omitted",
+    "ExpeL: no retrieval of successful trajectories as extra in-context examples; 4B/14B planners use insights from their own runs"
+  ],
+  "primary_per_planner_holm_PR": [
+    "frozen - walle",
+    "frozen - walle_rules",
+    "frozen - inv_rpms",
+    "frozen - expel",
+    "frozen - inv_expel"
+  ],
+  "also": "non-inferiority of frozen vs each baseline (95% CI lower bound > -2 pp); SR versions; 14B calls and tokens per episode",
+  "test": "paired task bootstrap 20k on rep-averaged per-task values, two-sided, Holm within each planner's family"
+}

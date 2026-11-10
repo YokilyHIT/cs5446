@@ -1,0 +1,100 @@
+% Included by report.tex; compile report.tex, not this file.
+This appendix reports additional controls, model-capacity comparisons and extensions beyond the main repair interface. SR and PR are expressed as percentages, and contrasts as percentage-point differences. Unless stated otherwise, results use fresh600 with three runs per task. Statistical conclusions follow the recorded contrast families; they are not inferred from differences between rounded table entries.
+
+\section{Additional Evidence for the WHEN and WHAT Studies}
+The main text now presents the predictive-timing investigation in Study~\ref{sec:when} and the fixed-trigger oracle probe in Study~\ref{sec:what}. This section retains the complete model-size matrix underlying the resampling comparison. It complements, rather than replaces, the evidence needed for the WHEN--WHAT--HOW progression in the main text.
+
+\begin{table}[tbp]
+\caption{Predictive guidance at a random 30\% trigger on dev460, two runs per task. SR and PR are percentages. R denotes no-information resampling. The original primary family contains the six prediction/oracle-minus-R contrasts across both planner sizes.}
+\label{tab:prediction-matrix}\centering
+\begin{tabular}{llrr}\toprule
+Planner & Condition & SR & PR\\\midrule
+4B & No intervention & 11.7 & 32.8\\
+4B & R & 14.5 & 33.0\\
+4B & 4B-WM forecast & 13.5 & 33.4\\
+4B & 14B-WM forecast & 14.0 & 34.5\\
+4B & Oracle next observation & 16.8 & 36.0\\\midrule
+14B & No intervention & 56.4 & 68.9\\
+14B & R & 60.0 & 71.5\\
+14B & 4B-WM forecast & 58.5 & 71.2\\
+14B & 14B-WM forecast & 58.8 & 70.5\\
+14B & Oracle next observation & 60.8 & 71.0\\\bottomrule
+\end{tabular}
+\end{table}
+
+Neither learned WM reliably outperforms resampling for either planner. Only oracle foresight for the 4B planner has a significant primary advantage. The true-information contrast differs from the oracle-repair probe in Table~\ref{tab:what-oracle}: here intervention occurs at random steps and supplies next observations; the WHAT probe intervenes at infeasible proposals and compares a failure notice with diagnosis and repair. Keeping these triggers distinct is essential to interpreting the transition between the studies.
+
+\section{Model-Size Controls}
+The final repair evaluation includes a 4B planner paired with either a 4B or 14B WM, and a 14B planner paired with a 14B WM. It is therefore not a complete two-by-two matrix. Thinking is disabled for the 14B planner. Table~\ref{tab:sizes} summarizes the evaluated combinations.
+\begin{table}[h]
+\caption{Model-size controls. A dash denotes an unreported combination in the final matrix.}\label{tab:sizes}
+\centering\begin{tabular}{lrrrr}\toprule
+& \multicolumn{2}{c}{4B planner} & \multicolumn{2}{c}{14B planner}\\
+Condition & SR & PR & SR & PR\\\midrule
+None & 20.9 & 39.4 & 59.1 & 70.3\\
+Failure only & 28.3 & 44.8 & 63.9 & 72.8\\
+Generic reflection & 28.6 & 45.9 & 64.9 & 73.5\\
+Structured reflection & 23.7 & 42.8 & 65.4 & 74.0\\
+Rule cards & 33.3 & 46.8 & 68.8 & 76.0\\
+4B-WM repair & 29.7 & 46.6 & -- & --\\
+14B-WM repair & 36.2 & 49.0 & 65.9 & 74.3\\
+Oracle repair & 36.7 & 47.5 & 69.5 & 76.6\\\bottomrule
+\end{tabular}
+\end{table}
+
+For the 4B planner, a 4B WM improves SR over failure notification by $+1.3$ points ($[-0.9,3.7]$, $p=0.249$, secondary and uncorrected), which is not statistically significant. Its SR is 6.6 points below that of 14B-WM repair, based on the unrounded contrast. This favors the larger WM in the evaluated setting without establishing a universal requirement on relative model sizes. With the 14B planner, 14B-WM repair improves SR over no intervention by 6.8 points, but remains below rule cards.
+
+\section{Baselines with the 14B Planner}
+The baseline implementations and knowledge sources are the same as in the main report; any WM role still uses the frozen 14B model.
+\begin{table}[h]
+\caption{Aligned baselines with the 14B planner.}
+\centering\begin{tabular}{lrr}\toprule
+Method & SR & PR\\\midrule
+14B-WM repair & 65.9 & 74.3\\
+WALL-E-style & 55.0 & 69.4\\
+WALL-E-style + learned rules & 54.4 & 68.8\\
+RPMS-style & 70.7 & 77.0\\
+ExpeL-style, every step & 53.2 & 63.4\\
+ExpeL-style, failure gate & 64.1 & 72.3\\
+WorldEvolver-style & 61.0 & 72.2\\
+WorldEvolver-style + memory & 59.8 & 71.3\\\bottomrule
+\end{tabular}
+\end{table}
+Repair achieves higher SR and PR than the WM-driven and learned-insight alternatives, but trails RPMS-style guidance by 2.6 PR points (CI $[-3.9,-1.3]$ for repair minus RPMS). Per-action WM judging may reject valid proposals and induce unnecessary revisions; for the stronger planner, its success falls below the no-intervention baseline. These results limit the claim that WM advice is uniformly preferable to explicit rules.
+
+\section{Combining Repair with Explicit Rules}
+The rule-checked variant compares the WM's explanation and suggested step with rule cards and an observation-derived belief state. If they conflict, a second WM call receives the relevant rule and tracked facts, and the planner receives the revised advice. The concatenation control instead presents the original repair alongside the rules and state. A learned-rule variant did not pass development selection; its rules omitted specific constraints, including the one-object carrying limit.
+
+\begin{table}[h]
+\caption{Rule-based extensions. Calls denotes online 14B calls per episode when using the 4B planner.}
+\centering\begin{tabular}{lrrrrr}\toprule
+& \multicolumn{2}{c}{4B planner} & \multicolumn{2}{c}{14B planner} & \\
+Method & SR & PR & SR & PR & Calls\\\midrule
+WM repair & 36.2 & 49.0 & 65.9 & 74.3 & 5.3\\
+RPMS-style & 37.2 & 48.1 & 70.7 & 77.0 & 0\\
+Repair + rules, concatenated & 37.8 & 49.2 & 70.6 & 77.0 & 4.7\\
+Repair checked by rules & 38.9 & 49.4 & 71.0 & 77.0 & 7.2\\\bottomrule
+\end{tabular}
+\end{table}
+
+Relative to repair alone, rule checking changes PR by $0.4$ points ($[-1.0,1.8]$) for the 4B planner and $2.6$ ($[1.4,3.9]$) for the 14B planner. Only the latter primary contrast is supported. Checking does not significantly outperform concatenation for either planner, and both checked configurations satisfy the non-inferiority criterion against RPMS-style guidance. Specific rules therefore help the stronger planner, but these experiments provide no evidence that verification improves on simply presenting both knowledge sources. Rules plus state alone achieve similar performance without online WM calls.
+
+\section{Decision Authority and Memory Controls}
+\begin{table}[h]
+\caption{Decision-authority controls with a 4B planner and 14B WM.}
+\centering\begin{tabular}{lrr}\toprule
+Condition & SR & PR\\\midrule
+Repair; planner decides & 36.2 & 49.0\\
+Execute suggested first step directly & 36.9 & 49.2\\
+14B model takes over failing step & 49.0 & 58.3\\\bottomrule
+\end{tabular}
+\end{table}
+Direct execution changes PR by $0.2$ points ($[-1.4,1.8]$), which is not significant. Takeover performs better: repair minus takeover is $-9.4$ PR points ($[-11.7,-7.2]$). Both controls were pre-registered. The decision to restrict the principal claims to planner-controlled action selection was made after observing these results. Separately, retaining the latest five diagnoses reduces SR by $4.4$ points ($[2.3,6.5]$ for the reduction, exploratory). The frozen method does not retain a persistent repair memory.
+
+\section{Repeated Evaluation on unseen134}
+With the 4B planner and five runs per task, 14B-WM repair achieves 38.5\% SR, compared with 25.4\% for no intervention and 34.9\% for rule cards. The repair-minus-none contrast is $+13.1$ points ($[8.7,17.8]$). This agrees with the direction of the fresh600 result. Because unseen134 was used in earlier studies, it provides corroborating evidence rather than an untouched final evaluation.
+
+\section{Evidence and Reproducibility}
+The project records pre-registrations for method selection, the fresh600 hypotheses, equal-information controls, follow-up experiments, aligned baselines and rule-based extensions. Analysis averages runs within each task before bootstrapping tasks, so repetitions are not counted as independent task samples. Differences computed from unrounded results may differ slightly from subtraction of the displayed values.
+
+The available archive contains implementation code, aggregate tables, pre-registration records and learned baseline knowledge, but excludes episode-level raw JSONL files and run logs. Core implementation files include \texttt{agent.py}, \texttt{preconditions.py}, \texttt{baselines\_r6.py} and \texttt{hybrid\_r7.py}. Local build notes map manuscript tables to their source results. No anonymous public release link has been provided.

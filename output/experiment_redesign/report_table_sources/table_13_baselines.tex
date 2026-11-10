@@ -1,0 +1,15 @@
+\begin{table}[tbp]
+\caption{Aligned baselines on fresh600. Calls denotes online advisory-model calls per episode; Tokens denotes total tokens per episode. Offline knowledge-learning costs are excluded from the call count.}
+\label{tab:baselines}\centering
+\begin{tabular}{lrrrr}\toprule
+Method & SR (\%) & PR (\%) & Calls & Tokens\\\midrule
+\textbf{WM repair} & \textbf{36.2} & \textbf{49.0} & 5.3 & 47.8k\\
+WALL-E-style & 26.8 & 48.2 & 54.5 & 118.2k\\
+WALL-E-style + rules & 27.3 & 46.0 & 44.7 & 101.6k\\
+RPMS-style & 37.2 & 48.1 & 0 & 42.6k\\
+ExpeL-style, every step & 12.9 & 24.1 & 0 & 56.7k\\
+ExpeL-style, failure gate & 28.1 & 43.4 & 0 & 52.2k\\
+WorldEvolver-style & 22.1 & 41.4 & 25.9 & 88.7k\\
+WorldEvolver-style + memory & 23.4 & 41.9 & 25.8 & 95.9k\\\bottomrule
+\end{tabular}
+\end{table}

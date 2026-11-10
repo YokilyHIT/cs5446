@@ -1,0 +1,54 @@
+{
+  "created": "2026-10-29",
+  "stage": "r7_hybrid (stage 41)",
+  "method": "rule-verified WM repair: same failure gate and first WM call as the frozen method; rules (hand cards + tracked belief state, symbolic check; or WALL-E-style learned rules, WM self-check) only check the WM's diagnosis, never shown to the planner; on a failed symbolic check the WM is re-asked once with the rule card and tracked facts; planner decides",
+  "arms_new": [
+    "inv_wmverify",
+    "inv_wmverify_learned",
+    "inv_wmrules_concat (control: frozen block + RPMS block, no check)",
+    "inv_rpms (dev run of the round-6 baseline)"
+  ],
+  "arms_reused_dev": "probe_feasibility: p{4,14}b_inv_wmrepair_wm14 (frozen), p{4,14}b_inv_rules, inv_fail, inv_repair",
+  "stage_A_dev460x2": {
+    "selection_rule": "A verify variant advances to fresh600 only if, for BOTH planners, its dev PR exceeds the frozen method and the concat control (point estimates). If both variants qualify, the one with the higher mean PR over the two planners advances. If none qualifies, stop: report a negative result, no further tuning on dev beyond one revision of the check, which must be reported.",
+    "reported": "SR, PR, 14B calls and tokens per episode, check pass rate, re-ask rate, reason-category agreement before/after re-ask"
+  },
+  "stage_B_fresh600x3_if_selected": {
+    "family": "Holm over 3 per planner, PR primary, SR secondary, paired task bootstrap 20k",
+    "H1": "selected - frozen (wmrepair_wm14) > 0",
+    "H2": "selected - concat > 0",
+    "H3": "selected non-inferior to inv_rpms (95% CI lower bound > -2 pp)"
+  },
+  "code_sha256": {
+    "hybrid_r7.py": "c770552f0e8711af0984bea55b33dada5cd950cc4b4a0e1e8e3d5e2c5c48fa4e",
+    "agent.py": "3180e8339438e2c4d2592c0dda8c11a4fc59d957b5ff26b1cf30a11f831221e7",
+    "preconditions.py": "767ebdf9c3ff7104bf46e412737745d1c69ce79a9e322320e88f539d0c0119fb",
+    "baselines_r6.py": "7c9f75ad6c19637ad8f045d4725d51c0e730dcd2d9ffacba977d65a51698a0cd",
+    "run_episodes.py": "99dc962d5e9b8e4f5a5d8c6d45842f60ee0f36900ddad2b076c67c41a0e39c67",
+    "common.py": "e7ffed716370681a3208ef8fcc2c7d82b30aec1382ef13c92ff2d3ab3f975b5c"
+  },
+  "knowledge_sha256": {
+    "walle_rules.json": "b3a10c3800d2718ba8121adf7ade9b80bf9fcc9bf335fe2b667e2efa244866aa"
+  },
+  "note": "preconditions.py hash differs from p7_final preregistration_round5_final.json because round-5 confound/follow-up code was added after the freeze. The frozen version (sha256 ca345b85...) is archived in alfworld-patch-20261023; the only change to existing code is an optional mode argument of wm_repair_block whose default returns the same output. hybrid_r7 uses WM_REPAIR_PROMPT, REPAIR_BLOCK and RULE_CARDS, unchanged since the freeze.",
+  "offline_check_on_frozen_dev_logs": "symbolic check covers 87% (4B) / 76% (14B) of gate steps and passes 36% / 33%; episodes with mostly failing checks had the same SR as those with mostly passing (4B 0.222 vs 0.221; 14B 0.507 vs 0.512) -- a risk for this method, recorded before the runs.",
+  "stage_A_outcome": {
+    "date": "2026-10-30",
+    "selected": "inv_wmverify",
+    "dev_PR": {
+      "p4b": {
+        "wmverify": 44.4,
+        "frozen": 42.2,
+        "concat": 42.6
+      },
+      "p14b": {
+        "wmverify": 76.4,
+        "frozen": 74.1,
+        "concat": 76.0
+      }
+    },
+    "wmverify_learned": "does not qualify (4B 41.5, 14B 73.3 PR)",
+    "code_unchanged_since_stage_A": true,
+    "stage_B_launch": "launch_fresh.sh, 2026-10-30; arms inv_wmverify and inv_wmrules_concat, both planners; reused: p7_final wmrepair_wm14, r6_baselines inv_rpms"
+  }
+}

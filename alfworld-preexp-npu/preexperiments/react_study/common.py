@@ -56,6 +56,8 @@ STAGES = {
     37: "p7_final",
     38: "probe_feasibility",
     39: "failure_analysis",
+    40: "r6_baselines",
+    41: "r7_hybrid",
 }
 SUBDIRS = ("raw", "tables", "figures", "logs")
 

@@ -1,0 +1,24 @@
+{
+  "frozen_at": "2026-10-28, before any fresh600 run of these arms (3-task smoke tests only)",
+  "baseline": "WorldEvolver-style selective foresight (arXiv 2606.30639): the world model predicts the next observation of the planner's proposed action at EVERY step; the prediction is shown only if its confidence exp(mean token logprob) > tau; when the gate is closed the planner is called again without foresight (WorldEvolver Alg. 1, CC)",
+  "variants": {
+    "selective": "no memory",
+    "selective_em": "online episodic memory of real transitions (k=5 Jaccard retrieval, as in round 1/2), built during evaluation"
+  },
+  "alignment": "same planners (4B, 14B), world model = the same frozen Qwen3-14B (wm_alt) as every other arm, protocol v2-list, fresh600 x 3",
+  "tau": {
+    "p4b": 0.9999980530365506,
+    "p14b": 0.9999944236229084,
+    "calibration": "30% target usage on label-pool states of each planner (tables/selective_calibration.json); test data not used"
+  },
+  "deviations": [
+    "WorldEvolver's semantic heuristic rules are not included",
+    "memory retrieval as implemented in round 1 (action-word Jaccard)"
+  ],
+  "hardware": "NPU 0-3 only (1 x 4B, 3 x 14B); NPU 4-7 left free",
+  "primary_per_planner_holm_PR": [
+    "frozen - selective",
+    "frozen - selective_em"
+  ],
+  "test": "paired task bootstrap 20k on rep-averaged per-task values, two-sided, Holm within each planner (2 contrasts); non-inferiority margin -2 pp also reported"
+}

@@ -58,3 +58,21 @@ Third-party: AgentBoard code/data in `5446/third_party_dl/` (the prompt and test
 |---|---|
 | [probe_feasibility/](probe_feasibility/README.md) (stage A) | Same WM and gate: repair interface +7 PR over next-observation prediction; not "reflect again"; separate diagnosis call beats in-context structured reflection; rule cards ~ WM repair on 4B, better on 14B. Freeze rule -> WM repair with 14B WM |
 | [p7_final/](p7_final/README.md) (stage B) | Frozen, never-run fresh_test600 x 3: 4B SR 20.9 -> 36.2 (H1 +4.2 PR vs failure notice, H3 +15.3 SR vs none, H2 non-inferior to rule cards; all supported), = oracle repair. 14B: +6.8 SR vs none but rule cards better. unseen134 x 5 agrees in direction |
+
+### Round 5 follow-ups (2026-10-23)
+| Directory | One-line conclusion |
+|---|---|
+| [p7_final/](p7_final/README.md) (confounds, follow-ups) | Same information: repair beats prediction +4.1 PR; cause alone n.s., first step helps, both best. 14B takeover of failing steps 49.0 SR (outside the planner-decides scope). Direct execution = frozen; repair memory hurts (SR -4.4) |
+| [failure_analysis/](failure_analysis/README.md) (deep analysis) | Gain lands after pick-up (0.44 -> 0.66); WM cause right in only 30% of gate steps yet near-oracle; 14B gap = carry-one-object rule |
+
+## Round 6 (2026-10-26 – 29): recent-method baselines, aligned models and tasks
+| Directory | One-line conclusion |
+|---|---|
+| [r6_baselines/](r6_baselines/README.md) | fresh600 x 3, same 14B for every WM / knowledge role. 4B: ours ahead of WALL-E-style (+9.4 SR; judge false alarms 44-67%), ExpeL-style and WorldEvolver-style confidence gate (+14.2 SR), ties RPMS-style. 14B: RPMS-style better (-2.6 PR) |
+
+## Round 7 (2026-10-30): WM repair + explicit rules
+| Directory | One-line conclusion |
+|---|---|
+| [r7_hybrid/](r7_hybrid/README.md) | Rules checking the WM diagnosis: 14B +2.6 PR over frozen (= RPMS-style), 4B n.s.; no better than simply concatenating WM repair and rules (H2 fails for both). Learned-rule variant failed dev selection |
+
+Project report: `reports/react_study/report_project_final_20261030.md`.
